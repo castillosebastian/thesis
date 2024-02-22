@@ -1,0 +1,5 @@
+# Autoencoder Variacional {#sec-Capitulo3}
+
+En este capítulos presentaremos la arquitectura de nuestro modelo de Autoencoder Variacional (VAE). Expondremos brevemente los pasos seguidos en su construcción y los resultados obtenidos en distintas evaluaciones de desempeño.
+
+## Presentación del modelo
