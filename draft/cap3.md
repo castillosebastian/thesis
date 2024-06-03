@@ -36,7 +36,7 @@ https://chatgpt.com/share/c1e86afb-15e4-463c-ac87-6808816a6764
 
 A través de la representación de un espacio de características dado mediante un espacio latente de menor dimensión se busca modelar la distribución de probabilidad de los datos originales. En este proceso de aprendizaje, la optimización de la función de pérdida no tiene más restricciones que  minimizar la diferencia entre la observación original y la reconstrucción, dando lugar a espacios latentes discontinuos. Esto sucede porque la red puede aprender a representar los datos de entrada de manera eficiente sin necesidad de aprender una representación continua. En la arquitectura del autocodificador no hay determinantes para que dos puntos cercanos en el espacio de características se mapeen a puntos cercanos en el espacio latente. 
 
-Por otro lado, la discontinuidad y la falta de regularidad en el espacio latente permite que sea posible que ciertas regiones de este espacio no tengan ninguna relación válida con el espacio de características. Esto puede ser un problema en la generación de datos, ya que la red puede generar representaciones que alejadas de los datos originales.
+Por otro lado, la discontinuidad y la falta de regularidad en el espacio latente permite que sea posible que ciertas regiones de este espacio no tengan ninguna relación válida con el espacio de características. Esto puede ser un problema en la generación de datos, ya que la red puede generar representaciones alejadas de los datos originales.
 
 
 <!---
@@ -67,20 +67,20 @@ Por esa razón, la distribución de probabilidad conjunta de $x$ y $z$ se expres
 
 > $p_\theta(x, z) = p_\theta(x|z) p(z)$ 
 
-En este punto surge un problema: la verosimilitud marginal $p_\theta(x)$ es difícil de calcular debido a que requiere integrar sobre todas las posibles variables latentes $z$:
+En este punto surge un problema: para calcular la verosimilitud de los datos observados es preciso marginalizar la distribución de probabilidad conjunta con respecto a las variables latentes. Esto se expresa como:
 
 > $p_\theta(x) = \int p_\theta(x|z) p(z) \, dz$
 
-Esta integral puede ser intratable en la práctica, especialmente cuando el espacio latente $z$ es de alta dimensión. Para abordar este problema, se acude a la inferencia variacional que introduce una aproximación $q_\phi(z|x)$ a la verdadera distribución posterior $p_\theta(z|x)$. 
+Esta integral puede ser intratable en la práctica, especialmente cuando el espacio latente $z$ es de alta dimensión. Supondría calcular la integral de todas las posibles configuraciones de $z$ en el espacio latente. 
 
-En lugar de maximizar directamente la verosimilitud marginal, se maximiza una cota inferior conocida como la *evidence lower bound* (ELBO):
+Para abordar este problema, se acude a la inferencia variacional que introduce una aproximación $q_\phi(z|x)$ a la verdadera distribución posterior $p_\theta(z|x)$. En lugar de maximizar directamente la verosimilitud marginal, se maximiza una cota inferior conocida como la *evidence lower bound* (ELBO):
 
 > $\log p_\theta(x) \geq \left(\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)] - \text{KL}(q_\phi(z|x) \| p(z)) \right)$
 
 Donde:
 
 - $\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)]$ es la esperanza de la log-verosimilitud bajo la aproximación variacional.
-- $\text{KL}(q_\phi(z|x) \| p(z))$ es la divergencia de Kullback-Leibler entre la distribución aproximada $q_\phi(z|x)$ y la distribución prior $p(z)$.
+- $\text{KL}(q_\phi(z|x) \| p(z))$ es la divergencia de Kullback-Leibler entre la distribución aproximada $q_\phi(z|x)$ y la distribución *a priori* de las variables latentes  $p(z)$.
 
 Así, maximizando esta cota inferior (ELBO), se optimizan simultáneamente los parámetros $\theta$ del modelo y los parámetros $\phi$ de la distribución aproximada, permitiendo una inferencia eficiente y escalable en modelos con variables latentes.
 
@@ -88,4 +88,4 @@ El objetivo de aprendizaje del AV se da entonces por:
 
 > $\mathcal{L}_{AV}(x; \theta, \phi) = \max(\phi,\theta) \left( E_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)] - \text{KL}(q_\phi(z|x) \| p(z)) \right),$
 
-Como puede apreciearse en la ecución anterior la función de pérdida del AV se compone de dos términos: el primero es la esperanza de la log-verosimilitud bajo la aproximación variacional y el segundo es la divergencia de Kullback-Leibler relacionada a la reconstrucción de los datos y la regularización del espacio latente, respectivamente. Existe entre ambos términos una relación de compromiso que permite al AV aprender una representación significativa de los datos de entrada y un espacio latente continuo y regularizado. Cuanto mayor sea la divergencia de Kullback-Leibler, más regularizado será el espacio latente y más suave será la distribución de probabilidad de los datos generados. Cuanto menor sea la divergencia de Kullback-Leibler, más se parecerá la distribución de probabilidad de los datos generados a la distribución de probabilidad de los datos de entrada, sin embargo, el espacio latente será menos regularizado y la generación de datos será mas ruidosa.
+Como puede apreciearse en la ecución anterior la función de pérdida del AV se compone de dos términos: el primero es la esperanza de la log-verosimilitud bajo la aproximación variacional y el segundo es la divergencia de Kullback-Leibler relacionada a la reconstrucción de los datos y la regularización del espacio latente, respectivamente. Existe entre ambos términos una relación de compromiso que permite al AV aprender una representación significativa de los datos de entrada y un espacio latente continuo y regularizado. Cuanto mayor sea la divergencia de Kullback-Leibler, más regularizado será el espacio latente y más suave será la distribución de probabilidad de los datos generados. Cuanto menor sea la divergencia de Kullback-Leibler, más se parecerá la distribución de probabilidad de los datos generados a la distribución de probabilidad de los datos de entrada, sin embargo, el espacio latente será menos regularizado y la generación de datos mas ruidosa.
