@@ -3,5 +3,9 @@ Minería de Datos
 Autoencoder Variacionales y Algoritmos Genéticos   
 
 
-render: quarto render     
+render: 
+```bash
+cd utnthesis
+quarto render     
+```
 source: https://github.com/nmfs-opensci/quarto-thesis    

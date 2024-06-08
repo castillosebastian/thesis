@@ -1,6 +1,6 @@
 project:
   type: book
-  output-dir: .
+  output-dir: output
 book:
   title: Tesis de Maestría
   date: Abril, 2024
