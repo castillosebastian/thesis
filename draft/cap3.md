@@ -6,7 +6,7 @@ En este capítulos presentamos la arquitectura del Autocodificador Variacional (
 
 Los modelos generativos (MG) son un amplio conjunto de algoritmos de aprendizaje automático que buscan modelar la distribución de probabilidad de datos observados $p(x)$. Estos modelos permiten generar nuevos datos que se asemejan a los datos originales, lo que los hace útiles en tareas de generación de datos sintéticos, imputación de datos faltantes, reducción de dimensionalidad y selección de características, entre otros.
 
-Los modelos generativos pueden tener como imputs diferentes tipos de datos, como imágenes, texto, audio y video, entre otros. Por ejemplo, las imágenes son un tipo de datos para los cuales los MG han demostrado ser muy efectivos. En este caso, cada dato de entrada $x$ es una imagen que puede estar representada por un vector miles de elementos  que corresponden a los valores de píxeles. El objetivo de un modelo generativo es aprender las dependencias entre los píxeles (e.g. pixeles vecinos tienden a tener valores similares) y poder generar nuevas imágenes que se asemejen a las imágenes originales.
+Los modelos generativos pueden tener como *inputs* diferentes tipos de datos, como imágenes, texto, audio, entre otros. Por ejemplo, las imágenes son un tipo de datos para los cuales los MG han demostrado ser muy efectivos. En este caso, cada dato de entrada $x$ es una imagen que puede estar representada por un vector miles de elementos  que corresponden a los valores de píxeles. El objetivo de un modelo generativo es aprender las dependencias [@doerschTutorialVariationalAutoencoders2021]  entre los píxeles (e.g. pixeles vecinos tienden a tener valores similares) y poder generar nuevas imágenes que se asemejen a las imágenes originales.
 
 Podemos formalizar esta idea asumiendo que tenemos ejemplos de datos $x$, distribuidos según una distribución de probabilidad no conocida que queremos modelo $p_\theta(x)$ para que sea capaz de generar datos similares a los originales. 
 
@@ -18,18 +18,17 @@ Los autocodificadores se componen de dos partes: un *codificador* y un *decodifi
 
 En el proceso de aprendizaje de un autocodificador, la red modela la distribución de probabilidad de los datos de entrada $x$ y aprende a mapearlos a un espacio latente $z$. Para ello, se busca minimizar la diferencia entre la observación original $x_i$ y la reconstrucción $x_i'$, diferencia que se denomina *error de reconstrucción*. Esta optimización se realiza a través de una *función de pérdida* que se define como la diferencia entre $x_i$ y $x_i'$.
 
-Formalmente, podemos establecer estas definiciones: 
+Formalmente, podemos establecer estas definiciones [@delatorreAutocodificadoresVariacionalesVAE2023]: 
 
 - Sea $x$ el espacio de características de los datos de entrada y $z$ el espacio latente, ambos espacios son euclidianos, $x = \mathbb{R}^m$ y $z = \mathbb{R}^n$, donde $m > n$.
 - Sea las siguientes funciones paramétricas $C_\theta: x \rightarrow z$ y $D_\phi: z \rightarrow x'$ que representan el codificador y decodificador respectivamente.
 - Entonces para cada observación $x_i \in x$, el autocodificador busca minimizar la función de pérdida $L(x_i, D_\phi(E_\theta(x_i)))$. Ambas funciones $E_\theta$ y $D_\phi$ son redes neuronales profundas que se entrenan simultáneamente.
 
-Para optimizar un autocodificador se requiere una función que permita medir la diferencia entre la observación original y la reconstrucción. En la práctica, se utiliza generalmente la *distancia euclidia* entre $x_i$ y $x_i'$, es decir, $||x_i - x_i'||^2$. Esta función de pérdida se define como la suma de todas las distancias a lo largo del conjunto de datos de entrenamiento. Tenemos entonces que: 
+Para optimizar un autocodificador se requiere una función que permita medir la diferencia entre la observación original y la reconstrucción. En la práctica, se utiliza generalmente la *distancia euclidia* entre $x_i$ y $x_i'$, es decir, $||x_i - x_i'||^2$. La función de pérdida se define como la suma de todas las distancias a lo largo del conjunto de datos de entrenamiento. Tenemos entonces que: 
 
 > $L(\theta, \phi)$ =  $argmin_{\theta, \phi} \sum_{i=1}^{N} ||x_i - D_\phi(C_\theta(x_i))||^2$
 
 Donde $L(\theta, \phi)$ representa la función de pérdida que queremos minimizar: $\theta$ son los parámetros del codificador $C$ y $\phi$ son los parámetros del decodificados $D$.
-
 
 <!---
 https://chatgpt.com/share/c1e86afb-15e4-463c-ac87-6808816a6764
@@ -60,13 +59,12 @@ En esta arquitectura en lugar de realizar transformaciones determinísticas de l
 
 Así, la red codificadora, también llamada *red de reconocimiento*, transforma la distribución de probabilidad de los datos de entrada en una distribución de probabilidad -generalmente más simple (e.g. distribucion normal multivaridada)- en el espacio latente. La red decodificadora, también llamada *red generativa*, transforma la distribución de probabilidad del espacio latente en una distribución de probabilidad en el espacio de características. 
 
-Dado un conjunto de datos de entrada $x = \{x_1, x_2, ..., x_N\}$, donde $x_i \in \mathbb{R}^m$, se asume que cada muestra es generada por un mismo proceso o sistema subyacente cuya distribución de probabilidad se desconoce y se busca modelar. El modelo buscado procura aprender $p_\theta(x)$, donde $\theta$ son los parámetros de la función. En su versión logarítimica se expresa como: 
+Dado un conjunto de datos de entrada $x = \{x_1, x_2, ..., x_N\}$, donde $x_i \in \mathbb{R}^m$, se asume que cada muestra es generada por un mismo proceso o sistema subyacente cuya distribución de probabilidad se desconoce y se busca modelar. El modelo buscado procura aprender $p_\theta(x)$, donde $\theta$ son los parámetros de la función. En su versión logarítimica[^1] se expresa como: 
+
+[^1]: Esta función se lee como la log-verosimilitud de los datos observados $x$ bajo el modelo $p_\theta(x)$ y es igual a la suma de las log-verosimilitudes de cada dato de entrada $x_i$.
+
 
 > $\log p_\theta(x) = \sum_{x_i \in x} \log p_\theta(x)$
-
-<!---
-Esta función se lee como la log-verosimilitud de los datos observados $x$ bajo el modelo $p_\theta(x)$ y es igual a la suma de las log-verosimilitudes de cada dato de entrada $x_i$.
--->
 
 La forma más común de calcular el parámetro $\theta$ es a través del estimador de *máxima verosimilitud*, cuya función de optimización es: 
 
@@ -90,7 +88,9 @@ Para abordar este problema, se acude a la inferencia variacional que introduce u
 
 Así, en lugar de maximizar directamente la verosimilitud marginal, se maximiza una cota inferior conocida como *límite inferior de evidencia* (*ELBO* son sus siglas en ingles), dando lugar a la función:
 
-> $\log p_\theta(x) \geq \left(\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)] - \text{KL}(q_\phi(z|x) \| p_\theta(z)) \right)$
+> $\log p_\theta(x) \geq \left(\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)] - \text{KL}(q_\phi(z|x) \| p_\theta(z)) \right)$ [^convexidadlogaritmos]
+
+[^convexidadlogaritmos] Nótese que ese límite es siempre inferior y esto deriba de una de las propiedades de las funciones convexas. Esta propiedad, denominada *desigualdad de Jensen*, establece que el valor esperado de una función convexa es siempre menor o igual a la función de la esperanza. O sea, $\mathbb{E}[f(x)] \leq f(\mathbb{E}[x])$. En este caso, la función logaritmo es cóncava, por lo que la desigualdad se invierte: $\log(\mathbb{E}[x]) \geq \mathbb{E}[\log(x)]$.
 
 Donde:
 
