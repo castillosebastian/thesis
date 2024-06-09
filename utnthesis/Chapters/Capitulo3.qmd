@@ -88,7 +88,7 @@ Nótese que esta integral puede ser intratable en la práctica, debido a que no 
 
 Para abordar este problema, se acude a la inferencia variacional que introduce una aproximación $q_\phi(z|x)$ a la verdadera distribución posterior $p_\theta(z|x)$. Generalmente se emplea la distribución normal multivariada para aproximar la distribución *a posteriori*, con media y varianza parametrizadas por la red neuronal. Sin embargo, la elección de la distribución no necesariamente tiene que pasar por una distribución normal pues lo importante es que sea una distribución que permita la diferenciación y el cálculo de la divergencia entre ambas distribuciones (por ejemplo si $X$ es binaria la distribución $p_\theta(x|z)$ puede ser una distribución de Bernoulli).
 
-Así, en lugar de maximizar directamente la verosimilitud marginal, se maximiza una cota inferior conocida como *límite inferior de evidencia* (*ELBO* son sus siglas en ingles), dando lugar a la función:
+Así, en lugar de maximizar directamente el logaritmos de la verosimilitud (*log-verosimilitud), se maximiza una cota inferior conocida como *límite inferior de evidencia* (*ELBO* son sus siglas en ingles), dando lugar a la función:
 
 > $\log p_\theta(x) \geq \left(\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)] - \text{KL}(q_\phi(z|x) \| p_\theta(z)) \right)$ [^convexidadlogaritmos]
 
@@ -96,15 +96,10 @@ Así, en lugar de maximizar directamente la verosimilitud marginal, se maximiza 
 
 Donde:
 
-- $\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)]$ es el valor esperado (*esperanza*[^esperanza]) de la log-verosimilitud bajo la aproximación variacional, y determina la precision de la reconstrucción de los datos de entrada. Un valor alto de esta esperanza indica que el modelo es capaz de reconstruir los datos de entrada con alta precisión a partir de los parámetros generados por la distribución aproximada.
+- $\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)]$ es el valor esperado (*esperanza*[^esperanza]) de la log-verosimilitud bajo la aproximación variacional, y determina la precision de la reconstrucción de los datos de entrada (un valor alto de esta esperanza indica que el modelo es capaz de reconstruir los datos de entrada con alta precisión a partir de los parámetros generados por la distribución aproximada).
 - $\text{KL}(q_\phi(z|x) \| p_\theta(z))$ es la divergencia de Kullback-Leibler entre la distribución aproximada $q_\phi(z|x)$ y la distribución *a priori* de las variables latentes  $p_\theta(z)$, y determina la regularización del espacio latente.
   
-[^esperanza]:La esperanza es esencialmente un promedio ponderado de todos los posibles valores que puede tomar la variable aleatoria, donde los pesos son las probabilidades de esos valores. En un VAE, donde consideramos una distribución aproximada $q_\phi(z|x)$ para el espacio latente, la expresión citada es la esperanza de la log-verosimilitud bajo esta distribución.En la práctica se usa **muestreo** para aproximarla, es decir, en lugar de calcular la integral (o suma) exacta, se toman muestras $z^{(i)}$ de la distribución $q_\phi(z|x)$ y se calcula el promedio de las log-verosimilitudes correspondientes:
-
-    $[ \mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)] \approx \frac{1}{N} \sum_{i=1}^N \log p_\theta (x|z^{(i)})]$
-
-    Aquí, $N$ es el número de muestras. 
-
+[^esperanza]:La esperanza es esencialmente un promedio ponderado de todos los posibles valores que puede tomar la variable aleatoria, donde los pesos son las probabilidades de esos valores. En un VAE, donde consideramos una distribución aproximada $q_\phi(z|x)$ para el espacio latente, la expresión citada es la esperanza de la log-verosimilitud bajo esta distribución.Aunque teóricamente esto implica un promedio sobre todas las posibles muestras $z$  de la distribución $q_\phi(z|x)$, en la práctica, esta esperanza se estima utilizando una única muestra durante el entrenamiento para mejorar la eficiencia computacional. Esta única muestra permite calcular directamente $\log p_\theta (x_i|z_i)$, proporcionando una aproximación a la esperanza teórica y determinando la precisión de la reconstrucción de los datos de entrada.
 
 Maximizando esta cota inferior (*ELBO*), se optimizan simultáneamente los parámetros $\theta$ del modelo y los parámetros $\phi$ de la distribución empleada en la aproximación, permitiendo una inferencia eficiente y escalable en modelos con variables latentes.
 
