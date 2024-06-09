@@ -96,8 +96,15 @@ Así, en lugar de maximizar directamente la verosimilitud marginal, se maximiza 
 
 Donde:
 
-- $\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)]$ es la esperanza de la log-verosimilitud bajo la aproximación variacional, y determina la precision de la reconstrucción de los datos de entrada.
+- $\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)]$ es el valor esperado (*esperanza*[^esperanza]) de la log-verosimilitud bajo la aproximación variacional, y determina la precision de la reconstrucción de los datos de entrada. Un valor alto de esta esperanza indica que el modelo es capaz de reconstruir los datos de entrada con alta precisión a partir de los parámetros generados por la distribución aproximada.
 - $\text{KL}(q_\phi(z|x) \| p_\theta(z))$ es la divergencia de Kullback-Leibler entre la distribución aproximada $q_\phi(z|x)$ y la distribución *a priori* de las variables latentes  $p_\theta(z)$, y determina la regularización del espacio latente.
+  
+[^esperanza]:La esperanza es esencialmente un promedio ponderado de todos los posibles valores que puede tomar la variable aleatoria, donde los pesos son las probabilidades de esos valores. En un VAE, donde consideramos una distribución aproximada $q_\phi(z|x)$ para el espacio latente, la expresión citada es la esperanza de la log-verosimilitud bajo esta distribución.En la práctica se usa **muestreo** para aproximarla, es decir, en lugar de calcular la integral (o suma) exacta, se toman muestras $z^{(i)}$ de la distribución $q_\phi(z|x)$ y se calcula el promedio de las log-verosimilitudes correspondientes:
+
+    $[ \mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)] \approx \frac{1}{N} \sum_{i=1}^N \log p_\theta (x|z^{(i)})]$
+
+    Aquí, $N$ es el número de muestras. 
+
 
 Maximizando esta cota inferior (*ELBO*), se optimizan simultáneamente los parámetros $\theta$ del modelo y los parámetros $\phi$ de la distribución empleada en la aproximación, permitiendo una inferencia eficiente y escalable en modelos con variables latentes.
 
