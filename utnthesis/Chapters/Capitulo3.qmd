@@ -52,9 +52,9 @@ An Introduction to Variational Autoencoders, KINGMA,2019
 
 Los Autocodificadores Variacionales (AVs) buscan resolver los problemas de discontinuidad y falta de regularidad en el espacio latente de los Autocodificadores. Comparten con éstos la arquitectura *codificador-decodificador*, pero introducen importantes modificaciones en su funcionamiento. 
 
-En esta arquitectura en lugar de realizar transformaciones determinísticas de los datos de entrada a un espacio latente, se busca modelar la distribución de probabilidad de los datos de entrenamiento aproximando la distribución *a posteriori* de las variables latentes $p_\theta(z|x)$.
+En esta arquitectura en lugar de realizar transformaciones determinísticas de los datos de entrada, se busca modelar la distribución de probabilidad de los datos de entrenamiento aproximando la distribución *a posteriori* de las variables latentes $p_\theta(z|x)$.
 
-Así, la red codificadora, también llamada *red de reconocimiento*, transforma la distribución de probabilidad de los datos de entrada en una distribución de probabilidad -generalmente más simple (e.g. distribucion normal multivaridada)- en el espacio latente. La red decodificadora, también llamada *red generativa*, transforma la distribución de probabilidad del espacio latente en una distribución de probabilidad en el espacio de características. 
+En los AVs la red codificadora, también llamada *red de reconocimiento*, transforma la distribución de probabilidad de los datos de entrada en una distribución de probabilidad -generalmente más simple (e.g. distribucion normal multivaridada)- en el espacio latente. La red decodificadora, también llamada *red generativa*, transforma la distribución de probabilidad del espacio latente en una distribución de probabilidad en el espacio de características. 
 
 ![Autocoficadores Variacionales](autocodificadores_variacionales.png)
 
@@ -68,27 +68,21 @@ An Introduction to Variational Autoencoders, KINGMA,2019
 
 > $\log p_\theta(x) = \sum_{x_i \in x} \log p_\theta(x)$
 
-La forma más común de calcular el parámetro $\theta$ es a través del estimador de *máxima verosimilitud*, cuya función de optimización es: 
+La forma más común de calcular el parámetro $\theta$ es a través del estimador de *máxima verosimilitud*, cuya función de optimización es: $\theta^* = \arg \max_\theta \log p_\theta(x)$, es decir, buscamos los parámetros $\theta$ que maximizan la log-verosimilitud asignada a los datos por el modelo. 
 
-> $\theta^* = \arg \max_\theta \log p_\theta(x)$, 
+En el contexto de los AVs, el objetivo es modelar la distribución de probabilidad de los datos observados $x$ a través de una distribución de probabilidad conjunta de variables observadas y latentes $p_\theta(x, z)$. Esta distribución conjunta se puede factorizar en  $p_\theta(x, z) = p_\theta(x|z) p_\theta(z)$, donde $p_\theta(z)$ comunmente se la denomina como 'distribución *a priori*' de las variables latentes (debido a que no está condicionada por ninguna observación) y $p_\theta(x|z)$ es la probabilidad condicional de los datos observados dados los latentes. 
 
-es decir, buscamos los parámetros $\theta$ que maximizan la log-verosimilitud asignada a los datos por el modelo. 
+En esta distribución conjunta, para determinar la distribución marginal respecto de los datos observados, es preciso integrar sobre todos los elementos de $z$, dando como resultado la siguiente función:
 
-Dicho lo anterior, cabe resaltar que, en el contexto de los AVs, el objetivo es modelar la distribución de probabilidad de los datos observados $x$ a través de una distribución de probabilidad conjunta de variables observadas y latentes. Así, la función de verosimilitud de los datos observados se expresa como:
+> $p_\theta(x) = \int p_\theta(x,z)dz$ [^zdiferenciacion] 
 
-> $p_\theta(x, z) = p_\theta(x|z) p_\theta(z)$,  
+[^zdiferenciacion]: Aquí $dz$ es el diferencial de $z$, por lo que la expresión indica la integración infinitesimal sobre todas las posibles configuraciones de la variable latente.
 
-que permite hacer explícita la dependencia de $x$ respecto de $z$.
-
-En este punto surge un problema: para calcular la verosimilitud de los datos observados es preciso marginalizar la distribución de probabilidad conjunta con respecto a la variable latente. Esto se define como *probabilidad marginal* y se expresa como:
-
-> $p_\theta(x) = \int p_\theta(x|z)p_\theta(z)dz$
-
-Nótese que esta integral puede ser intratable en la práctica, debido a que no dispone de una solución analítica definida ni tampoco una solución numérica eficiente: $p_\theta(x)$ puede ser multimodal o de alta dimensionalidad, dificultando el cálculo de la integral. 
+Esta distribución marginal puede ser extremadamente compleja, y contener un número indeterminable de dependencias[@kingmaIntroductionVariationalAutoencoders2019], volviendo el calculo de la verosimilitud de los datos observados intratable. La intratabilidad de $p_\theta(x)$ está determinada por la intratabilidad de la distribución *a posteriori* $p_\theta(z|x)$: esta puede ser multimodal o de alta dimensionalidad dificultando una solución analítica o numérica eficiente. Este obstáculo impide la diferenciación y por lo tanto la optimización de los parámetros del modelo. 
 
 Para abordar este problema, se acude a la inferencia variacional que introduce una aproximación $q_\phi(z|x)$ a la verdadera distribución posterior $p_\theta(z|x)$. Generalmente se emplea la distribución normal multivariada para aproximar la distribución *a posteriori*, con media y varianza parametrizadas por la red neuronal. Sin embargo, la elección de la distribución no necesariamente tiene que pasar por una distribución normal pues lo importante es que sea una distribución que permita la diferenciación y el cálculo de la divergencia entre ambas distribuciones (por ejemplo si $X$ es binaria la distribución $p_\theta(x|z)$ puede ser una distribución de Bernoulli).
 
-Así, en lugar de maximizar directamente el logaritmos de la verosimilitud (*log-verosimilitud), se maximiza una cota inferior conocida como *límite inferior de evidencia* (*ELBO* son sus siglas en ingles), dando lugar a la función:
+Así, en lugar de maximizar directamente el logaritmo de la verosimilitud (*log-verosimilitud), se maximiza una cota inferior conocida como *límite inferior de evidencia* (*ELBO* son sus siglas en ingles), dando lugar a la función:
 
 > $\log p_\theta(x) \geq \left(\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)] - \text{KL}(q_\phi(z|x) \| p_\theta(z)) \right)$ [^convexidadlogaritmos]
 
@@ -96,8 +90,8 @@ Así, en lugar de maximizar directamente el logaritmos de la verosimilitud (*log
 
 Donde:
 
-- $\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)]$ es el valor esperado (*esperanza*[^esperanza]) de la log-verosimilitud bajo la aproximación variacional, y determina la precision de la reconstrucción de los datos de entrada (un valor alto de esta esperanza indica que el modelo es capaz de reconstruir los datos de entrada con alta precisión a partir de los parámetros generados por la distribución aproximada).
-- $\text{KL}(q_\phi(z|x) \| p_\theta(z))$ es la divergencia de Kullback-Leibler entre la distribución aproximada $q_\phi(z|x)$ y la distribución *a priori* de las variables latentes  $p_\theta(z)$, y determina la regularización del espacio latente.
+- $\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)]$ es el valor esperado (*esperanza*[^esperanza]) de la log-verosimilitud bajo la aproximación variacional, y determina la precision de la reconstrucción de los datos de entrada (un valor alto de esta esperanza indica que el modelo es capaz de reconstruir los datos de entrada con alta precisión a partir de los parámetros generados por $q_\phi(z|x)$).
+- $\text{KL}(q_\phi(z|x) \| p_\theta(z))$ es la divergencia de Kullback-Leibler entre la distribución $q_\phi(z|x)$ y la distribución *a priori* de las variables latentes  $p_\theta(z)$, y determina la regularización del espacio latente.
   
 [^esperanza]:La esperanza es esencialmente un promedio ponderado de todos los posibles valores que puede tomar la variable aleatoria, donde los pesos son las probabilidades de esos valores. En un VAE, donde consideramos una distribución aproximada $q_\phi(z|x)$ para el espacio latente, la expresión citada es la esperanza de la log-verosimilitud bajo esta distribución.Aunque teóricamente esto implica un promedio sobre todas las posibles muestras $z$  de la distribución $q_\phi(z|x)$, en la práctica, esta esperanza se estima utilizando una única muestra durante el entrenamiento para mejorar la eficiencia computacional. Esta única muestra permite calcular directamente $\log p_\theta (x_i|z_i)$, proporcionando una aproximación a la esperanza teórica y determinando la precisión de la reconstrucción de los datos de entrada.
 
