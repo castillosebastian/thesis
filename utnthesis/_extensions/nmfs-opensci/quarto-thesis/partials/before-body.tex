@@ -10,8 +10,8 @@
 \begin{center}
 
 \vspace*{.06\textheight}
-{\scshape\LARGE \univname\par}\vspace{1.5cm} % University name
-\textsc{\Large Doctoral Thesis}\\[0.5cm] % Thesis type
+{\scshape\LARGE \univname\par}\vspace{1cm} % University name
+\textsc{\Large Tesis de Maestría}\\[0.5cm] % Thesis type
 
 \HRule \\[0.4cm] % Horizontal line
 {\huge \bfseries \ttitle\par}\vspace{0.4cm} % Thesis title
@@ -19,7 +19,7 @@
  
 \begin{minipage}[t]{0.4\textwidth}
 \begin{flushleft} \large
-\emph{Author:}\\
+\emph{Autor:}\\
 $if(author.url)$
 \href{$author.url$}{\authorname} % Author name - remove the \href bracket to remove the link
 $else$
@@ -29,7 +29,7 @@ $endif$
 \end{minipage}
 \begin{minipage}[t]{0.4\textwidth}
 \begin{flushright} \large
-\emph{Supervisor:} \\
+\emph{Directores:} \\
 $if(thesis.supervisor.url)$%
 \href{$thesis.supervisor.url$}{\supname} % Supervisor name - remove the \href bracket to remove the link  
 $else$%
@@ -40,10 +40,10 @@ $endif$
  
 \vfill
 
-\large \textit{A thesis submitted in fulfillment of the requirements\\ for the degree of \degreename}\\[0.3cm] % University requirement text
-\textit{in the}\\[0.4cm]
+\large \textit{Tesis presentada en cumplimiento de los requisitos \\ para el grado de \degreename}\\[0.3cm] % University requirement text
+\textit{en}\\[0.4cm]
 \groupname\\
-\deptname\\[2cm] % Research group name and department name
+\deptname\\[1cm] % Research group name and department name
  
 \vfill
 
@@ -56,7 +56,7 @@ $endif$
 $endif$
 
 $if(book.date)$
-{\large $book.date$}\\[4cm] % Date
+{\large $book.date$}\\[1cm] % Date
 $endif$
 
  
