@@ -1,18 +1,18 @@
 # Autocodificadores Variacionales {#sec-Capitulo3}
 
-En este capítulos presentamos la arquitectura del Autocodificador Variacional (VAE) que empleamos para la generación de datos sintéticos. Exponemos brevemente sus fundamentos teóricos, los pasos que hemos seguidos en su implementación en este trabajo y las variaciones introducidas para su apropiada aplicación a los problemas abordados. En el capítulo siguiente nos enfocaremos en los Algoritmos Genéticos, sus fundamentos y características. Finalmente, el último capítulo expondremos los resultados obtenidos combinando ambas tecnologías para resolver problemas de selección de características.
+En este capítulos presentamos la arquitectura del Autocodificador Variacional (AV) que empleamos para la generación de datos sintéticos. Exponemos brevemente sus fundamentos teóricos, los pasos que hemos seguidos en su implementación en este trabajo y las variaciones introducidas para su apropiada aplicación a los problemas abordados. En el capítulo siguiente nos enfocaremos en los Algoritmos Genéticos, sus fundamentos y características. Finalmente, el último capítulo expondremos los resultados obtenidos combinando ambas tecnologías para resolver problemas de selección de características.
 
 ## Modelos generativos
 
-Los modelos generativos (MG) son un amplio conjunto de algoritmos de aprendizaje automático que buscan modelar la distribución de probabilidad de datos observados $p(x)$. Estos modelos permiten generar nuevos datos que se asemejan a los datos originales, lo que los hace útiles en tareas de generación de datos sintéticos, imputación de datos faltantes, reducción de dimensionalidad y selección de características, entre otros.
+Los modelos generativos (MG) son un amplio conjunto de algoritmos de aprendizaje automático que buscan modelar la distribución de probabilidad de datos observados $p_\theta(x)$. Estos modelos permiten generar nuevos datos que se asemejan a los datos originales, y se aplican en tareas de generación de datos sintéticos, imputación de datos faltantes, reducción de dimensionalidad y selección de características, entre otros.
 
-Los modelos generativos pueden tener como *inputs* diferentes tipos de datos, como imágenes, texto, audio, entre otros. Por ejemplo, las imágenes son un tipo de datos para los cuales los MG han demostrado ser muy efectivos. En este caso, cada dato de entrada $x$ es una imagen que puede estar representada por un vector miles de elementos  que corresponden a los valores de píxeles. El objetivo de un modelo generativo es aprender las dependencias [@doerschTutorialVariationalAutoencoders2021]  entre los píxeles (e.g. pixeles vecinos tienden a tener valores similares) y poder generar nuevas imágenes que se asemejen a las imágenes originales.
+Los modelos generativos pueden tener como *inputs* diferentes tipos de dato, como imágenes, texto, audio, entre otros. Por ejemplo, las imágenes son un tipo de dato para los cuales los MG han demostrado gran efectividad. En este caso, cada dato de entrada $x$ es una imagen que puede estar representada por un vector miles de elementos  que corresponden a los valores de píxeles. El objetivo de un modelo generativo es aprender las dependencias [@doerschTutorialVariationalAutoencoders2021]  entre los píxeles (e.g. pixeles vecinos tienden a tener valores similares) y poder generar nuevas imágenes que se asemejen a las imágenes originales.
 
 Podemos formalizar esta idea asumiendo que tenemos ejemplos de datos $x$, distribuidos según una distribución de probabilidad no conocida que queremos modelo $p_\theta(x)$ para que sea capaz de generar datos similares a los originales. 
 
 ## Autocodificadores
 
-Los autocodificadores son un tipo de MG especializado en la representación de un espacio de características dado en un espacio de menor dimensión [@delatorreAutocodificadoresVariacionalesVAE2023].  El objetivo de esta transformación es obtener una representación de baja dimensionalidad y mayor fidelidad posible del espacio original. Para ello el modelo debe aprender una representación significativa de los datos observados, reduciendo las señales de entrada a sus dimensiones más importantes. 
+Los autocodificadores son un tipo de MG especializado en la representación de un espacio de características dado en un espacio de menor dimensión [@delatorreAutocodificadoresVariacionalesVAE2023].  El objetivo de esta transformación es obtener una representación de baja dimensionalidad y la mayor fidelidad posible del espacio original. Para ello el modelo debe aprender una representación significativa de los datos observados, reduciendo las señales de entrada a sus dimensiones más importantes. 
 
 Los autocodificadores se componen de dos partes: un *codificador* y un *decodificador*. El *codificador* es una función que toma una observación $x_i$ y la transforma en un vector de menor dimensión $z$, mientras que el *decodificador* toma el vector $z$ y lo transforma en una observación $x_i'$ que -idealmente- se asemeja a la observación original. Este vector de menor dimensión $z$ es conocido como *espacio latente*.
 
@@ -52,54 +52,78 @@ An Introduction to Variational Autoencoders, KINGMA,2019
 
 Los Autocodificadores Variacionales (AVs) buscan resolver los problemas de discontinuidad y falta de regularidad en el espacio latente de los Autocodificadores. Comparten con éstos la arquitectura *codificador-decodificador*, pero introducen importantes modificaciones en su funcionamiento. 
 
-En esta arquitectura en lugar de realizar transformaciones determinísticas de los datos de entrada, se busca modelar la distribución de probabilidad de los datos de entrenamiento aproximando la distribución *a posteriori* de las variables latentes $p_\theta(z|x)$.
+En esta arquitectura en lugar de realizar transformaciones determinísticas de los datos de entrada, se busca modelar la distribución de probabilidad de dichos datos aproximando la distribución *a posteriori* de las variables latentes $p_\theta(z|x)$.
 
 En los AVs la red codificadora, también llamada *red de reconocimiento*, transforma la distribución de probabilidad de los datos de entrada en una distribución de probabilidad -generalmente más simple (e.g. distribucion normal multivaridada)- en el espacio latente. La red decodificadora, también llamada *red generativa*, transforma la distribución de probabilidad del espacio latente en una distribución de probabilidad en el espacio de características. 
 
 ![Autocoficadores Variacionales](autocodificadores_variacionales.png)
 
-Dado un conjunto de datos de entrada $x = \{x_1, x_2, ..., x_N\}$, donde $x_i \in \mathbb{R}^m$, se asume que cada muestra es generada por un mismo proceso o sistema subyacente cuya distribución de probabilidad se desconoce y se busca modelar. El modelo buscado procura aprender $p_\theta(x)$, donde $\theta$ son los parámetros de la función. En su versión logarítimica[^flogverosimilitud] se expresa como: 
+Dado un conjunto de datos de entrada $x = \{x_1, x_2, ..., x_N\}$, donde $x_i \in \mathbb{R}^m$, se asume que cada muestra es generada por un mismo proceso o sistema subyacente cuya distribución de probabilidad se desconoce. El modelo buscado procura aprender $p_\theta(x)$, donde $\theta$ son los parámetros de la función. Por las ventajas que ofrece el logaritmo[^ventajaslogaritmo] para el cálculo de la misma tendremos la siguiente expresión: 
 
-[^flogverosimilitud]: Esta función se lee como la log-verosimilitud de los datos observados $x$ bajo el modelo $p_\theta(x)$ y es igual a la suma de la log-verosimilitud de cada dato de entrada $x_i$.
+[^ventajaslogaritmo]: El logaritmo convierte la probabilidad conjunta (que se calcula como el producto de las probabilidades condicionales) en una suma de logaritmos, facilitando el cálculo y evitando problemas de precisión numérica: $\log(ab) = \log(a)+\log(b)$. 
+
+> $\log p_\theta(x) = \sum_{x_i \in x} \log p_\theta(x)$[^flogverosimilitud]
+
+[^flogverosimilitud]:Esta función se lee como la log-verosimilitud de los datos observados $x$ bajo el modelo $p_\theta(x)$ y es igual a la suma de la log-verosimilitud de cada dato de entrada $x_i$. 
 
 <!---
 An Introduction to Variational Autoencoders, KINGMA,2019
 -->
 
-> $\log p_\theta(x) = \sum_{x_i \in x} \log p_\theta(x)$
-
 La forma más común de calcular el parámetro $\theta$ es a través del estimador de *máxima verosimilitud*, cuya función de optimización es: $\theta^* = \arg \max_\theta \log p_\theta(x)$, es decir, buscamos los parámetros $\theta$ que maximizan la log-verosimilitud asignada a los datos por el modelo. 
 
-En el contexto de los AVs, el objetivo es modelar la distribución de probabilidad de los datos observados $x$ a través de una distribución de probabilidad conjunta de variables observadas y latentes $p_\theta(x, z)$. Esta distribución conjunta se puede factorizar en  $p_\theta(x, z) = p_\theta(x|z) p_\theta(z)$, donde $p_\theta(z)$ comunmente se la denomina como 'distribución *a priori*' de las variables latentes (debido a que no está condicionada por ninguna observación) y $p_\theta(x|z)$ es la probabilidad condicional de los datos observados dados los latentes. 
+En el contexto de los AVs, el objetivo es modelar la distribución de probabilidad de los datos observados $x$ a través de una distribución de probabilidad conjunta de variables observadas y latentes: $p_\theta(x, z)$. Aplicando la regla de la cadena de probabilidad podemos factorizar la distribución conjunta de la siguiente manera: $p_\theta(x, z) = p_\theta(x|z) p_\theta(z)$. Aquí $p_\theta(x|z)$ es la probabilidad condicional de los datos observados dados los latentes, y $p_\theta(z)$ es la probabilidad *a priori*[^apriori] de los latentes.
 
-En esta distribución conjunta, para determinar la distribución marginal respecto de los datos observados, es preciso integrar sobre todos los elementos de $z$, dando como resultado la siguiente función:
+[^apriori]: La expresión *a priori* alude a que no está condicionada por ningun dato observado.
+
+Para determinar la distribución marginal respecto de los datos observados, es preciso integrar sobre todos los elementos de $z$, dando como resultado la siguiente función:
 
 > $p_\theta(x) = \int p_\theta(x,z)dz$ [^zdiferenciacion] 
 
-[^zdiferenciacion]: Aquí $dz$ es el diferencial de $z$, por lo que la expresión indica la integración infinitesimal sobre todas las posibles configuraciones de la variable latente.
+[^zdiferenciacion]: Aquí $dz$ es el diferencial de $z$, por lo que la expresión indica la integración sobre todas las posibles configuraciones de la variable latente.
 
-Esta distribución marginal puede ser extremadamente compleja, y contener un número indeterminable de dependencias[@kingmaIntroductionVariationalAutoencoders2019], volviendo el calculo de la verosimilitud de los datos observados intratable. La intratabilidad de $p_\theta(x)$ está determinada por la intratabilidad de la distribución *a posteriori* $p_\theta(z|x)$: esta puede ser multimodal o de alta dimensionalidad dificultando una solución analítica o numérica eficiente. Este obstáculo impide la diferenciación y por lo tanto la optimización de los parámetros del modelo. 
+Esta distribución marginal puede ser extremadamente compleja, y contener un número indeterminable de dependencias [@kingmaIntroductionVariationalAutoencoders2019], volviendo el calculo de la verosimilitud de los datos observados intratable. Esta intratabilidad de $p_\theta(x)$ está determinada por la intratabilidad de la distribución *a posteriori* $p_\theta(z|x)$, cuya dimensionalidad y multi-modalidad pueden hacer difícil cualquier solución analítica o numérica eficiente. Dicho obstáculo impide la diferenciación y por lo tanto la optimización de los parámetros del modelo. 
 
-Para abordar este problema, se acude a la inferencia variacional que introduce una aproximación $q_\phi(z|x)$ a la verdadera distribución posterior $p_\theta(z|x)$. Generalmente se emplea la distribución normal multivariada para aproximar la distribución *a posteriori*, con media y varianza parametrizadas por la red neuronal. Sin embargo, la elección de la distribución no necesariamente tiene que pasar por una distribución normal pues lo importante es que sea una distribución que permita la diferenciación y el cálculo de la divergencia entre ambas distribuciones (por ejemplo si $X$ es binaria la distribución $p_\theta(x|z)$ puede ser una distribución de Bernoulli).
+Para abordar este problema, se acude a la inferencia variacional que introduce una aproximación $q_\phi(z|x)$ a la verdadera distribución *a posteriori* $p_\theta(z|x)$. Generalmente se emplea la distribución normal multivariada para aproximar la distribución *a posteriori*, con media y varianza parametrizadas por la red neuronal[^normalmultivariada]. Sin embargo, la elección de la distribución no necesariamente tiene que pasar por una distribución normal, el único requerimiento es que sea una distribución que permita la diferenciación y el cálculo de la divergencia entre ambas distribuciones (por ejemplo si $X$ es binaria la distribución $p_\theta(x|z)$ puede ser una distribución Bernoulli).
 
-Así, en lugar de maximizar directamente el logaritmo de la verosimilitud (*log-verosimilitud), se maximiza una cota inferior conocida como *límite inferior de evidencia* (*ELBO* son sus siglas en ingles), dando lugar a la función:
+[^normalmultivariada]: En AVs, se suele asumir que $z$ sigue una distribución normal multivariada: $p_\theta(z) = \mathcal{N}(z; 0, I)$, con media cero y matriz de covarianza identidad. La matriz de covarianza identidad es una matriz diagonal con unos en la diagonal y ceros en los demás lugares, y su empleo simplifica la implementación del modelo, permite que las variables latentes sean independientes (covarianza = 0) y varianza unitaria, evitando así cualquier complejidad vinculada a las dependencias entre dimensiones de $z$.
 
-> $\log p_\theta(x) \geq \left(\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)] - \text{KL}(q_\phi(z|x) \| p_\theta(z)) \right)$ [^convexidadlogaritmos]
+Así, en lugar de maximizar directamente el logaritmo de la verosimilitud (*log-verosimilitud*), se maximiza una cota inferior conocida como *límite inferior de evidencia* (*ELBO* por sus siglas en ingles). La derivación procede de la siguiente manera:
 
-[^convexidadlogaritmos]: Nótese que ese límite es siempre menor o igual y esto se deriva de una de las propiedades de las funciones convexas. Esta propiedad, denominada *desigualdad de Jensen*, establece que el valor esperado de una función convexa es siempre mayor o igual a la función del valor esperado. Es decir, $\mathbb{E}[f(x)] \geq f(\mathbb{E}[x])$. En el caso de funciones cóncavas, la desigualdad se invierte: $\mathbb{E}[f(x)] \leq f(\mathbb{E}[x])$. En este caso, la función logaritmo es cóncava, por lo que la desigualdad se expresa como: $\log(\mathbb{E}[x]) \geq \mathbb{E}[\log(x)]$.
+1. Log-verosimilitud marginal:   
+   
+   $\log p_\theta(x) = \log \left( \int p_\theta(x, z) \, dz \right)$
+
+2. Aplicando inferencia variacional:   
+   
+   $\log p_\theta(x) = \log \left( \int q_\phi(z|x) \frac{p_\theta(x, z)}{q_\phi(z|x)} \, dz \right)$
+
+3. Aplicando la desigualdad de Jensen[^desigualdadJensen]:   
+   
+   $\log p_\theta(x) \geq \mathbb{E}_{q_\phi(z|x)} \left[ \log \left( \frac{p_\theta(x, z)}{q_\phi(z|x)} \right) \right]$
+
+4. Descomponiendo la fracción dentro del logaritmo:   
+   
+   $\log p_\theta(x) \geq \mathbb{E}_{q_\phi(z|x)} \left[ \log p_\theta(x|z) + \log p_\theta(z) - \log q_\phi(z|x) \right]$
+
+5. El resultando es el límite inferior de evidencia:       
+   
+> $\log p_\theta(x) \geq \mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)] - D_{\text{KL}}(q_\phi(z|x) \| p_\theta(z))$ 
+
+[^desigualdadJensen]: Nótese que ese límite es siempre menor o igual y esto se deriva de una de las propiedades de las funciones convexas. Esta propiedad, denominada *desigualdad de Jensen*, establece que el valor esperado de una función convexa es siempre mayor o igual a la función del valor esperado. Es decir, $\mathbb{E}[f(x)] \geq f(\mathbb{E}[x])$. En el caso de funciones cóncavas, la desigualdad se invierte: $\mathbb{E}[f(x)] \leq f(\mathbb{E}[x])$. En este caso, la función logaritmo es cóncava, por lo que la desigualdad se expresa como: $\log(\mathbb{E}[x]) \geq \mathbb{E}[\log(x)]$.
 
 Donde:
 
 - $\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)]$ es el valor esperado (*esperanza*[^esperanza]) de la log-verosimilitud bajo la aproximación variacional, y determina la precision de la reconstrucción de los datos de entrada (un valor alto de esta esperanza indica que el modelo es capaz de reconstruir los datos de entrada con alta precisión a partir de los parámetros generados por $q_\phi(z|x)$).
-- $\text{KL}(q_\phi(z|x) \| p_\theta(z))$ es la divergencia de Kullback-Leibler entre la distribución $q_\phi(z|x)$ y la distribución *a priori* de las variables latentes  $p_\theta(z)$, y determina la regularización del espacio latente.
+- $D_{\text{KL}}(q_\phi(z|x) \| p_\theta(z))$ es la divergencia de Kullback-Leibler entre la distribución $q_\phi(z|x)$ y la distribución *a priori* de las variables latentes  $p_\theta(z)$, y determina la regularización del espacio latente.
   
-[^esperanza]:La esperanza es esencialmente un promedio ponderado de todos los posibles valores que puede tomar la variable aleatoria, donde los pesos son las probabilidades de esos valores. En un VAE, donde consideramos una distribución aproximada $q_\phi(z|x)$ para el espacio latente, la expresión citada es la esperanza de la log-verosimilitud bajo esta distribución.Aunque teóricamente esto implica un promedio sobre todas las posibles muestras $z$  de la distribución $q_\phi(z|x)$, en la práctica, esta esperanza se estima utilizando una única muestra durante el entrenamiento para mejorar la eficiencia computacional. Esta única muestra permite calcular directamente $\log p_\theta (x_i|z_i)$, proporcionando una aproximación a la esperanza teórica y determinando la precisión de la reconstrucción de los datos de entrada.
+[^esperanza]:La esperanza es un promedio ponderado de todos los posibles valores que puede tomar una variable aleatoria, donde los pesos son las probabilidades de esos valores. En un AV, donde consideramos una distribución aproximada $q_\phi(z|x)$ para el espacio latente, la expresión citada es la esperanza de la log-verosimilitud bajo esta distribución.Aunque teóricamente esto implica un promedio sobre todas las posibles muestras $z$  de la distribución $q_\phi(z|x)$, en la práctica, esta esperanza se estima utilizando una única muestra durante el entrenamiento por razones de  eficiencia computacional. Esta única muestra permite calcular directamente $\log p_\theta (x_i|z_i)$, proporcionando una aproximación a la esperanza teórica y determinando la precisión de la reconstrucción de los datos de entrada.
 
-Maximizando esta cota inferior (*ELBO*), se optimizan simultáneamente los parámetros $\theta$ del modelo y los parámetros $\phi$ de la distribución empleada en la aproximación, permitiendo una inferencia eficiente y escalable en modelos con variables latentes.
+Maximizando esta cota inferior (*ELBO*), se optimizan simultáneamente los parámetros $\theta$ del modelo y los parámetros $\phi$ de la distribución empleada en la aproximación, permitiendo una inferencia eficiente y escalable en modelos con $z$ de alta dimensionalidad.
 
 El objetivo de aprendizaje del AV se da entonces por:
 
-> $\mathcal{L}_\theta,_\phi(x) = \max(\phi,\theta) \left( E_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)] - \text{KL}(q_\phi(z|x) \| p_\theta(z)) \right),$
+> $\mathcal{L}_\theta,_\phi(x) = \max(\phi,\theta) \left( E_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)] - D_{\text{KL}}(q_\phi(z|x) \| p_\theta(z)) \right),$
 
 Como puede apreciearse en la ecuación anterior la función de pérdida del AV se compone de dos términos: el primero es la esperanza de la log-verosimilitud bajo la aproximación variacional y el segundo es la divergencia de Kullback-Leibler relacionada a la reconstrucción de los datos y la regularización del espacio latente. Existe entre ambos términos una relación de compromiso que permite al AV aprender una representación representativa de los datos de entrada y, al mismo tiempo, un espacio latente continuo y regularizado. Cuanto mayor sea la divergencia de Kullback-Leibler, más regularizado será el espacio latente y más suave será la distribución de probabilidad de los datos generados. Cuanto menor sea la divergencia de Kullback-Leibler, más se parecerá la distribución de probabilidad de los datos generados a la distribución de probabilidad de los datos de entrada, sin embargo, el espacio latente será menos regularizado y la generación de datos mas ruidosa.
 

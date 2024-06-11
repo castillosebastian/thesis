@@ -114,3 +114,180 @@ Como puede apreciearse en la ecuación anterior la función de pérdida del AV s
 <!---
 Girin, Dynamical Variational Autoencoders: A Comprehensive Review
 -->
+
+# Consultas varias
+
+#### Logaritmos
+
+La razón de emplear logaritmo como función objetivo para el cálculo de la verosimilitud radica en su conveniencia para el cálculo. El logaritmo convierte la probabilidad conjunta (que se calcula como el producto de las probabilidades condicionales) en una suma de logaritmos, lo que facilita el cálculo y evita problemas de precisión numérica: $\log(ab) = \log(a)+\log(b)$. 
+
+
+#### Probabilidad conjunta
+
+La probabilidad conjunta en el contexto de los Autoencoders Variacionales (VAEs) se refiere a la distribución conjunta de los datos observados \(x\) y las variables latentes \(z\). En los VAEs, esta probabilidad conjunta se modela de manera que podamos descomponerla y manejarla más fácilmente. Aquí te explico cómo se calcula la probabilidad conjunta:
+
+### Probabilidad Conjunta en VAEs:
+
+1. **Definición**:
+   - La probabilidad conjunta \(p_\theta(x, z)\) describe cómo los datos observados \(x\) y las variables latentes \(z\) se relacionan en el modelo.
+
+2. **Descomposición de la Probabilidad Conjunta**:
+   - La probabilidad conjunta se descompone usando la regla de la cadena de probabilidad:
+     \[
+     p_\theta(x, z) = p_\theta(x|z) \, p_\theta(z)
+     \]
+   - Aquí, \(p_\theta(x|z)\) es la probabilidad condicional de los datos observados \(x\) dados los latentes \(z\), y \(p_\theta(z)\) es la probabilidad prior de las variables latentes.
+
+### Componentes de la Probabilidad Conjunta:
+
+1. **Probabilidad Condicional \(p_\theta(x|z)\)**:
+   - Esta distribución describe cómo se generan los datos observados a partir de las variables latentes. En VAEs, esto suele estar modelado por una red neuronal que toma \(z\) como entrada y produce una distribución sobre \(x\).
+
+2. **Probabilidad Prior \(p_\theta(z)\)**:
+   - Esta es la distribución a priori sobre las variables latentes \(z\). En VAEs, se suele asumir que \(z\) sigue una distribución normal multivariada:
+     \[
+     p_\theta(z) = \mathcal{N}(z; 0, I)
+     \]
+   - Aquí, \(\mathcal{N}(z; 0, I)\) es una distribución normal con media cero y matriz de covarianza identidad.
+
+### Ejemplo de Cálculo:
+
+Supongamos que estamos trabajando con un modelo VAE simple donde:
+
+- \(p_\theta(x|z)\) es una distribución normal con media y varianza determinadas por una red neuronal parametrizada por \(\theta\).
+- \(p_\theta(z)\) es una distribución normal estándar.
+
+La probabilidad conjunta se calcula como:
+
+1. **Obteniendo el prior**:
+   \[
+   p_\theta(z) = \mathcal{N}(z; 0, I)
+   \]
+
+2. **Obteniendo la probabilidad condicional**:
+   - Supongamos que la red neuronal parametrizada por \(\theta\) produce una media \(\mu_\theta(z)\) y una desviación estándar \(\sigma_\theta(z)\) para \(x\) dado \(z\).
+   - Entonces, \(p_\theta(x|z)\) es:
+     \[
+     p_\theta(x|z) = \mathcal{N}(x; \mu_\theta(z), \sigma_\theta(z)^2)
+     \]
+
+3. **Calculando la probabilidad conjunta**:
+   - La probabilidad conjunta es el producto de estas dos distribuciones:
+     \[
+     p_\theta(x, z) = p_\theta(x|z) \, p_\theta(z)
+     \]
+   - Sustituyendo las distribuciones normales, se tiene:
+     \[
+     p_\theta(x, z) = \mathcal{N}(x; \mu_\theta(z), \sigma_\theta(z)^2) \, \mathcal{N}(z; 0, I)
+     \]
+
+### Integración en el Contexto de VAEs:
+
+En los VAEs, la probabilidad conjunta \(p_\theta(x, z)\) se usa en el cálculo de la verosimilitud marginal \(p_\theta(x)\) y en la maximización de la ELBO. Para calcular la verosimilitud marginal, integramos \(z\) sobre la probabilidad conjunta:
+
+\[
+p_\theta(x) = \int p_\theta(x, z) \, dz = \int p_\theta(x|z) \, p_\theta(z) \, dz
+\]
+
+Dado que esta integral suele ser intratable, los VAEs utilizan una distribución aproximada \(q_\phi(z|x)\) y optimizan la ELBO:
+
+\[
+\log p_\theta(x) \geq \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)] - D_{\text{KL}}(q_\phi(z|x) \parallel p_\theta(z))
+\]
+
+### Resumen:
+
+La probabilidad conjunta \(p_\theta(x, z)\) en los VAEs se descompone en la probabilidad condicional \(p_\theta(x|z)\) y la probabilidad prior \(p_\theta(z)\). Esta descomposición permite manejar y optimizar el modelo de manera efectiva, incluso cuando la integración exacta es intratable.
+
+
+#### Derivación del ELBO
+
+Para entender mejor cómo se usa el logaritmo en la derivación de la ELBO, consideremos el siguiente desarrollo:
+
+1. **Log-verosimilitud marginal**:
+   $\log p_\theta(x) = \log \left( \int p_\theta(x, z) \, dz \right)$
+
+2. **Aplicando el truco de la variación**:
+   $\log p_\theta(x) = \log \left( \int q_\phi(z|x) \frac{p_\theta(x, z)}{q_\phi(z|x)} \, dz \right) $
+
+3. **Aplicando la desigualdad de Jensen**:
+   $\log p_\theta(x) \geq \mathbb{E}_{q_\phi(z|x)} \left[ \log \left( \frac{p_\theta(x, z)}{q_\phi(z|x)} \right) \right]$
+
+4. **Descomponiendo la fracción dentro del logaritmo**:
+   $\log p_\theta(x) \geq \mathbb{E}_{q_\phi(z|x)} \left[ \log p_\theta(x|z) + \log p_\theta(z) - \log q_\phi(z|x) \right]$
+
+5. **Resultando en la ELBO**:
+   $\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)] - D_{\text{KL}}(q_\phi(z|x) \parallel p_\theta(z))$
+
+Vamos a revisar y explicar cada paso de la derivación de la cota inferior variacional (ELBO) para los Autoencoders Variacionales (VAEs).
+
+### Paso 1: Log-verosimilitud marginal
+
+La log-verosimilitud marginal de los datos observados \(x\) se expresa como:
+
+\[
+\log p_\theta(x) = \log \left( \int p_\theta(x, z) \, dz \right)
+\]
+
+**Explicación**:
+- Aquí, \(p_\theta(x, z)\) es la probabilidad conjunta de los datos observados \(x\) y las variables latentes \(z\).
+- La integral \(\int p_\theta(x, z) \, dz\) marginaliza sobre todas las posibles configuraciones de \(z\) para obtener la probabilidad marginal de \(x\).
+
+### Paso 2: Aplicando el truco de la variación
+
+Introducimos una distribución variacional \(q_\phi(z|x)\) para aproximar la verdadera posterior \(p_\theta(z|x)\):
+
+\[
+\log p_\theta(x) = \log \left( \int q_\phi(z|x) \frac{p_\theta(x, z)}{q_\phi(z|x)} \, dz \right)
+\]
+
+**Explicación**:
+- Multiplicamos y dividimos por \(q_\phi(z|x)\), una distribución aproximante que parametrizamos con \(\phi\).
+- Esto es válido porque \(\frac{q_\phi(z|x)}{q_\phi(z|x)} = 1\), y permite reformular la integral de una manera que facilita la aplicación de la desigualdad de Jensen.
+
+### Paso 3: Aplicando la desigualdad de Jensen
+
+Aplicamos la desigualdad de Jensen a la expresión anterior para obtener una cota inferior:
+
+\[
+\log p_\theta(x) \geq \mathbb{E}_{q_\phi(z|x)} \left[ \log \left( \frac{p_\theta(x, z)}{q_\phi(z|x)} \right) \right]
+\]
+
+**Explicación**:
+- La desigualdad de Jensen establece que \(\log \mathbb{E}[X] \geq \mathbb{E}[\log X]\) para una variable aleatoria \(X\).
+- Aquí, \(X\) es \(\frac{p_\theta(x, z)}{q_\phi(z|x)}\), y estamos tomando la esperanza con respecto a la distribución \(q_\phi(z|x)\).
+
+### Paso 4: Descomponiendo la fracción dentro del logaritmo
+
+Descomponemos el logaritmo de la fracción:
+
+\[
+\log p_\theta(x) \geq \mathbb{E}_{q_\phi(z|x)} \left[ \log p_\theta(x|z) + \log p_\theta(z) - \log q_\phi(z|x) \right]
+\]
+
+**Explicación**:
+- La fracción \(\frac{p_\theta(x, z)}{q_\phi(z|x)}\) se descompone usando las propiedades de los logaritmos:
+  \[
+  \frac{p_\theta(x, z)}{q_\phi(z|x)} = \frac{p_\theta(x|z) p_\theta(z)}{q_\phi(z|x)}
+  \]
+- Al tomar el logaritmo de esta fracción, obtenemos:
+  \[
+  \log \left( \frac{p_\theta(x, z)}{q_\phi(z|x)} \right) = \log p_\theta(x|z) + \log p_\theta(z) - \log q_\phi(z|x)
+  \]
+
+### Paso 5: Resultando en la ELBO
+
+La expresión final se convierte en la Evidencia Inferior Variacional (ELBO):
+
+\[
+\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)] - D_{\text{KL}}(q_\phi(z|x) \parallel p_\theta(z))
+\]
+
+**Explicación**:
+- El primer término \(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\) es la esperanza (media) de la log-verosimilitud condicional, evaluada con respecto a la distribución \(q_\phi(z|x)\).
+- El segundo término \(D_{\text{KL}}(q_\phi(z|x) \parallel p_\theta(z))\) es la divergencia de Kullback-Leibler, que mide la diferencia entre la distribución aproximada \(q_\phi(z|x)\) y la prior \(p_\theta(z)\).
+- Maximizar la ELBO implica maximizar la verosimilitud condicional esperada y minimizar la divergencia KL, lo que ajusta \(q_\phi(z|x)\) para que sea una buena aproximación de \(p_\theta(z|x)\).
+
+### Resumen:
+
+La derivación muestra cómo se obtiene una cota inferior variacional (ELBO) para la log-verosimilitud marginal de los datos. Este enfoque permite optimizar modelos generativos complejos como los VAEs, donde la integración exacta es intratable. La ELBO se convierte en la función objetivo que los VAEs maximizan durante el entrenamiento, balanceando la precisión de la reconstrucción y la regularización de la estructura latente.
