@@ -291,3 +291,124 @@ La expresión final se convierte en la Evidencia Inferior Variacional (ELBO):
 ### Resumen:
 
 La derivación muestra cómo se obtiene una cota inferior variacional (ELBO) para la log-verosimilitud marginal de los datos. Este enfoque permite optimizar modelos generativos complejos como los VAEs, donde la integración exacta es intratable. La ELBO se convierte en la función objetivo que los VAEs maximizan durante el entrenamiento, balanceando la precisión de la reconstrucción y la regularización de la estructura latente.
+
+# Perdida en el VAE
+
+### Relación entre la Distancia Euclídea y el Error Cuadrático Medio
+
+La **distancia euclídea** y el **error cuadrático medio (MSE, por sus siglas en inglés)** están estrechamente relacionados:
+
+1. **Distancia Euclídea**:
+   - Es una medida de la distancia directa (en línea recta) entre dos puntos en un espacio euclidiano.
+   - Para dos puntos \( \mathbf{x} \) y \( \mathbf{y} \) en un espacio n-dimensional, se define como:
+     \[
+     d(\mathbf{x}, \mathbf{y}) = \sqrt{\sum_{i=1}^{n} (x_i - y_i)^2}
+     \]
+
+2. **Error Cuadrático Medio (MSE)**:
+   - Es una medida estadística que cuantifica la diferencia promedio al cuadrado entre los valores estimados por un modelo y los valores reales.
+   - Para un conjunto de valores predichos \( \hat{y} \) y valores reales \( y \), se define como:
+     \[
+     \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (\hat{y}_i - y_i)^2
+     \]
+   - El MSE es proporcional al cuadrado de la distancia euclídea entre los valores predichos y los reales.
+
+En resumen, el MSE es esencialmente la distancia euclídea al cuadrado promedio entre los puntos predichos y los puntos reales. 
+
+### Relación con la Entropía Cruzada
+
+La **entropía cruzada** es una métrica de pérdida diferente y se usa comúnmente en problemas de clasificación:
+
+1. **Entropía Cruzada**:
+   - Mide la discrepancia entre dos distribuciones de probabilidad: la distribución verdadera \( p \) y la distribución estimada \( q \).
+   - Para una clasificación binaria, se define como:
+     \[
+     H(p, q) = -\frac{1}{n} \sum_{i=1}^{n} [y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i)]
+     \]
+   - Aquí, \( y \) es el valor verdadero (0 o 1) y \( \hat{y} \) es el valor predicho (probabilidad).
+
+La entropía cruzada es particularmente útil en problemas donde los resultados son probabilidades, mientras que el MSE es más adecuado para problemas de regresión donde las predicciones son valores continuos.
+
+### Métrica de Pérdida en VAE
+
+En un **Variational Autoencoder (VAE)**, se utilizan dos tipos de métricas de pérdida:
+
+1. **Reconstrucción**:
+   - Mide la diferencia entre la entrada original y la salida reconstruida por el decodificador.
+   - Comúnmente, se usa el error cuadrático medio (MSE) para datos continuos o la entropía cruzada para datos binarios.
+
+2. **Regularización (KL Divergence)**:
+   - Es una medida de cuán diferente es la distribución latente aprendida \( q(z|x) \) de la distribución prior \( p(z) \), usualmente una distribución normal.
+   - La divergencia KL (Kullback-Leibler) se define como:
+     \[
+     D_{\text{KL}}(q(z|x) \| p(z)) = \int q(z|x) \log \frac{q(z|x)}{p(z)} dz
+     \]
+
+La pérdida total de un VAE es una combinación de estas dos métricas:
+\[
+\text{Pérdida total} = \text{Pérdida de reconstrucción} + D_{\text{KL}}(q(z|x) \| p(z))
+\]
+
+En resumen, en los VAE se utiliza una métrica de pérdida compuesta que incluye tanto el error cuadrático medio (o la entropía cruzada) para la reconstrucción, como la divergencia KL para la regularización.
+
+
+# Cambio de Signo en la optimización
+
+La diferencia entre la representación teórica y la implementación práctica de la pérdida en un Variational Autoencoder (VAE) radica en el contexto de la optimización que se está realizando. Vamos a explorar esto con más detalle.
+
+### Teoría: Evidencia Inferior Variacional (ELBO)
+
+En la teoría, cuando derivamos el objetivo de un VAE, estamos maximizando la evidencia inferior variacional (ELBO) de la probabilidad logarítmica de los datos:
+
+\[
+\log p(x) \geq \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)] - D_{\text{KL}}(q_\phi(z|x) \| p(z))
+\]
+
+Aquí:
+- \(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\) es el término de reconstrucción esperado.
+- \(D_{\text{KL}}(q_\phi(z|x) \| p(z))\) es la divergencia KL entre la distribución aproximada \(q_\phi(z|x)\) y la distribución prior \(p(z)\).
+
+Nuestro objetivo es maximizar el ELBO para que la aproximación sea lo más cercana posible a la verdadera distribución de los datos.
+
+### Práctica: Minimización de la Pérdida
+
+En la práctica, al entrenar modelos de machine learning, trabajamos con optimizadores que minimizan una función de pérdida. Para convertir el problema de maximización del ELBO en un problema de minimización, simplemente negamos el ELBO:
+
+\[
+\text{Pérdida} = -\left(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)] - D_{\text{KL}}(q_\phi(z|x) \| p(z))\right)
+\]
+
+Esto se puede reescribir como:
+
+\[
+\text{Pérdida} = D_{\text{KL}}(q_\phi(z|x) \| p(z)) - \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]
+\]
+
+Sin embargo, en la implementación, generalmente se presenta de una manera que suma los términos, ya que es más intuitivo trabajar con términos de pérdida positiva:
+
+\[
+\text{Pérdida} = -\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)] + D_{\text{KL}}(q_\phi(z|x) \| p(z))
+\]
+
+### Reconstrucción y KL en Práctica
+
+Para simplificar aún más, cuando implementamos esto en código, el término de reconstrucción negativo se convierte en una pérdida de reconstrucción positiva (por ejemplo, MSE o entropía cruzada), y la divergencia KL ya es una medida positiva:
+
+```python
+# Reconstrucción (usualmente como pérdida positiva)
+reconstruction_loss = ((x - x_hat) ** 2).sum()  # MSE
+
+# Divergencia KL (siempre positiva)
+kl_loss = autoencoder.encoder.kl
+
+# Pérdida total como suma de términos positivos
+loss = reconstruction_loss + kl_loss
+
+# Paso de retropropagación
+loss.backward()
+optimizer.step()
+```
+
+### Resumen
+
+En resumen, aunque teóricamente maximizamos el ELBO y esto involucra una resta, en la práctica minimizamos la pérdida negando el ELBO y reescribiendo los términos para trabajar con sumas de cantidades positivas. Esto es porque los optimizadores como SGD, Adam, etc., están diseñados para minimizar funciones de pérdida.
