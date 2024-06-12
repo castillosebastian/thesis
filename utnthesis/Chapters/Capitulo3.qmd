@@ -12,7 +12,7 @@ Podemos formalizar esta idea asumiendo que tenemos ejemplos de datos $x$, distri
 
 ## Autocodificadores
 
-Los autocodificadores son un tipo de MG especializado en la representación de un espacio de características dado en un espacio de menor dimensión [@delatorreAutocodificadoresVariacionalesVAE2023].  El objetivo de esta transformación es obtener una representación de baja dimensionalidad y la mayor fidelidad posible del espacio original. Para ello el modelo debe aprender una representación significativa de los datos observados, reduciendo las señales de entrada a sus dimensiones más importantes. 
+Los autocodificadores son un tipo de MG especializado en la representación de un espacio de características dado en un espacio de menor dimensión [@delatorreAutocodificadoresVariacionalesVAE2023].  El objetivo de esta transformación es obtener una representación de baja dimensionalidad y la mayor fidelidad posible del espacio original. Para ello el modelo debe aprender a preservar la mayor cantidad de información relevante en un vector denso de menos dimensiones que las originales, y descartar -al mismo tiempo- lo irrelevante. Luego, a partir de esa información codificada, se busca reconstruir los datos observados según el espacio original.
 
 Los autocodificadores se componen de dos partes: un *codificador* y un *decodificador*. El *codificador* es una función que toma una observación $x_i$ y la transforma en un vector de menor dimensión $z$, mientras que el *decodificador* toma el vector $z$ y lo transforma en una observación $x_i'$ que -idealmente- se asemeja a la observación original. Este vector de menor dimensión $z$ es conocido como *espacio latente*.
 
@@ -40,21 +40,22 @@ https://chatgpt.com/share/c1e86afb-15e4-463c-ac87-6808816a6764
 
 En el proceso de aprendizaje antes descripto, la optimización no está sujeta a otra restricción mas que  minimizar la diferencia entre la observación original y la reconstrucción, dando lugar a espacios latentes generalmente discontinuos. Esto sucede porque la red puede aprender a representar los datos de entrada de manera eficiente sin necesidad de aprender una representación continua. En la arquitectura del autocodificador no hay determinantes para que dos puntos cercanos en el espacio de características se mapeen a puntos cercanos en el espacio latente. 
 
-Esta discontinuidad en el espacio latente hace posible que ciertas regiones de este espacio no tengan ninguna relación válida con el espacio de características. Esto es un problema en la generación de datos, ya que la red podrá generar representaciones alejadas de los datos originales. Regularmente lo que se busca en los MG, no es simplemente una generación de datos completemante igual o totalmente distintos a los orginales, sino cierta situación intermedia donde los nuevos datos introducen variaciones en características específicas. 
+Esta discontinuidad en el espacio latente hace posible que ciertas regiones de este espacio no tengan ninguna relación válida con el espacio de características. Durante el entrenamiento el modelo simplemente no ha tenido que reconstruir datos cuyas distribuciones coincidan con estas regiones. Esto es un problema en la generación de datos, ya que la red podrá generar representaciones alejadas de los datos originales. Regularmente lo que se busca en los MG, no es simplemente una generación de datos completemante igual o totalmente distintos a los orginales, sino cierta situación intermedia donde los nuevos datos introducen variaciones en características específicas. 
 
 ![Discontinuidad del espacio latente](espacio_latente_discontinuo.png)
 
 ## Autocodificadores Variacionales
 
 <!---
-An Introduction to Variational Autoencoders, KINGMA,2019
+1. An Introduction to Variational Autoencoders, KINGMA,2019
+2. (Amazing) https://towardsdatascience.com/intuitively-understanding-variational-autoencoders-1bfe67eb5daf
 -->
 
-Los Autocodificadores Variacionales (AVs) buscan resolver los problemas de discontinuidad y falta de regularidad en el espacio latente de los Autocodificadores. Comparten con éstos la arquitectura *codificador-decodificador*, pero introducen importantes modificaciones en su funcionamiento. 
+Los Autocodificadores Variacionales (AVs) buscan resolver los problemas de discontinuidad y falta de regularidad en el espacio latente de los Autocodificadores. Comparten con éstos la arquitectura *codificador-decodificador*, pero introducen importantes modificaciones en su diseño para crear un espacio latente continuo. 
 
-En esta arquitectura en lugar de realizar transformaciones determinísticas de los datos de entrada, se busca modelar la distribución de probabilidad de dichos datos aproximando la distribución *a posteriori* de las variables latentes $p_\theta(z|x)$.
+Estos modelos, a diferencia de los autocodificadores tradicionales que realizan transformaciones determinísticas de los datos de entrada (codificándolos como vectores *n*-dimensionales), buscan modelar la distribución de probabilidad de dichos datos aproximando la distribución *a posteriori* de las variables latentes $p_\theta(z|x)$. Para ello, la codificación se produce mediante la generación de dos vectores ($\mu$ y $\sigma$)  que conforman los parámetros de la distribución empleada en la aproximación.
 
-En los AVs la red codificadora, también llamada *red de reconocimiento*, transforma la distribución de probabilidad de los datos de entrada en una distribución de probabilidad -generalmente más simple (e.g. distribucion normal multivaridada)- en el espacio latente. La red decodificadora, también llamada *red generativa*, transforma la distribución de probabilidad del espacio latente en una distribución de probabilidad en el espacio de características. 
+La red codificadora, también llamada *red de reconocimiento*, mapea los datos de entrada $x$ a una distribución de probabilidad en el espacio latente, que generalmente es una distribución más simple, como la distribución normal multivariada. La red decodificadora, también llamada *red generativa*, toma muestras del espacio latente usando los parámetros $\mu$ y $\sigma\$ y las transforma en una distribución de probabilidad en el espacio de características, generando nuevas instancias que reflejan la probabilidad de los datos originales. Estas transformaciones implican que, incluso para el mismo dato observado (donde los parámetros de $z$ son iguales), el dato de salida podrá ser diferente debido al proceso estocástico de reconstrucción.
 
 ![Autocoficadores Variacionales](autocodificadores_variacionales.png)
 
@@ -124,7 +125,7 @@ Donde:
 
 Maximizando esta cota inferior (*ELBO*), se optimizan simultáneamente los parámetros $\theta$ del modelo y los parámetros $\phi$ de la distribución empleada en la aproximación, permitiendo una inferencia eficiente y escalable en modelos con $z$ de alta dimensionalidad [^cambiosignoencodigooptimizacion].
 
-[^cambiosignoencodigooptimizacion]:En la teoría, cuando derivamos el objetivo de un AV, estamos maximizando la evidencia inferior variacional (ELBO), para que la aproximación sea lo más cercana posible a la verdadera distribución de los datos. LLevado el problema a una implementación práctica generalmente se emplean optimizadores (SGD, Adam, etc.) que minimizan una función de pérdida. Para convertir el problema de maximización del ELBO en un problema de minimización, simplemente negamos el ELBO, resultando que los términos de la ecuación se reescriben como suma de cantidades positivas. El error de reconstrucción se mide, según los casos, mediante MSE o entropía cruzada. 
+[^cambiosignoencodigooptimizacion]:En la teoría, cuando derivamos el objetivo de un AV, estamos maximizando la evidencia inferior variacional (ELBO), para que la aproximación sea lo más cercana posible a la verdadera distribución de los datos. LLevado el problema a una implementación práctica generalmente se emplean optimizadores (SGD, Adam, etc.) que minimizan una función de pérdida. Para convertir el problema de maximización del ELBO en un problema de minimización, simplemente negamos el ELBO, resultando que los términos de la ecuación se reescriben como suma de cantidades positivas. El error o pérdida de reconstrucción se mide, según los casos, mediante MSE o entropía cruzada. 
 
 El objetivo de aprendizaje del AV se da entonces por:
 

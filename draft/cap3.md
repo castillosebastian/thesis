@@ -412,3 +412,9 @@ optimizer.step()
 ### Resumen
 
 En resumen, aunque teóricamente maximizamos el ELBO y esto involucra una resta, en la práctica minimizamos la pérdida negando el ELBO y reescribiendo los términos para trabajar con sumas de cantidades positivas. Esto es porque los optimizadores como SGD, Adam, etc., están diseñados para minimizar funciones de pérdida.
+
+
+
+---
+
+Con estas sugerencias, el texto debería ser más claro y preciso en su explicación de los VAE.
