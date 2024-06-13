@@ -12,13 +12,13 @@ Podemos formalizar esta idea asumiendo que tenemos ejemplos de datos $x$, distri
 
 ## Autocodificadores
 
-Los autocodificadores son un tipo de MG especializado en la representación de un espacio de características dado en un espacio de menor dimensión [@delatorreAutocodificadoresVariacionalesVAE2023].  El objetivo de esta transformación es obtener una representación de baja dimensionalidad y la mayor fidelidad posible del espacio original. Para ello el modelo debe aprender a preservar la mayor cantidad de información relevante en un vector denso de menos dimensiones que las originales, y descartar -al mismo tiempo- lo irrelevante. Luego, a partir de esa información codificada, se busca reconstruir los datos observados según el espacio original.
+Los autocodificadores son un tipo de MG especializado en la representación de un espacio de características dado en un espacio de menor dimensión [@delatorreAutocodificadoresVariacionalesVAE2023].  El objetivo de esta transformación es obtener una representación de baja dimensionalidad y la mayor fidelidad posible del espacio original. Para ello el modelo aprende a preservar la mayor cantidad de información relevante en un vector denso de menos dimensiones que las originales, y descarta -al mismo tiempo- lo irrelevante. Luego, a partir de esa información codificada, se busca reconstruir los datos observados según el espacio original.
 
-Los autocodificadores se componen de dos partes: un *codificador* y un *decodificador*. El *codificador* es una función que toma una observación $x_i$ y la transforma en un vector de menor dimensión $z$, mientras que el *decodificador* toma el vector $z$ y lo transforma en una observación $x_i'$ que -idealmente- se asemeja a la observación original. Este vector de menor dimensión $z$ es conocido como *espacio latente*.
+Los autocodificadores se componen de dos partes: un *codificador* y un *decodificador*. El *codificador* es una función no lineal que opera sobre una observación $x_i$ y la transforma en un vector de menor dimensión $z$, mientras que el *decodificador* opera a partir del vector $z$ y lo transforma en una observación $x_i'$, buscando que se asemeja a la observación original. Este vector de menor dimensión $z$ es conocido como *espacio latente*.
 
 ![autocodificadores](autocodificadores.png)
 
-En el proceso de aprendizaje de un autocodificador, la red modela la distribución de probabilidad de los datos de entrada $x$ y aprende a mapearlos a un espacio latente $z$. Para ello, se busca minimizar la diferencia entre la observación original $x_i$ y la reconstrucción $x_i'$, diferencia que se denomina *error de reconstrucción*. Esta optimización se realiza a través de una *función de pérdida* que se define como la diferencia entre $x_i$ y $x_i'$.
+En el proceso de aprendizaje de un autocodificador, la red modela la distribución de probabilidad de los datos de entrada $x$ y aprende a mapearlos a un espacio latente $z$. Para ello, se busca minimizar la diferencia entre la observación original $x_i$ y la reconstrucción $x_i'$, diferencia que se denomina *error de reconstrucción*. Esta optimización se realiza a través de una *función de pérdida* que se define como la diferencia entre $x_i$ y $x_i'$, que permite la optimización simultánea del codificador y decodificador.
 
 Formalmente, podemos establecer estas definiciones [@delatorreAutocodificadoresVariacionalesVAE2023]: 
 
@@ -54,13 +54,13 @@ Esta discontinuidad en el espacio latente hace posible que ciertas regiones de e
 
 Los Autocodificadores Variacionales (AVs) buscan resolver los problemas de discontinuidad y falta de regularidad en el espacio latente de los Autocodificadores. Comparten con éstos la arquitectura *codificador-decodificador*, pero introducen importantes modificaciones en su diseño para crear un espacio latente continuo. 
 
-Estos modelos, a diferencia de los autocodificadores que realizan transformaciones determinísticas de los datos de entrada (codificándolos como vectores *n*-dimensionales), buscan modelar la distribución de probabilidad de dichos datos aproximando la distribución *a posteriori* de las variables latentes $p_\theta(z|x)$. Para ello, la codificación se produce mediante la generación de dos vectores ($\mu$ y $\sigma$)  que conforman los parámetros de la distribución empleada en la aproximación.
+Estos modelos, a diferencia de los autocodificadores que realizan transformaciones determinísticas de los datos de entrada (codificándolos como vectores *n*-dimensionales), buscan modelar la distribución de probabilidad de dichos datos aproximando la distribución *a posteriori* de las variables latentes $p_\theta(z|x)$. Para ello, la codificación se produce mediante la generación de dos vectores ($\mu$ y $\sigma$)  que conforman el espacio latente, a partir del cual se toman las muestras para la generación.
 
-La red codificadora, también llamada *red de reconocimiento*, mapea los datos de entrada $x$ a una distribución de probabilidad en el espacio latente, que generalmente es una distribución más simple, como la distribución normal multivariada. La red decodificadora, también llamada *red generativa*, toma muestras del espacio latente usando los parámetros $\mu$ y $\sigma$ y las transforma en una distribución de probabilidad en el espacio de características, generando nuevas instancias que reflejan la probabilidad de los datos originales. Estas transformaciones implican que, incluso para el mismo dato observado (donde los parámetros de $z$ son iguales), el dato de salida podrá ser diferente debido al proceso estocástico de reconstrucción.
+La red codificadora, también llamada *red de reconocimiento*, mapea los datos de entrada $x$ a los vectores $\mu$ de medias y $\sigma$ de desvíos estándar, que parametrizan una distribución de probabilidad en el espacio latente. Generalmente, esta distribución es una distribución  simple, como la distribución normal multivariada. La red decodificadora, también llamada *red generativa*, toma muestras de esta distribución para generar un vector, y lo transforma según la distribución de probabilidad preexistente del espacio de características. De esta manera, se generan nuevas instancias que reflejan la probabilidad de los datos originales. Estas transformaciones implican que, incluso para el mismo dato observado (donde los parámetros de $z$ son iguales), el dato de salida podrá ser diferente debido al proceso estocástico de reconstrucción.
 
 ![Autocoficadores Variacionales](autocodificadores_variacionales.png)
 
-Una forma de entender esta arquitectura sería relacionar los vectores que componen $z$ como 'referecias', donde el vector de medias controla el *centro* en torno al cual se distribuirán los valores codificados de los datos de entrada, mientras que el vector de los desvíos traza la *distancia* máxima que pueden asumir dichos valores respecto del *centro*. 
+Una forma de entender esta arquitectura sería relacionar los vectores que componen $z$ como 'referecias', donde el vector de medias controla el *centro* en torno al cual se distribuirán los valores codificados de los datos de entrada, mientras que el vector de los desvíos traza el *área* que pueden asumir dichos valores en torno al *centro*. 
 
 Para indagar en estas intuiciones, veamos la solución que proponen los AV detenidamente, utilizando un enfoque formal. Así, dado un conjunto de datos de entrada $x = \{x_1, x_2, ..., x_N\}$, donde $x_i \in \mathbb{R}^m$, se asume que cada muestra es generada por un mismo proceso o sistema subyacente cuya distribución de probabilidad se desconoce. El modelo buscado procura aprender $p_\theta(x)$, donde $\theta$ son los parámetros de la función. Por las ventajas que ofrece el logaritmo[^ventajaslogaritmo] para el cálculo de la misma tendremos la siguiente expresión: 
 
@@ -97,7 +97,7 @@ Así, en lugar de maximizar directamente el logaritmo de la verosimilitud (*log-
 <!---
 https://chatgpt.com/share/be24e1ef-14a3-40e4-a4c1-57ab925daed3
 -->
-1. Log-verosimilitud marginal:   
+1. Log-verosimilitud marginal (intratable):   
    
    $\log p_\theta(x) = \log \left( \int p_\theta(x, z) \, dz \right)$
 
@@ -123,6 +123,10 @@ Donde:
 
 - $\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)]$ es el valor esperado (*esperanza*[^esperanza]) de la log-verosimilitud bajo la aproximación variacional, y determina la precision de la reconstrucción de los datos de entrada (un valor alto de esta esperanza indica que el modelo es capaz de reconstruir los datos de entrada con alta precisión a partir de los parámetros generados por $q_\phi(z|x)$).
 - $D_{\text{KL}}(q_\phi(z|x) \| p_\theta(z))$ es la divergencia de Kullback-Leibler entre la distribución $q_\phi(z|x)$ y la distribución *a priori* de las variables latentes  $p_\theta(z)$, y determina la regularización del espacio latente.
+
+<!---
+https://www.countbayesie.com/blog/2017/5/9/kullback-leibler-divergence-explained
+-->
   
 [^esperanza]:La esperanza es un promedio ponderado de todos los posibles valores que puede tomar una variable aleatoria, donde los pesos son las probabilidades de esos valores. En un AV, donde consideramos una distribución aproximada $q_\phi(z|x)$ para el espacio latente, la expresión citada es la esperanza de la log-verosimilitud bajo esta distribución.Aunque teóricamente esto implica un promedio sobre todas las posibles muestras $z$  de la distribución $q_\phi(z|x)$, en la práctica, esta esperanza se estima utilizando una única muestra durante el entrenamiento por razones de  eficiencia computacional. Esta única muestra permite calcular directamente $\log p_\theta (x_i|z_i)$, proporcionando una aproximación a la esperanza teórica y determinando la precisión de la reconstrucción de los datos de entrada.
 
