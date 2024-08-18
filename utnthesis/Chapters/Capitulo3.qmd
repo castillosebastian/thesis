@@ -143,3 +143,4 @@ Como puede apreciearse en la ecuación anterior la función de pérdida del AV s
 <!---
 Girin, Dynamical Variational Autoencoders: A Comprehensive Review
 -->
+
