@@ -1,0 +1,292 @@
+Voy a presentarte la crónica de las tareas realizadas en el contexto de mi trabajo de Tesis de Maestría. Dicho trabajo tenía las siguientes características: "# Introducción {#sec-Capitulo1}
+
+En el campo del aprendizaje automático y la minería de datos, la selección de características es una tarea crítica que puede determinar el éxito de un modelo predictivo. La alta dimensionalidad y la complejidad inherente a muchos conjuntos de datos hacen que la selección de un subconjunto óptimo de características sea un desafío significativo. Este desafío se ve agravado cuando se dispone de un número limitado de muestras, lo que puede afectar negativamente la capacidad de un algoritmo para generalizar y ofrecer resultados robustos. 
+
+Los algoritmos genéticos (AG) se han consolidado como una herramienta poderosa para abordar problemas de optimización complejos, incluyendo la selección de características. Estos algoritmos, inspirados en la evolución natural, son capaces de explorar grandes espacios de búsqueda de manera efectiva, proporcionando soluciones cercanas al óptimo en una variedad de contextos. Sin embargo, la eficacia de los AGs depende en gran medida de la calidad y cantidad de datos disponibles para evaluar las posibles soluciones, lo que subraya la importancia de contar con un conjunto de datos adecuado.
+
+En este contexto, surge la necesidad de investigar estrategias que puedan mitigar las limitaciones impuestas por la disponibilidad limitada de datos. Una de las técnicas emergentes en este ámbito es la aumentación de datos mediante autoencoders variacionales (AVs). Los AVs, como modelos generativos, tienen la capacidad de crear muestras sintéticas que mantienen las propiedades fundamentales de los datos originales, lo que los convierte en una herramienta prometedora para mejorar la capacidad de los AGs en la selección de características.
+
+## 1.2 Planteamiento del Problema
+
+El problema central de esta investigación radica en la limitación que impone la disponibilidad de datos en el proceso de selección de características utilizando AGs. Esta limitación es especialmente crítica en escenarios de alta dimensionalidad y bajo número de muestras, donde la función objetivo, que guía la búsqueda de soluciones óptimas, puede degradarse significativamente. La pregunta que guía este trabajo es: ¿cómo puede la aumentación de datos mediante autoencoders variacionales mejorar el desempeño de los algoritmos genéticos en la selección de características?
+
+## 1.3 Importancia del Problema
+
+La selección de características no solo impacta en la precisión de los modelos predictivos, sino que también afecta la eficiencia computacional y la interpretabilidad de los resultados. En problemas de alta dimensionalidad, la capacidad de reducir el número de características relevantes sin perder información crucial es de vital importancia. Mejorar este proceso mediante la integración de técnicas de aumentación de datos podría tener un impacto significativo en diversas aplicaciones prácticas, desde la biología molecular hasta la ingeniería y las ciencias sociales.
+
+## Objetivos
+
+**General**:
+
+Evaluar el impacto de la aumentación de datos mediante autoencoders variacionales sobre el desempeño de estrategias de selección de características basados en algoritmos genéticos.
+
+2.  Integrar estrategias de aumentación de datos basadas en AVs en los AGs.
+
+3.  Evaluar el desempeño de las estrategias propuestas empleando conjuntos de datos de diferente complejidad.
+
+4.  Comparar el desempeño de AGs con datos aumentados mediante las estrategias desarrolladas frente a implementaciones sin aumentación.". La crónica de actividades para cumplir estos objectivos debes extraerla de las siguiente conversación que mantuve con mis Directores de tesis, que te detallo a continuación: ---------------------------------------------- > """ 
+
+Comunicaciones con mis Directores de Tesis
+
+-------
+Avances
+Inbox
+
+Claudio Sebastián Castillo <castilloclaudiosebastian@gmail.com>
+Attachments
+Mon, Nov 27, 2023, 9:17 AM
+to Matias, Leandro
+
+Buen día Matías y Leandro, cómo están?
+Estoy empezando el trabajo de investigación de mi tesis. Estoy en la etapa de evaluar cómo se desempeñan modelos tradicionales de ML en los 4 dataset analizados, teniendo en cuenta AUC y F1, y tiempo de entrenamiento. Les adjunto un adelanto de las evaluaciones. Destaco que trabajé con 18 modelos, salvo para el caso de GCM que trabajé con 10, debido a su dimensionalidad). Hice un ajuste fino basado de GridSearch de los mejores hiperparámetros, como para disponer de métricas de comparación realistas. Trabajé en la nube con una VM de 24 vCPU y 30 RAM. Todo funcionó bastante bien. Ahora estoy terminando de correr un último experimento sobre GCM. Tengo todos los experimentos documentos en mi repo (https://github.com/castillosebastian/ealab/tree/main/exp). Quería llegar a tener una reunión con ustedes y tener en la mano algo armado. De todas formas podemos repetir los experimentos las veces que ustedes digan.   
+Si les parece, podemos armar una reunión para ver estas cosas y los próximos pasos. Tengo muchas ganas de meterme con AV y su integración a AG, pero asumo que esta primera parte tiene que estar solida y bien armada para que luego sean válidas y ricas las comparaciones. 
+Entonces, espero que me digan cuándo podrían juntarse unos minutos. Tendría que ser despues de las 18.30, hora que salgo de trabajo. Les mando un saludo cordial
+PD. tengo una gran noticia para cuando nos juntemos :)
+------
+Avances
+Inbox
+
+Claudio Sebastián Castillo <castilloclaudiosebastian@gmail.com>
+Mon, Feb 5, 7:31 PM
+to Matias, Leandro
+
+Matías y Leandro, buen día, espero que hayan pasado muy bien y descansado. 
+Bueno, conforme lo conversado, les comento que estuve trabajando en la primera versión de nuestro VAE que pueden consultar aquí.  Y tiene varios experimentos vinculados. 
+Digo una primera versión, porque aunque estoy generando datos sintéticos y ensayando algunas pruebas de aumentación (con GCM y MADELON) no estoy teniendo mejoras en los resultados de clasificación utilizando un MLP. 
+Estuve yendo y viniendo con los scripts varias veces, y estoy convencido que el VAE que estoy trabajando no alcanza para codificar y reproducir las distribuciones subyacentes a los datos de entrenamiento. Pude confirmar esto luego de que intentara hacer una clasificación enteramente sobre datos sintéticos y obtuviera un resultado casi nulo (que se puede consultar aquí, línea 158 y siguientes). Ese simple experimento me demuestra que el problema está en la arquitectura del VAE. 
+Puesto a ver esta arquitectura con más detalle advierto que durante el entrenamiento el VAE no está mejorando sus métricas de evaluación. Por lo que no esta sería la señal confirmatoria que tengo que ajustar el VAE. 
+En este momento estoy viendo justamente eso. 
+Tenía pensado poder dedicarle unos días a este problema para llegar a la primera reunión con ustedes con las cosas pendientes terminadas:
+
+- eleccion de modelos     
+- corrida base con busqueda de hyperparámetros () y división original!    
+- implementar aumentación de datos x AVs    
+- experimentar dataset aumentados con modelos seleccionados
+
+Al mismo tiempo, estoy documentando todo esto como para ir perfilando los puntos iniciales de la tesis. 
+Bueno, los mantengo al tanto y les aviso cuando esté listo en los próximos días. 
+Cordialmente
+Claudio
+--------
+RESPUESTA DE MI DIRECTOR MATIAS GERARD
+Buenas tardes Claudio!!
+
+Si si, la verdad que fue un muy merecido descanso (aunque creo que me merezco un poco más... jajajajaja)
+Qué bueno que hayas podido avanzar!!
+Disculpá la demora, pero quería tomarme el tiempo de mirar bien lo que mandaste antes de responderte.
+Antes que desesperes 😅, te comento que estuve mirando el código y pareciera que está todo ok.
+Las dificultades que estás teniendo son naturales, y tienen que ver con el modelado del problema (por varios factores):
+Puede ser que la arquitectura usada sea pequeña y no alcance a capturar la estructura de los datos. Incluso, que las funciones de transferencia no sean las más adecuadas. Hay que seguir trabajando en eso 🤷
+Puede ser que el uso de la Binary Cross Entropy no sea la mejor opción, ya que esta medida determina cuán lejos estás del 0/1, y no el error cometido respecto de un valor de referencia real (las features de tu patrón, el cual querés aprender). En el caso de imágenes, puede ser entendible que quieras hacer que un pixel valga 0 o 1 (por ejemplo, cuando se aprende una máscara), pero en este caso estamos queriendo predecir los valores reales de las features de un patrón (que particularmente estás normalizando en el rango 0-1). Posiblemente convenga cambiar el cálculo del error para considerar el error absoluto o cuadrático en lugar de la BCE.
+Puede ser que la normalización de los datos te esté distorsionando la forma en que ve la distribución. Pensá que estás transformando cada "batch" de manera independiente, ya que no se aprenden los parámetros para ser aplicados al siguiente set de datos. No estoy seguro del efecto de esta parte, pero seguramente en algo debe estar influyendo.
+Fundamentalmente, el principal problema que vas a encontrar es que estás modelando las distribuciones (cada clase) de forma independiente. VAE trabaja aprendiendo la distribución de todos los datos (una suerte de suma de gausianas) y luego permite generar nuevos datos a partir de la distribución aprendida. Suponete que tenés 2 clases balanceadas y no solapadas (bien separadas). En ese caso, uno esperaría poder aprender las clases de forma independiente, ya que los datos no se pisan, y debería ser posible generar datos de cada clase sin problemas. Sin embargo, cuando las distribuciones se solapan, no es claro donde termina una y empieza la otra. Esto hace que al aprender por separado las distribuciones, se desconozcan los límites de cada una. Sin embargo, si se aprenden de forma simultánea, podés modelar mejor la distribución de los datos, aunque a costa de perder la capacidad de orientar la síntesis de datos a la clase que te interesa. Por eso es que pensamos en el uso de CVAE, que agrega una feature adicional que es la información de la clase que se está aprendiendo (y que también se usa para sintetizar), podría ayudar a salvar esta limitación. Este modelo debería ser capaz de aprender la distribución de los datos condicionada a cada clase, lo que permitiría orientar la síntesis a lo que nos interese.
+
+Para entender mejor todo este proceso, te propongo que explores el funcionamiento del VAE (y CVAE) usando datos artificiales. Podés usar la función make_blob de sklearn para generar 2 distribuciones en 2D y jugar con el efecto del solapamiento y del desbalance. Con esos datos tratá de entrenar un VAE (y un CVAE) y fijate como se distribuyen los datos originales y los sintetizados por los diferentes modelos. La ventaja de usar dats en 2D es que vas a poder ir graficando los resultados del modelo y coloreando las clases para ver qué pasa. Cuando tengas algunas pruebas hechas podemos juntarnos y analizar lo que fuiste obteniendo. Una vez que tengamos clara toda esta parte, podemos empezar probando con datos para problemas binarios y luego extenderlo a multiclase (es decir, aumentar la complejidad de manera progresiva, teniendo claro como uno esperaría que funcione). De paso te adelanto que antes de correr los clasificadores podría ser interesante buscar alguna medida o test estadístico que nos permita evaluar si los datos sintetizados provienen de la misma distribución para cada clase (estoy pensando en voz alta).
+
+Por ùltimo, te dejo algunos enlaces que pueden ser útiles para ayudar a entender todo esto que te comenté más arriba. En lo personal, me parecen super didácticos! 
+Variational AutoEncoder: https://www.cs.us.es/~fsancho/Blog/posts/VAE.md
+Understanding Conditional Variational Autoencoders: https://towardsdatascience.com/understanding-conditional-variational-autoencoders-cd62b4f57bf8
+Conditional Variational Autoencoder -- Intuition and Implementation: https://agustinus.kristia.de/techblog/2016/12/17/conditional-vae/
+
+Bueno, eso sería todo por ahora.
+Te propongo que hagas las pruebitas que te comenté más arriba y, antes de seguir, coordinemos una reunión de 30 min o 1 hora para charlar los resultados y definir los siguientes pasos. Más que grandes avances y reuniones largas, tal vez convenga tener reuniones cada 15 días e ir avanzando de a poquito, así te podemos discutir los avances más rápido y orientar mejor los esfuerzos.
+Seguimos en contacto.
+Saludos.
+
+Matias
+
+P/D: Me parece perfecto que vayas documentando todo. Va a ser de gran utilidad al momento de escribir la tesis!! (y alguna publicación 😉)
+------
+COMENTARIO A LA RESPUESTA DE MI DIRECTOR 
+Matias, Leandro
+Impecable Matias y Leandro, muy de acuerdo con tus observaciones. Estaba en la pista de CVAE para investigar, así que después de lo que me comentas creo que es fundamental mirar esa implementación. Se me pasó lo de BCE, ya lo corrijo. Voy a hacer la exploración que me recomendas Matías para formar una primera intuición sobre esto. Creo que lo de agregar un test estadístico para ver las distribuciones es muy valioso, lo leí por ahí en una implementación, lo voy a recuperar. Acuerdo con el aproach, se vé que te viniste con toda del descanso :) . Pongo manos a la obra que las recomendaciones y los mantengo al tanto. Gracias nuevamente a ambos!
+-----
+AVANCES
+Claudio Sebastián Castillo <castilloclaudiosebastian@gmail.com>
+Mon, Mar 4, 9:17 AM
+to Matias, Leandro
+
+Matías y Leando:
+
+Buen día, bueno conforme a sus propuestas implementé distintos cambios para si tenía mejores resultados. Efectivamente como sospechaban aumentar un orden de magnitud en GCM rindió sus frutos. Llevé el dataset sintético a 3000 observaciones, balanceado, con 214 muestras por clase, y optuve el mismo resultado en datos de test que los que obtengo entrenando un MLP con datos reales. 
+Implementé por otro lado el L1 loss y drop_out, con varias pruebas y aquí no tuve mejoras. Quiźas en este case la explicación pase por el hecho que ya estoy trabajando con modelos que tienen buenos resultados (es decir estoy partiendo de una configuración de CVAE que tienen buenos valores de reconstrucción),y que por ello no hay mucho espcio para variación. El dropout lo probé con un CVAE chico y otro más grande. 
+
+Les paso el link del informe: informe: https://docs.google.com/document/d/1gWb-ZSH4YTOX-Dy3M3r5mJBqivUpua53VP44cAskPR4/edit?usp=sharing
+
+Me pongo a trabajar en la primera versión de AG sobre leukemia. Los mantengo al tanto. 
+
+Buena semana, claudio
+-------
+AVANCES
+Implementado el AG para leukemia, madelon y gisette
+Inbox
+
+Claudio Sebastián Castillo <castilloclaudiosebastian@gmail.com>
+Tue, Mar 12, 8:56 AM
+to Matias, Leandro
+
+Matias y Leandro buen día les paso reporte de la implementación del algoritmo genético. Espero sus comentarios para avanzar con: 1) un algoritmo genético para el datset de GCM y 2) la integración del VAE o CVAE en el AG, primera versión. 
+
+https://docs.google.com/document/d/1FR382uvjXNNoPcQtaGlQ9LPCH0IjvX_IdNdq2rArGCY/edit?usp=sharing   
+
+Cordialmente
+Claudio
+------
+AVANCES
+Resultados primer GA+VAE en leukemia
+Inbox
+
+Claudio Sebastián Castillo <castilloclaudiosebastian@gmail.com>
+Mon, Mar 25, 2:39 PM
+to Matias, Leandro
+
+Matias y Leandro, les mando el acceso a la notebook donde están resumidos el primer par de experimentos realizados sobre 'Leukemia' con datset original y con dataset aumentado en 100 observaciones generadas con un VAE. 
+Encuentro que los datos son muy parecidos en todos los aspectos, como podrán observar en la tabla de 'Resumen Estadístico' y en los Gráficos de la Evolución (De las 30 pruebas realizadas, les presento dos gráficos para el experimento sin aumentar -'0001'- y dos gráficos para el experimento con aumentación -'0002'-). También encuentro que hay mucha variabilidad en las características seleccionadas, pese a que en todos los casos el 'acc' es casi optimo. Se deduce de eso que las características están altamente correlacionadas? Habría que plantear un nuevo experimento, aumentando 1000 observaciones? O quizás ya pasamos a otra estrategia de aumentación como las que discutimos al principio (ejemplo: aumentación en la descendencia)? Bueno, si les parece armamos una reunión para mirar los experimentos y discutir los resultados. Cordialmente, Claudio.
+https://github.com/castillosebastian/ealab/blob/main/expga1/report_results.ipynb
+
+------
+AVANCES
+Avances
+Inbox
+
+Claudio Sebastián Castillo <castilloclaudiosebastian@gmail.com>
+Attachments
+Sun, May 12, 9:08 PM
+to Leandro, Matias
+
+Buen día, Matias y Leando, bueno, acá le comparto un informe con los resultados de las pruebas realizadas. Creo que, para ir de lo general a lo particular, podría tener resultados más estables en las técnicas que estamos empleando (VAE+GA), comparándola con un GA base, con dataset sin aumentación. 
+
+Dicho resultado se puede apreciar en el siguiente gráfico donde comparo 180 experimentos (90 con aumentación y 90 sin aumentación) sobre el dataset leukemia (con distintos parámetros de configuración del cromosoma). En el documento se pueden apreciar estas diferencias considerando los subgrupos de experimentos. 
+
+image.png
+
+Gráfico con subgrupos de experimentos
+
+image.png
+
+- Respecto de la selección de características en el documento adjunto podrán ver las dos representaciones (experimentos con aumentación y sin aumentación). Sobre este tema estuve trabajando bastante pues pude confirmar que leukemia presenta muchas features de alta correlación: el 32% del dataset tiene correlación arriba de 0.7/-0.7. correlation_matrix.png
+En este sentido, hice experimentos con la configuración de individuos en nuestro algoritmo genético con probabilidad de genes activos de 0.01 y 0.005 (dando lugar a n_genes en un rango de 15 hasta 85), sin mayor consecuencia en el accuracy. 
+- Ya tengo realizados experimentos de Madelon y Gisette con buenos resultados, pero me gustaría conversar con ustedes estos hallazgos en leukemia para armar eventualmente nuevos experimentos con estos dos datasets.
+Les mando un saludo cordial, esta semana estoy disponible para juntarme cuando digan.
+Un abrazo 
+Claudio 
+
+
+
+
+ 3 Attachments
+  •  Scanned by Gmail
+
+Matias Gerard <mgerard@sinc.unl.edu.ar>
+Wed, May 15, 6:59 PM
+to me, Leandro
+
+Buenas noches Claudio,
+
+Primero que nada y como siempre, muy detallado y completo el informe!
+La verdad es que es una buena noticia que los experimentos muestren, la menos para este dataset, un mejor desempeño con el dataset aumentado.
+Lo otro interesante es que se mantiene un muy buen desempeño cuando se fuerza a que el cromosoma seleccione pocos genes.
+Esta semana es complicada para reunirme. Si les parece, podemos ver si coordinamos para la semana que viene. Podemos charlar un poquito de estos resultados y ver cómo seguimos.
+Avisen nomás cuando pueden así vamos definiendo día/horario. Por mi parte, el miércoles después de las 18 hs no tendría inconveniente en reunirme.
+Aguardo sus respuestas.
+Saludos.
+
+Matias
+
+P/D: Definimos algo de seguir con la siguiente etapa de inclusión de los VAE en los algoritmos evolutivos? O sobre trabajar con los otros datasets? (no recuerdo 😅)
+---------
+
+AVANCES
+Resultados, primeros análisis generales
+Inbox
+
+Claudio Sebastián Castillo <castilloclaudiosebastian@gmail.com>
+Fri, Jun 21, 7:08 PM
+to Matias, Leandro
+
+Matías y Leandro, buen día. Bueno les cuento que, según nuestra última reunión, avancé sobre los experimentos en GCM, y ya tengo resultados. Dichos resultados y los obtenidos en los anteriores experimentos los comparto en documento adjunto donde hago un balance de cómo se desempeñó la estrrategia de aumentación en la implementació de AG. Creo que los resultados generales son muy buenos, y que incluso donde la estrategia parece ser debil (el caso de GCM) hay un camino muy claro de lo que podría implementarse en próximos trabajos. 
+Conforme lo conversado con Matías, ya estoy escribiendo la tesis. El índice sería:
+1. Introducción
+2. Presentación del problema, datos y contexto. 
+3. Autocodificadores Variacionales, teoría e implementación.
+4. Algoritmos Genéticos: teoría e implementación
+5. Experimentos y Resultados. 
+Estoy terminando el capítulo 3. Ni bien lo cierre si les parece se los comparto. 
+Bueno espero sus comentarios y la posibilidad para reunirnos a conversar los resultados. 
+Un saludo cordial 
+Claudio
+Reporte: 
+https://docs.google.com/document/d/1-I1gwvV1mCojANXwh0Rnau_1uhTO9q8Uo2F8vp4H-ZY/edit?usp=sharing
+------
+ULTIMO AVANCE
+Novedades
+Inbox
+
+Claudio Sebastián Castillo <castilloclaudiosebastian@gmail.com>
+Fri, Aug 2, 8:31 PM
+to Matias, Leandro
+
+Matias y Leandro, les paso los resultados de GCM en una nueva serie de experimentos donde se parte de una nuevas particiones de entrenamiento y testeo, y donde NUNCA! se mezclan dichas particiones: el CVAE y el AG solo se entrenan/corren con 'train' y evaluan en 'test'. 
+Viendo el gráfico entiendo que estamos ante un resultado claramente positivo en los casos donde los individuos tenían cromosomas con 750 y 450 genes activos en promedio, mientra que en el caso de una reducción más drástica la diferencia es menor, pero se mantiene tambien.
+
+image.png
+
+image.png
+
+
+Ni bien me den el OK, me pongo a saltar. 
+Cordialmente, Claudio
+
+
+
+
+
+Matias Gerard
+Mon, Aug 5, 7:47 PM
+to me, Leandro
+
+Buenas noches Claudio.
+
+En base a los resultados, creo que da para saltar 🤭
+Me llama la atención que caiga tanto el desempeño al hacer más estricto el número de características a usar, porque no termino de entender qué está pasando.
+En el boxplot se ve que la dispersión para los datos sintéticos es menor que para el dataset original, pero igual me sorprende la caída del desempeño.
+Fuera de eso, me parece que es un muy buen resultado!
+Tal vez agregaría un punto intermedio entre 45 y 450 (podría ser 150 o 200) como para ver cómo se produce la caída en el desempeño, y determinar si es o no abrupta.
+Bien, para ver cómo seguir les propongo que nos reunamos el próximo lunes 12/8, a las 18 hs. Creo que con un ratito alcanza para organizarnos y acordar los siguientes pasos.
+Les pido que confirmen si pueden así creo el evento y les mando la invitación.
+Saludos.
+
+Matias
+
+--
+Matias F. Gerard
+-------
+
+""". TU TRABAJO ES: realizar una descripción resumira, clara , y con lenguaje técnico de los pasos realizados en este proceso de trabajo, haciendo incapié en, los estudios iniciales, el estudio, diseño y contrucción un modelo genérico de Autocodificador Variacional, la adaptición del AV a los dataset elegidos en el trabajo y la búsqueda de los mejores hiperparámetros, luego la creación de una estructura combinada de AV y Algoritmo Genético para la selección de Características, y, finalmente, la experimentación final y resultados. 
+
+############### RESPUESTA #############################3
+
+Aquí tienes una descripción resumida del proceso de trabajo en tu tesis de Maestría:
+
+---
+
+### Descripción Técnica del Proceso de Trabajo
+
+1. **Estudios Iniciales**:
+   Se comenzó evaluando el desempeño de modelos de aprendizaje automático tradicionales en cuatro conjuntos de datos (datasets) distintos. El objetivo fue medir métricas como AUC, F1, y el tiempo de entrenamiento. Se trabajó con 18 modelos, optimizando hiperparámetros mediante GridSearch, utilizando una máquina virtual en la nube con 24 vCPUs y 30 GB de RAM.
+
+2. **Diseño y Construcción de un Modelo Genérico de Autocodificador Variacional (VAE)**:
+   Se desarrolló una primera versión de un VAE para generar datos sintéticos que se utilizaron para la aumentación de datos en los datasets GCM y MADELON. Aunque la arquitectura inicial del VAE no logró capturar las distribuciones subyacentes de los datos de manera efectiva, se identificaron problemas en la codificación y reproducción de las distribuciones, lo que llevó a revisar la arquitectura y los métodos de evaluación utilizados.
+
+3. **Adaptación del VAE a los Datasets Elegidos y Búsqueda de Hiperparámetros**:
+   Se realizaron ajustes en la arquitectura del VAE, incrementando la magnitud de datos sintéticos generados, lo que resultó en mejoras notables en el desempeño de los modelos cuando se entrenaron con estos datos. También se experimentó con la pérdida L1 y dropout, aunque sin mejoras significativas en ciertos casos, posiblemente debido a configuraciones ya optimizadas del modelo CVAE.
+
+4. **Creación de una Estructura Combinada de VAE y Algoritmo Genético (GA) para la Selección de Características**:
+   Se implementó un algoritmo genético en combinación con el VAE en datasets como leukemia, madelon y gisette. Los experimentos iniciales mostraron que el desempeño del GA mejoraba cuando se integraban datos aumentados por el VAE, especialmente en términos de selección de características.
+
+5. **Experimentación Final y Resultados**:
+   Los experimentos finales se centraron en GCM, donde se observaron resultados positivos al utilizar datasets aumentados con CVAE y evaluados con GA, especialmente cuando los cromosomas contenían un número elevado de genes activos. Se continuó experimentando con distintas configuraciones de genes activos para evaluar el impacto en el desempeño, identificando áreas para mejorar y futuros trabajos.
+
+---
+
+Este resumen técnico refleja los pasos clave en la ejecución de tu trabajo de investigación, destacando las iteraciones necesarias en la construcción y adaptación del modelo de VAE, la integración con algoritmos genéticos, y la evaluación a través de experimentos rigurosos.
