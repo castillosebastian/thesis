@@ -144,3 +144,36 @@ Como puede apreciearse en la ecuación anterior la función de pérdida del AV s
 Girin, Dynamical Variational Autoencoders: A Comprehensive Review
 -->
 
+## Presentación de nuestro modelo de AV
+
+
+```{mermaid}
+graph TD
+  A[Input] --> B[Linear -> ReLU -> BN]
+  B --> C[Linear -> ReLU -> BN]
+  C --> D[Linear -> ReLU -> BN]
+  D --> E{Latent Variables: mu, logvar}
+  E --> F[Reparameterization]
+  F --> G[Linear -> ReLU -> BN]
+  G --> H[Linear -> ReLU -> BN]
+  H --> I[Linear -> BN -> Output]
+```
+
+
+
+
+
+```{mermaid}
+graph TD
+  A[Input + Label] --> B[Linear -> ReLU -> BN]
+  B --> C[Linear -> ReLU -> BN]
+  C --> D[Linear -> ReLU -> BN]
+  D --> E{Latent Variables: mu, logvar}
+  E --> F[Reparameterization]
+  F --> G[Latent Variable z + Label]
+  G --> H[Linear -> ReLU -> BN]
+  H --> I[Linear -> ReLU -> BN]
+  I --> J[Sigmoid -> Output]
+```
+
+

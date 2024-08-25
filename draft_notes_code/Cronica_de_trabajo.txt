@@ -25,10 +25,16 @@ Mon, Feb 5, 7:31 PM
 to Matias, Leandro
 
 Matías y Leandro, buen día, espero que hayan pasado muy bien y descansado. 
-Bueno, conforme lo conversado, les comento que estuve trabajando en la primera versión de nuestro VAE que pueden consultar aquí.  Y tiene varios experimentos vinculados. 
-Digo una primera versión, porque aunque estoy generando datos sintéticos y ensayando algunas pruebas de aumentación (con GCM y MADELON) no estoy teniendo mejoras en los resultados de clasificación utilizando un MLP. 
-Estuve yendo y viniendo con los scripts varias veces, y estoy convencido que el VAE que estoy trabajando no alcanza para codificar y reproducir las distribuciones subyacentes a los datos de entrenamiento. Pude confirmar esto luego de que intentara hacer una clasificación enteramente sobre datos sintéticos y obtuviera un resultado casi nulo (que se puede consultar aquí, línea 158 y siguientes). Ese simple experimento me demuestra que el problema está en la arquitectura del VAE. 
-Puesto a ver esta arquitectura con más detalle advierto que durante el entrenamiento el VAE no está mejorando sus métricas de evaluación. Por lo que no esta sería la señal confirmatoria que tengo que ajustar el VAE. 
+Bueno, conforme lo conversado, les comento que estuve trabajando en la primera versión de nuestro VAE que pueden consultar aquí. 
+ Y tiene varios experimentos vinculados. 
+Digo una primera versión, porque aunque estoy generando datos sintéticos y ensayando algunas pruebas de aumentación (con GCM y MADELON) 
+no estoy teniendo mejoras en los resultados de clasificación utilizando un MLP. 
+Estuve yendo y viniendo con los scripts varias veces, y estoy convencido que el VAE que estoy trabajando no alcanza para codificar y 
+reproducir las distribuciones subyacentes a los datos de entrenamiento. Pude confirmar esto luego de que intentara hacer una clasificación 
+enteramente sobre datos sintéticos y obtuviera un resultado casi nulo (que se puede consultar aquí, línea 158 y siguientes).
+ Ese simple experimento me demuestra que el problema está en la arquitectura del VAE. 
+Puesto a ver esta arquitectura con más detalle advierto que durante el entrenamiento el VAE no está mejorando sus métricas de evaluación. 
+Por lo que no esta sería la señal confirmatoria que tengo que ajustar el VAE. 
 En este momento estoy viendo justamente eso. 
 Tenía pensado poder dedicarle unos días a este problema para llegar a la primera reunión con ustedes con las cosas pendientes terminadas:
 

@@ -1,0 +1,515 @@
+
+A continuación te presento un boceto del capítulo 3 de mi tesis doctoral, que describe el diseño y construcción de un modelo de Autoencodificador Variacional (VAE) 
+para la aumentación de datos en problemas de la selección de características. 
+Este capítulo es una parte fundamental de la tesis, ya que describe en detalle el modelo 
+propuesto y su implementación en el marco de la investigación.
+
+Tu tarea es describir el proceso de construcción del modelo de Autoencodificador Variacional (VAE) que se presenta a continuación.
+
+Debes prestar especial atención a los detalles del modelo, su arquitectura, las funciones de pérdida utilizadas, los hiperparámetros y cualquier otro aspecto relevante
+
+Debes utilizar un lenguaje técnico claro y preciso. 
+
+
+
+BOCETO------------------------------------------------------------------------------------------------------------
+
+
+El proceso de construcción del modelo de Autoencodificador Variacional (VAE) se realizó en dos etapas, incluyendo
+varios ejercicios exploratorios y 52 experimentos sistemáticos. 
+
+La primera etapa estuvo orientada al diseño de la arquitectura del modelo, y la validación de su funcionamiento en los conjuntos de datos elegidos.
+En esta etapa, se exploraron distintas configuraciones de la red,y se realizaron pruebas preliminares para evaluar la capacidad 
+del modelo para generar datos sintéticos.
+
+En la segunda etapa, una vez validada la arquitectura del modelo, el esfuerzo se orientó a la busqueda de los mejores hiperparámetros, 
+para la generación de datos sintéticos de calidad óptima. 
+
+A continuación presentamos los códigos de las dos versiones del modelo de Autoencodificador Variacional (VAE) que se desarrollaron en el marco de la tesis.
+
+
+
+### Busqueda de hiperparámetros
+
+Amplié la búsqueda de hiperparámetros del VAE y CVAE, ajusté el parámetro de paciencia para detener los entrenamientos en 10 épocas sin mejora en datos de test, y agregue gráficos orientadores. 
+Las pruebas realizadas muestran que un MLP entrenado con datos sintéticos generados con un VAE clasifica mejor o igual que con los datos reales. Esto son los resultados:
+
+dataset
+MLP entrenado sobre datos reales y evaluado en test real
+MLP entrenado sobre datos sintéticos y evaluado en test real
+leukemia
+ precision    recall  f1-score   support
+
+           0       0.76      1.00      0.87        13
+           1       1.00      0.56      0.71         9
+
+    accuracy                           0.82        22
+   macro avg       0.88      0.78      0.79        22
+weighted avg       0.86      0.82      0.80        22
+
+Accuracy: 0.8182
+              precision    recall  f1-score   support
+
+           0       0.93      1.00      0.96        13
+           1       1.00      0.89      0.94         9
+
+    accuracy                           0.95        22
+   macro avg       0.96      0.94      0.95        22
+weighted avg       0.96      0.95      0.95        22
+
+Accuracy: 0.9545
+madelon
+              precision    recall  f1-score   support
+
+           0       0.56      0.55      0.55       396
+           1       0.54      0.55      0.55       384
+
+    accuracy                           0.55       780
+   macro avg       0.55      0.55      0.55       780
+weighted avg       0.55      0.55      0.55       780
+
+Accuracy: 0.5513
+              precision    recall  f1-score   support
+
+           0       0.56      0.72      0.63       396
+           1       0.59      0.42      0.49       384
+
+    accuracy                           0.57       780
+   macro avg       0.58      0.57      0.56       780
+weighted avg       0.58      0.57      0.56       780
+
+Accuracy: 0.5731
+gisette
+              precision    recall  f1-score   support
+
+           0       0.98      0.98      0.98       904
+           1       0.98      0.98      0.98       896
+
+    accuracy                           0.98      1800
+   macro avg       0.98      0.98      0.98      1800
+weighted avg       0.98      0.98      0.98      1800
+
+Accuracy: 0.9772
+              precision    recall  f1-score   support
+
+           0       0.95      0.97      0.96       904
+           1       0.97      0.95      0.96       896
+
+    accuracy                           0.96      1800
+   macro avg       0.96      0.96      0.96      1800
+weighted avg       0.96      0.96      0.96      1800
+
+Accuracy: 0.9583 (diferencia 0.02)
+gcm
+              precision    recall  f1-score   support
+
+           0       0.14      0.25      0.18         4
+           1       0.00      0.00      0.00         1
+           2       1.00      1.00      1.00         3
+           3       1.00      0.33      0.50         6
+           4       0.89      1.00      0.94         8
+           5       0.40      0.67      0.50         3
+           6       0.80      0.80      0.80         5
+           7       0.50      0.75      0.60         4
+           8       0.33      0.25      0.29         4
+           9       0.25      0.67      0.36         3
+          10       1.00      0.25      0.40         4
+          11       1.00      0.67      0.80         3
+          12       1.00      0.25      0.40         4
+          13       1.00      0.20      0.33         5
+
+    accuracy                           0.54        57
+   macro avg       0.67      0.51      0.51        57
+weighted avg       0.74      0.54      0.56        57
+
+Accuracy: 0.5439
+              precision    recall  f1-score   support
+
+           0       0.00      0.00      0.00         4
+           1       0.00      0.00      0.00         1
+           2       1.00      1.00      1.00         3
+           3       1.00      0.17      0.29         6
+           4       1.00      0.88      0.93         8
+           5       1.00      0.33      0.50         3
+           6       0.80      0.80      0.80         5
+           7       1.00      0.50      0.67         4
+           8       0.38      0.75      0.50         4
+           9       0.12      0.67      0.21         3
+          10       0.20      0.50      0.29         4
+          11       1.00      0.67      0.80         3
+          12       1.00      0.50      0.67         4
+          13       0.00      0.00      0.00         5
+
+    accuracy                           0.51        57
+   macro avg       0.61      0.48      0.47        57
+weighted avg       0.66      0.51      0.51        57
+
+Accuracy: 0.5088 (diferencia 0.04)
+
+
+Los buenos resultados los asocio a:
+
+Mejora en el script de entrenamiento: el modelo que genera los datos sintéticos utilizando los mejores hiperparámetros luego de la BO también implementa un término de paciencia para cortar el entrenamiento luego de 10 épocas sin mejora en los datos de test. Antes el modelo generador no tenía ese corte, y corría todas las épocas que se establecían en la BO. Esto hacía que en ciertos casos se producía overfiting. 
+Mejora en los hiperparámetros: amplié los hiperparámetros, y estoy probando con redes más grandes. Sin perjuicio de ello para la capa latente (z o "latent_dim") las mejores configuraciones no son las más grandes, al contrario, valores entre 3 y 100 ofrecen los mejores resultados.  Tengo algunas intuiciones de porqué esto es razonable.
+
+Leukemia
+Modelo y Número experim
+Parametros
+Resultado obtenido en la generación y entrenamiento
+VAE 2 capas
+expN24
+{   "hiden1": 821,
+   "hiden2": 369,
+   "latent_dim": 18,
+   "lr": 0.0007250588081123061,
+   "epochs": 4148
+}
+Accuracy: 0.8182
+VAE 2 capas
+expN25t2
+{"hiden1": 206,
+   "hiden2": 260,
+   "latent_dim": 253,
+   "lr": 0.0007609919173845279,
+   "epochs": 1755}
+Accuracy: 0.9091
+VAE 2 capas
+expN25t1
+{   "hiden1": 346,
+   "hiden2": 178,
+   "latent_dim": 108,
+   "lr": 0.00026927118695538473,
+   "epochs": 2889}
+
+
+Accuracy: 0.9545
+VAE 2 capas
+expN23
+{   "hiden1": 759,
+   "hiden2": 315,
+   "latent_dim": 13,
+   "lr": 0.0009674525420114412,
+   "epochs": 1737}
+Accuracy: 0.9545
+
+
+Tendencia similar se observa en los otros datasets. 
+
+Madelon
+VAE 2 capas
+expN23
+{   "hiden1": 835,
+   "hiden2": 308,
+   "latent_dim": 25,
+   "lr": 0.00015503766948351942,
+   "epochs": 1364
+}
+Datos sintéticos
+Accuracy: 0.5731
+
+Datos reales
+Accuracy: 0.55 
+
+
+Gisette
+VAE 2 capas
+expN32
+{"hiden1": 3870,
+   "hiden2": 2987,
+   "latent_dim": 18,
+   "lr": 0.0009460907601722566,
+   "epochs": 2739
+}
+Datos sintéticos
+Accuracy: 0.9583
+Datos reales
+Accuracy: 0.9772 
+Muy poca diferencia
+
+
+GCM
+CVAE 2 capas
+expN42
+{   "hiden1": 358,
+   "hiden2": 189,
+   "latent_dim": 35,
+   "lr": 0.0006885024728547275,
+   "epochs": 3613}
+Datos sintéticos
+Accuracy: 0.5088
+Datos reales
+Accuracy: 0.5439 
+Muy poca diferencia
+
+
+
+Este es el gráfico de evaluar la variación de resultados a partir de diferentes configuraciones de la variable latente (leukemia dataset expN37):
+
+
+Trabajar sobre la arquitectura de los VAE y CVAE
+
+Agrandé a la arquitectura de mis modelos VAE una capas más: con 3 fc layer con diferentes dimensiones (la última capa repetida ) más la dimensión latente pero no obtuve majores resultados comparándolo con los resultados del VAE de 2 capas (tambien con la ultima capa repetida).  No se sigue de esto que modelos más grandes no sea más apto para el trabajo de generación de datos sintéticos, sino que en el caso de su aplicación a ‘leukemia’ no hacen la diferencia. En este aspecto creo que es posible que estemos obteniendo resultados tales que ya no admiten más mejora, sin importar  la arquitectura elegida.  
+
+Modelo y Numero experim
+Mejores Parámetros en la BO
+Resultado
+VAE de 3 capas
+expN26
+
+
+{  "hiden1": 498,
+   "hiden2": 248,
+   "hiden3": 91,
+   "latent_dim": 62,
+   "lr": 0.00025572190659996636,
+   "epochs": 2613}
+Accuracy: 0.9091
+VAE de 3 capas
+expN27
+{   "hiden1": 712,
+   "hiden2": 571,
+   "hiden3": 509,
+   "latent_dim": 116,
+   "lr": 0.0007824361609208231,
+   "epochs": 4992}
+Accuracy: 0.8636
+VAE de 3 capas
+expN28
+{
+   "hiden1": 7316,
+   "hiden2": 3565,
+   "hiden3": 270,
+   "latent_dim": 175,
+   "lr": 0.00025362841771815617,
+   "epochs": 2714
+}
+Accuracy: 0.9091
+CVAE 3 capas
+expN34
+{
+    "hiden1": 5812,
+    "hiden2": 2281,
+    "hiden3": 232,
+    "latent_dim": 9,
+    "lr": 0.00020657335868555095,
+    "epochs": 2416
+}
+Accuracy: 0.6364
+CVAE 3 capas
+expN29
+
+
+{   "hiden1": 995,
+   "hiden2": 712,
+   "hiden3": 495,
+   "latent_dim": 9,
+   "lr": 0.0007267073370981463,
+   "epochs": 1806}
+Accuracy: 0.5455
+
+
+También implementé CVAE de tres capas de distintas dimensiones, pero no obtuve mejores resultados para los problemas de clasificación binarios. En donde sí funcionó bien el CVAE (de 2 layers + últim repetida) fue en el datset de gcm. El modelo está generando datos para las distintas clases de manera esperable, y el resultado alcanzado con un MLP entrenado con estos datos sintéticos es similar al entrenado con datos reales:
+
+dataset
+MLP entrenado sobre datos reales y evaluado en test real
+MLP entrenado sobre datos sintéticos y evaluado en test real
+CVAE 3 capas 
+GCM
+expN39
+              precision    recall  f1-score   support
+
+           0       0.14      0.25      0.18         4
+           1       0.00      0.00      0.00         1
+           2       1.00      1.00      1.00         3
+           3       1.00      0.33      0.50         6
+           4       0.89      1.00      0.94         8
+           5       0.40      0.67      0.50         3
+           6       0.80      0.80      0.80         5
+           7       0.50      0.75      0.60         4
+           8       0.33      0.25      0.29         4
+           9       0.25      0.67      0.36         3
+          10       1.00      0.25      0.40         4
+          11       1.00      0.67      0.80         3
+          12       1.00      0.25      0.40         4
+          13       1.00      0.20      0.33         5
+    accuracy                           0.54        57
+   macro avg       0.67      0.51      0.51        57
+weighted avg       0.74      0.54      0.56        57
+
+Accuracy: 0.5439
+
+
+                 precision    recall  f1-score   support
+
+           0       0.00      0.00      0.00         4
+           1       0.00      0.00      0.00         1
+           2       0.00      0.00      0.00         3
+           3       0.00      0.00      0.00         6
+           4       0.00      0.00      0.00         8
+           5       0.00      0.00      0.00         3
+           6       0.00      0.00      0.00         5
+           7       0.00      0.00      0.00         4
+           8       0.33      0.50      0.40         4
+           9       0.50      1.00      0.67         3
+          10       0.00      0.00      0.00         4
+          11       0.00      0.00      0.00         3
+          12       0.29      0.50      0.36         4
+          13       0.00      0.00      0.00         5
+    accuracy                           0.12        57
+   macro avg       0.08      0.14      0.10        57
+weighted avg       0.07      0.12      0.09        57
+
+Accuracy: 0.1228
+        
+CVAE 2 capas 
+GCM
+expN42
+idem
+              precision    recall  f1-score   support
+
+           0       0.00      0.00      0.00         4
+           1       0.00      0.00      0.00         1
+           2       1.00      1.00      1.00         3
+           3       1.00      0.17      0.29         6
+           4       1.00      0.88      0.93         8
+           5       1.00      0.33      0.50         3
+           6       0.80      0.80      0.80         5
+           7       1.00      0.50      0.67         4
+           8       0.38      0.75      0.50         4
+           9       0.12      0.67      0.21         3
+          10       0.20      0.50      0.29         4
+          11       1.00      0.67      0.80         3
+          12       1.00      0.50      0.67         4
+          13       0.00      0.00      0.00         5
+    accuracy                           0.51        57
+   macro avg       0.61      0.48      0.47        57
+weighted avg       0.66      0.51      0.51        57
+
+Accuracy: 0.5088
+
+
+
+	
+Observo que el problema relativo a la incapacidad para predecir la clase 1, que es la clase con menos soporte en el dataset de test real, se replica en el dataset sintético para otras dos clases más. 
+
+expN39
+{
+   "hiden1": 5264,
+   "hiden2": 2776,
+   "hiden3": 952,
+   "latent_dim": 15,
+   "lr": 0.00011640389038114309,
+   "epochs": 3932
+}
+
+
+expN42
+{
+   "hiden1": 358,
+   "hiden2": 189,
+   "latent_dim": 35,
+   "lr": 0.0006885024728547275,
+   "epochs": 3613
+}
+
+
+En el caso de leukemia el CVAE obtiene resultados de baja calidad: 
+
+dataset
+MLP entrenado sobre datos reales y evaluado en test real
+MLP entrenado sobre datos sintéticos y evaluado en test real
+CVAE 3 capas 
+leukemia
+expN34
+Original Data Model Performance:
+              precision    recall  f1-score   support
+
+           0       0.76      1.00      0.87        13
+           1       1.00      0.56      0.71         9
+
+    accuracy                           0.82        22
+   macro avg       0.88      0.78      0.79        22
+weighted avg       0.86      0.82      0.80        22
+
+Accuracy: 0.8182
+ Synthetic Data Model Performance:
+              precision    recall  f1-score   support
+
+           0       0.73      0.62      0.67        13
+           1       0.55      0.67      0.60         9
+
+    accuracy                           0.64        22
+   macro avg       0.64      0.64      0.63        22
+weighted avg       0.65      0.64      0.64        22
+
+Accuracy: 0.6364
+
+
+Estos son los parámetros del CVAE de leukemia. Podría agregar algún experimento achicando las capas (un poco siguiendo la lógica del experimento expN42 con GCM que dió buenos resultados y es una CVAE ‘chico’)
+
+{    "hiden1": 5812,
+    "hiden2": 2281,
+    "hiden3": 232,
+    "latent_dim": 9,
+    "lr": 0.00020657335868555095,
+    "epochs": 2416}
+
+Aquí, como los resultados eran pobres pero tenía predicciones para ambas clases probé en el experimento 40 (expN40) incrementar el número de muestras en los datos sintéticos para luego entrenar el MLP con un dataset mas grande. Pero los resultados fueron peores que con el dataset del tamaño original.
+
+dataset
+MLP entrenado sobre datos reales y evaluado en test real
+MLP entrenado sobre datos sintéticos y evaluado en test real
+CVAE 3 capas 
+leukemia
+expN40
+Original Data Model Performance:
+              precision    recall  f1-score   support
+
+           0       0.76      1.00      0.87        13
+           1       1.00      0.56      0.71         9
+
+    accuracy                           0.82        22
+   macro avg       0.88      0.78      0.79        22
+weighted avg       0.86      0.82      0.80        22
+
+Accuracy: 0.8182
+ Synthetic Data Model Performance:
+              precision    recall  f1-score   support
+
+           0       0.47      0.54      0.50        13
+           1       0.14      0.11      0.12         9
+
+    accuracy                           0.36        22
+   macro avg       0.30      0.32      0.31        22
+weighted avg       0.33      0.36      0.35        22
+
+Accuracy: 0.3636
+
+
+
+Una conclusión que puede verse hasta aquí es que GCM es un dataset que, ya sea por que es multiclases o bien por el hecho de que sus clases tienen distribuciones de probabilidad subyacente similares, es un problema más difícil de atacar.. 
+
+Busqueda Bayesiana y Grid Search
+
+Trabajé con Grid Search y como dijiste Matías veo que su fortaleza está en el control completo del espacio de búsqueda que se quiere explorar. Lo implementé para responder la pregunta específica sobre cuál era la mejor configuración de parámetros para ‘latent_dim’ (ver scater plot pagina anterior). Sí creo que si la intención está orientada por la eficiencia y se quiere evitar el compromiso de setear parámetros particulares en pos de un rango amplio de búsqueda, la BO tiene lo que se necesita, y combina muy bien exploración y explotación. En este sentido tiene muchas similitudes con los algoritmos genéticos.
+
+Algunos experimentos:
+
+Experimento 36: en este experimento se dejó fijos los ‘layers’ y el ‘lr’ se hizo búsqueda sobre ‘latent_dim’. El mejor valor encontrado fue de ‘latent_dim’ = 974, con "hiden1": 2000, "hiden2": 1000. El resultado del VAE test loss fue de 0.9. La búsqueda se orientó a una ‘latent_dim’ de grandes dimensiones.
+
+
+
+
+
+
+
+
+Experimento 34(inicial), se hicieron 200 pruebas.Gráfico que muestra la exploración a lo largo de las pruebas y la poca variabilidad que se presenta en el ‘Objetive value’
+
+
+
+
+
+Entrenar con Más Datos
+
+No tengo mejores resultados. Las pruebas las hice sobre ‘leukemia’ y ‘gcm’, con varias configuraciones. En el caso de leukemia me parece que estamos obteniendo buenos resultados y en tal caso incrementar los datos sintéticos no aporta nada. En el caso de gcm entiendo que podemos tener algún problema en el CVAE, por lo que parece bastante claro que la baja calidad de recontrstrucción no se vé compensada con más datos cuando se trata de resultados predictivos. Aquí el viejo adagio de ML puede aplicar: ‘basura entra, basura sale’. No sé si este comportamiento se puede repetir sobre otros datasets. 
