@@ -1,24 +1,7 @@
-## Presentación de nuestro modelo de AV
 
-### AV empleado en dataset de dos clases
 
-El modelo encoder-decoder empleado para la generación de datos sintéticos en el dataset de dos clases (leukemia, madelon y gisette) se compone de dos capas ocultas, cada una seguida de una activación ReLU, mientras que el decoder es simétrico al encoder, con activaciones ReLU y una función de salida Sigmoid. La función de pérdida utilizada combina la divergencia KL y el error cuadrático medio (MSE) para garantizar una representación latente adecuada y una reconstrucción precisa de los datos.
 
-#### 2.1. Encoder
 
-El encoder se encarga de mapear los datos de entrada a un espacio latente de menor dimensión. Está conformado por tres capas lineales con activación ReLU, seguidas de normalización por lotes:
-
-$h_1 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_1}x + b_1))$\
-$h_2 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_2}h_1 + b_2))$\
-$h_3 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_3}h_2 + b_3))$
-
-#### 2.2. Decoder
-
-El decoder toma el vector latente $z$ y lo transforma de nuevo al espacio original, reconstruyendo los datos de entrada:
-
-$h_4 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_4}z + b_4))$\
-$h_5 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_5}h_4 + b_5))$\
-$\hat{x} = \text{BatchNorm}(\mathbf{W_6}h_5 + b_6)$
 
 ##### Diagrama de Arquitectura del VAE
 
@@ -130,15 +113,46 @@ El dataset GCM presenta un desafío significativo debido a su naturaleza multicl
 -------------
 -------------
 
-El desarrollo del modelo de Autoencodificador Variacional (AV) en el marco de esta investigación se llevó a cabo mediante un enfoque sistemático. El proceso se dividió en dos etapas principales: el diseño y validación inicial de la arquitectura del modelo, seguido de la optimización de hiperparámetros para mejorar la calidad de los datos sintéticos generados. Cada una de estas etapas implicó una serie de decisiones clave y experimentos diseñados para garantizar que el modelo fuera no efectivo en la generación de datos sintéticos, sino también robusto y adaptable a una variedad de conjuntos de datos y problemas de selección de características.
+## Presentación de nuestro modelo de AV
 
-En la primera etapa, se centró el esfuerzo en el diseño de la arquitectura del AV. Este proceso comenzó con la creación de una versión inicial y exploratoria del modelo, cuya finalidad era establecer una base sólida para las pruebas posteriores. La arquitectura del modelo fue concebida para manejar la alta dimensionalidad de los conjuntos de datos con los que se trabajaría. Específicamente, se optó por una estructura de red con 2 capas ocultas en el encoder y en el decoder, lo que permitió al modelo aprender representaciones latentes complejas y capturar las relaciones no lineales entre las variables de entrada.
+El desarrollo del modelo de Autoencodificador Variacional (AV) empleado en esta investigación se organizó en dos pasos. El primero giró en torno al diseño y validación de la arquitectura del modelo, mientras que el segundo estuvo enfocado en la optimización de dicha arquitectura para la generación de datos sintéticos en cada uno de los dataset bajo estudio. A continuación describiremos brevemente este proceso de desarrollo y la configuración final de los modelos elegidos para los experimentos de aumentación. 
 
-El diseño del encoder del AV incluyó dos capas lineales, cada una seguida de una activación LeakyReLU. Esta elección de activación fue deliberada, dado que LeakyReLU es conocida por su capacidad para mitigar el problema de los gradientes que se desvanecen, una preocupación común en redes profundas. A partir de la salida del encoder, el modelo generaba dos vectores, uno para la media y otro para la varianza logarítmica de la distribución latente, componentes críticos para el proceso de reparametrización. Esta técnica de reparametrización, que permite al modelo generar nuevas muestras en el espacio latente, es un elemento central en la arquitectura de los AVs y fue implementada para permitir que el modelo aprendiera una representación compacta y continua de los datos.
+### Modelo Inicial 
 
-El decoder, encargado de reconstruir los datos originales a partir del espacio latente, fue diseñado con una estructura simétrica a la del encoder, utilizando nuevamente activaciones LeakyReLU y finalizando con una función Sigmoid en la capa de salida. La función Sigmoid fue seleccionada debido a su capacidad para limitar la salida a un rango entre 0 y 1, lo que es particularmente útil para la normalización de los datos de entrada y salida.
+En la primera etapa, se centró el esfuerzo en el diseño de la arquitectura del AV. Este proceso comenzó con la creación de una versión inicial y exploratoria del modelo, cuya finalidad era establecer una base sobre la cual iterar en mejoras sucesivas. Se optó por una estructura de red con 2 capas ocultas en el encoder y en el decoder, lo que permitiría al modelo aprender representaciones latentes complejas y capturar las relaciones no lineales entre las variables de entrada.
 
-La función de pérdida del modelo combinó la divergencia Kullback-Leibler (KLD) y la entropía cruzada binaria (binary cross-entropy). La KLD se utilizó para medir la diferencia entre la distribución aprendida por el modelo y una distribución normal estándar, mientras que la entropía cruzada binaria se empleó para evaluar el error de reconstrucción, es decir, qué tan bien el modelo era capaz de replicar los datos de entrada a partir del espacio latente. La combinación de estas dos pérdidas permitió al modelo equilibrar la fidelidad de la reconstrucción con la regularización del espacio latente, un aspecto esencial para evitar el sobreajuste y asegurar la capacidad de generalización del AV.
+El diseño del encoder incluyó dos capas lineales, cada una seguida de una activación ReLU. Como vimos, el enconder genera dos vectores, uno para la media y otro para la varianza logarítmica de la distribución latente, componentes críticos para el proceso de reparametrización que permite al modelo generar nuevas muestras en el espacio latente. El decoder, encargado de reconstruir los datos originales a partir del espacio latente, fue diseñado con una estructura simétrica a la del encoder, utilizando nuevamente activaciones ReLU y finalizando con una función Sigmoidea en la capa de salida. La función Sigmoidea condiciona la salida a un rango entre 0 y 1, lo que es particularmente útil para la normalización de los datos de entrada y salida. 
+
+La función de pérdida del modelo combinó la divergencia Kullback-Leibler (KLD) y error cuadrático medio (MSE). La KLD se utilizó para medir la diferencia entre la distribución aprendida por el modelo y una distribución normal estándar, mientras que el error cuadrático medio se empleó para evaluar el error de reconstrucción, es decir, qué tan bien el modelo era capaz de replicar los datos de entrada a partir del espacio latente. 
+
+Este modelo se probó en la generación de datos sintéticos en los dataset de dos clases Leukemia y Madelon. Para evaluar los datos generados se realizaron experimentos de clasificación utilizando un MLP, comparando los resultados obtenidos en el dataset original y en el dataset con muestras sintéticas.  Inicialmente, la arquitectura empleada resultó insuficiente para capturar la complejidad de los datos, lo que llevó a un modelo incapaz de representar con precisión las características latentes, produciendo datos sintéticos de baja calidad.  
+
+### Segundo Modelo AV
+
+En respuesta a los problemas identificados previamente, se diseñó un nuevo modelo con una arquitectura de tres capas lineales en el encoder y el decoder, cada una con activaciones ReLU seguidas de normalización por lotes. Este diseño permitiría que las activaciones intermedias sean estabilizadas y que la información relevante sea conservada a lo largo de las capas. La normalización por lotes ayuda a mitigar los problemas de *covariate shift* durante el entrenamiento, mejorando la convergencia del modelo y su capacidad de generalización. Dado que el modelo fue ajustado para capturar la estructura de los datos a través de capas lineales y normalización por lotes, mantuvimos la elección de ReLU como función de activación dada su eficiencia computacional.
+
+El modelo resultante fue entrenado con un optimizador Adam y una tasa de aprendizaje ajustada, lo que permitió una convergencia más rápida y estable. Se experimentó con diferentes tamaños del espacio latente, evaluando el equilibrio entre la calidad de reconstrucción y la capacidad de generalización del modelo. Estos experimentos fueron clave para ajustar el AV a las necesidades específicas de los conjuntos de datos utilizados en la investigación, permitiendo una generación de datos sintéticos que no solo replicara los patrones de los datos originales, sino que también capturara la variabilidad inherente a estos.
+
+--- 
+**2.1. Encoder**
+
+$h_1 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_1}x + b_1))$\
+$h_2 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_2}h_1 + b_2))$\
+$h_3 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_3}h_2 + b_3))$
+
+**2.2. Decoder**
+
+$h_4 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_4}z + b_4))$\
+$h_5 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_5}h_4 + b_5))$\
+$\hat{x} = \text{BatchNorm}(\mathbf{W_6}h_5 + b_6)$
+
+ 
+***************************************************
+
+
+
+la optimización de hiperparámetros para mejorar la calidad de los datos sintéticos generados. Cada una de estas etapas implicó una serie de decisiones clave y experimentos diseñados para garantizar que el modelo fuera no efectivo en la generación de datos sintéticos, sino también robusto y adaptable a una variedad de conjuntos de datos y problemas de selección de características.
+
 
 Tras validar la arquitectura inicial mediante pruebas preliminares, se procedió a la segunda etapa del proceso, enfocada en la optimización de los hiperparámetros del modelo. Esta etapa implicó ajustar la arquitectura y explorar diferentes configuraciones para mejorar la calidad de los datos sintéticos generados. Se identificaron varias áreas de mejora en la versión inicial del AV, lo que llevó a la implementación de una segunda versión con cambios significativos.
 
