@@ -158,3 +158,33 @@ Además, se experimentó con el uso de dropout como técnica de regularización.
 Estos resultados llevaron a una reflexión sobre la falta de impacto positivo de ciertos ajustes, como la introducción de L1_loss y dropout. Es probable que la estabilidad y el buen rendimiento de las configuraciones ya validadas de AV y AVC, alcanzados a través de numerosos experimentos, limiten el potencial de mejora adicional mediante estos métodos. De hecho, en lugar de mejorar el rendimiento, estos cambios podrían estar degradando los resultados debido a la interferencia con una configuración ya optimizada.
 
 En resumen, la búsqueda de hiperparámetros y el ajuste de la arquitectura del AV y AVC revelaron la importancia de un enfoque balanceado que evite tanto la simplicidad excesiva como la complejidad innecesaria. Los resultados obtenidos muestran que, bajo ciertas configuraciones, los datos sintéticos pueden igualar o superar la utilidad de los datos reales en la formación de modelos predictivos, aunque la eficiencia y la calidad de estos resultados dependen en gran medida de la cuidadosa calibración de los hiperparámetros y de la adecuada elección de la arquitectura del modelo. 
+
+
+
+
+```{mermaid}
+graph TD
+  A[Input] --> B[Linear -> ReLU -> BN]
+  B --> C[Linear -> ReLU -> BN]
+  C --> D[Linear -> ReLU -> BN]
+  D --> E{mu, logvar}
+  E --> F[Reparameterization]
+  F --> G[Linear -> ReLU -> BN]
+  G --> H[Linear -> ReLU -> BN]
+  H --> I[Linear -> BN -> Output]
+```
+
+
+
+```{mermaid}
+graph TD
+  A[Input + Label] --> B[Linear -> ReLU -> BN]
+  B --> C[Linear -> ReLU -> BN]
+  C --> D[Linear -> ReLU -> BN]
+  D --> E{mu, logvar}
+  E --> F[Reparameterization]
+  F --> G[Latent Variable z + Label]
+  G --> H[Linear -> ReLU -> BN]
+  H --> I[Linear -> ReLU -> BN]
+  I --> J[Sigmoid -> Output]
+```

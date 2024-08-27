@@ -166,25 +166,24 @@ El modelo resultante fue entrenado con un optimizador Adam y una tasa de aprendi
 
 Estos experimentos fueron clave para ajustar el AV a las necesidades específicas de los conjuntos de datos utilizados en la investigación, permitiendo una generación de datos sintéticos que no solo replicara los patrones de los datos originales, sino que también capturara la variabilidad inherente a estos.
 
---- 
 **Arquitectura del Autocodificador Variacional**
 
 La arquitectura del Autocodificador Variacional está compuesta por tres capas lineales (una capa de entrada y dos capas ocultas), cada una seguida de una normalización por lotes (Batch Normalization) y una activación ReLU. El proceso de codificación se realiza de la siguiente manera:
 
-$h_1 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_1}x + b_1))$
-$h_2 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_2}h_1 + b_2))$
-$h_3 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_3}h_2 + b_3))$
+$h_1 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_1}x + b_1))$    
+$h_2 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_2}h_1 + b_2))$     
+$h_3 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_3}h_2 + b_3))$     
 
 Donde:
 
--$\mathbf{W_1}$es una matriz de pesos que transforma el vector de entrada $x$ al espacio de características de dimensión $H$.   
--$\mathbf{W_2}$transforma $h_1$ a un espacio de características de dimensión$H2$.   
--$\mathbf{W_3}$ mantiene la dimensión $H2$ mientras transforma$h_2$.      
--$b_1$,$b_2$, y$b_3$son los sesgos correspondientes a cada capa.
+- $\mathbf{W_1}$es una matriz de pesos que transforma el vector de entrada $x$ al espacio de características de dimensión $H$.   
+- $\mathbf{W_2}$transforma $h_1$ a un espacio de características de dimensión $H2$.   
+- $\mathbf{W_3}$ mantiene la dimensión $H2$ mientras transforma$h_2$.    
+- $b_1$,$b_2$, y$b_3$son los sesgos correspondientes a cada capa.
 
 Después de las tres capas, se generan los vectores latentes $\mu$ y $\log(\sigma^2)$ mediante dos capas lineales independientes que también aplican normalización por lotes.
 
-**2.2. Reparametrización**
+**Reparametrización**
 
 El vector latente $z$ se obtiene mediante la técnica de reparametrización, donde se introduce ruido gaussiano para permitir la retropropagación del gradiente:
 
@@ -192,68 +191,52 @@ $z = \mu + \sigma \times \epsilon$
 
 Donde $\epsilon$ es una variable aleatoria con distribución normal estándar, y $\sigma$ se calcula a partir de $\log(\sigma^2)$.
 
-**2.3. Decodificador**
+**Decodificador**
 
 El decodificador reconstruye el vector de entrada a partir del vector latente$z$utilizando una arquitectura de tres capas lineales, cada una seguida por una normalización por lotes y una activación ReLU:
 
-$h_4 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_4}z + b_4))$
-$h_5 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_5}h_4 + b_5))$
-$\hat{x} = \text{BatchNorm}(\mathbf{W_6}h_5 + b_6)$
+$h_4 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_4}z + b_4))$    
+$h_5 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_5}h_4 + b_5))$    
+$\hat{x} = \text{BatchNorm}(\mathbf{W_6}h_5 + b_6)$     
 
 Donde:
 
--$\mathbf{W_4}$ transforma el vector latente $z$ al espacio de características de dimensión $H2$.     
--$\mathbf{W_5}$ transforma $h_4$ al espacio de características de dimensión $H$.   
--$\mathbf{W_6}$ transforma $h_5$ de regreso al espacio de la dimensión original de la entrada $D_{in}$.   
--$b_4$,$b_5$, y$b_6$son los sesgos correspondientes a cada capa.
+- $\mathbf{W_4}$ transforma el vector latente $z$ al espacio de características de dimensión $H2$.     
+- $\mathbf{W_5}$ transforma $h_4$ al espacio de características de dimensión $H$.   
+- $\mathbf{W_6}$ transforma $h_5$ de regreso al espacio de la dimensión original de la entrada $D_{in}$.   
+- $b_4$,$b_5$, y$b_6$son los sesgos correspondientes a cada capa.
 
-Finalmente, la salida $\hat{x}$ es una aproximación reconstruida de la entrada original$x$.
+Finalmente, la salida $\hat{x}$ es una aproximación reconstruida de la entrada original $x$.
 
+### Modelo AVC para datos multiclase
 
-```{mermaid}
-graph TD
-  A[Input] --> B[Linear -> ReLU -> BN]
-  B --> C[Linear -> ReLU -> BN]
-  C --> D[Linear -> ReLU -> BN]
-  D --> E{mu, logvar}
-  E --> F[Reparameterization]
-  F --> G[Linear -> ReLU -> BN]
-  G --> H[Linear -> ReLU -> BN]
-  H --> I[Linear -> BN -> Output]
-```
-
----
-
-### Modelo CVAE para datos multiclase
-
-Para abordar el dataset GCM, que contiene 14 clases con distribuciones desiguales, se creo un Autocodificador Variacional Condicional (CVAE) que combina la capacidad de generación de un VAE tradicional con el condicionamiento explícito en las etiquetas de clase. El CVAE propuesto permitió una modelización más precisa de los datos, al incorporar información de clase en el proceso de codificación y decodificación.
+Para abordar el dataset GCM, que contiene 14 clases con distribuciones desiguales, se creo un Autocodificador Variacional Condicional (AVC) que combina la capacidad de generación de un AV tradicional con el condicionamiento explícito en las etiquetas de clase. El AVC propuesto permitió una modelización más precisa de los datos, al incorporar información de clase en el proceso de codificación y decodificación.
 
 En escenarios donde los datasets están desbalanceados, los modelos generativos pueden tender a favorecer las clases mayoritarias, ignorando las minoritarias. Para abordar el desbalance de clases que presenta GCM, se implementó una estrategia de ponderación de clases dentro de la función de pérdida, penalizando de manera diferenciada los errores de reconstrucción en función de la clase, mejorando así la capacidad del modelo para representar adecuadamente las clases minoritarias.
 
----
-**Arquitectura del Autocodificador Variacional Condicional (CVAE)**
+**Arquitectura del Autocodificador Variacional Condicional (AVC)**
 
-La arquitectura del Autocodificador Variacional Condicional (CVAE) se basa en una modificación del Autocodificador Variacional tradicional para incorporar información adicional en forma de etiquetas. Esta información se concatena tanto en la fase de codificación como en la de decodificación, permitiendo que el modelo aprenda distribuciones condicionales.
+La arquitectura del Autocodificador Variacional Condicional (AVC) se basa en una modificación del Autocodificador Variacional tradicional para incorporar información adicional en forma de etiquetas. Esta información se concatena tanto en la fase de codificación como en la de decodificación, permitiendo que el modelo aprenda distribuciones condicionales.
 
-**2.1. Codificador**
+**Codificador**
 
-El codificador del CVAE combina la entrada original con las etiquetas antes de ser procesada por una secuencia de capas lineales (una capa de entrada y dos capas ocultas), cada una seguida por una normalización por lotes (Batch Normalization) y una activación ReLU. El proceso de codificación se realiza de la siguiente manera:
+El codificador del AVC combina la entrada original con las etiquetas antes de ser procesada por una secuencia de capas lineales (una capa de entrada y dos capas ocultas), cada una seguida por una normalización por lotes (Batch Normalization) y una activación ReLU. El proceso de codificación se realiza de la siguiente manera:
 
-$h_1 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_1}[x, y] + b_1))$
-$h_2 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_2}h_1 + b_2))$
-$h_3 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_3}h_2 + b_3))$
+$h_1 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_1}[x, y] + b_1))$   
+$h_2 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_2}h_1 + b_2))$   
+$h_3 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_3}h_2 + b_3))$    
 
 Donde:
 
 - $[x, y]$ es la concatenación del vector de entrada $x$ con las etiquetas $y$.
-- $\mathbf{W_1}$ es una matriz de pesos que transforma el vector combinado $ [x, y]$ al espacio de características de dimensión $ H$.
-- $\mathbf{W_2}$ transforma $ h_1$ a un espacio de características de dimensión $ H2$.
-- $\mathbf{W_3}$ mantiene la dimensión $ H2$ mientras transforma $ h_2$.
-- $ b_1$, $ b_2$, y $ b_3$ son los sesgos correspondientes a cada capa.
+- $\mathbf{W_1}$ es una matriz de pesos que transforma el vector combinado $[x, y]$ al espacio de características de dimensión $H$.
+- $\mathbf{W_2}$ transforma $h_1$ a un espacio de características de dimensión $H2$.
+- $\mathbf{W_3}$ mantiene la dimensión $H2$ mientras transforma $h_2$.  
+- $b_1$, $b_2$, y $b_3$ son los sesgos correspondientes a cada capa.
 
 Al igual que en el Autocodificador Variacional tradicional, se generan los vectores latentes $\mu$ y $\log(\sigma^2)$ mediante dos capas lineales independientes.
 
-**2.2. Reparametrización**
+**Reparametrización**
 
 El vector latente $z$ se obtiene mediante la técnica de reparametrización, similar al Autocodificador Variacional tradicional:
 
@@ -261,21 +244,21 @@ $z = \mu + \sigma \times \epsilon$
 
 Donde $\epsilon$ es una variable aleatoria con distribución normal estándar, y $\sigma$ se calcula a partir de $\log(\sigma^2)$.
 
-**2.3. Decodificador**
+**Decodificador**
 
-El decodificador del CVAE reconstruye el vector de entrada a partir del vector latente $ z$ y las etiquetas $ y$, utilizando una arquitectura de tres capas lineales, cada una seguida por una normalización por lotes y una activación ReLU:
+El decodificador del AVC reconstruye el vector de entrada a partir del vector latente $z$ y las etiquetas $y$, utilizando una arquitectura de tres capas lineales, cada una seguida por una normalización por lotes y una activación ReLU:
 
-$h_4 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_4}[z, y] + b_4))$
-$h_5 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_5}h_4 + b_5))$
-$\hat{x} = \text{sigmoid}(\mathbf{W_6}h_5 + b_6)$
+$h_4 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_4}[z, y] + b_4))$       
+$h_5 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_5}h_4 + b_5))$     
+$\hat{x} = \text{sigmoid}(\mathbf{W_6}h_5 + b_6)$       
 
 Donde:
 
-- $[z, y]$ es la concatenación del vector latente $ z$ con las etiquetas $ y$.
-- $\mathbf{W_4}$ transforma el vector combinado $ [z, y]$ al espacio de características de dimensión $ H2 + \text{labels\_length}$.
-- $\mathbf{W_5}$ transforma $ h_4$ al espacio de características de dimensión $ H$.
-- $\mathbf{W_6}$ transforma $ h_5$ de regreso al espacio de la dimensión original de la entrada $ D_{in}$.
-- $ b_4$, $ b_5$, y $ b_6$ son los sesgos correspondientes a cada capa.
+- $[z, y]$ es la concatenación del vector latente $z$ con las etiquetas $y$.
+- $\mathbf{W_4}$ transforma el vector combinado $[z, y]$ al espacio de características de dimensión $ H2 + \text{labels\_length}$.
+- $\mathbf{W_5}$ transforma $h_4$ al espacio de características de dimensión $H$.
+- $\mathbf{W_6}$ transforma $h_5$ de regreso al espacio de la dimensión original de la entrada $ D_{in}$.  
+- $b_4$, $b_5$, y $b_6$ son los sesgos correspondientes a cada capa.
 
 Finalmente, la salida $\hat{x}$ es una aproximación reconstruida de la entrada original $x$, condicionada por las etiquetas $y$.
 
@@ -285,22 +268,7 @@ Finalmente, la salida $\hat{x}$ es una aproximación reconstruida de la entrada 
 - **Dimensiones ajustadas**: Se han ajustado las dimensiones de las capas para acomodar las etiquetas, reflejadas en las matrices de pesos y las normalizaciones por lotes.
 - **Capas adicionales en la fase de decodificación**: Se añaden capas y ajustes para manejar las etiquetas adicionales en el proceso de decodificación.
 
-Esta arquitectura permite que el CVAE capture relaciones condicionales más complejas entre las entradas y sus correspondientes etiquetas.
-
-```{mermaid}
-graph TD
-  A[Input + Label] --> B[Linear -> ReLU -> BN]
-  B --> C[Linear -> ReLU -> BN]
-  C --> D[Linear -> ReLU -> BN]
-  D --> E{mu, logvar}
-  E --> F[Reparameterization]
-  F --> G[Latent Variable z + Label]
-  G --> H[Linear -> ReLU -> BN]
-  H --> I[Linear -> ReLU -> BN]
-  I --> J[Sigmoid -> Output]
-```
-
----
+Esta arquitectura permite que el AVC capture relaciones condicionales más complejas entre las entradas y sus correspondientes etiquetas.
 
 ### Optimización de Hiperparámetros
 
@@ -312,7 +280,7 @@ El análisis de los resultados obtenidos mediante estas configuraciones reveló 
 
 Un hallazgo interesante se refiere a las dimensiones latentes del modelo. A medida que se ampliaba la búsqueda de hiperparámetros, se descubrió que las mejores configuraciones para la variable latente no eran necesariamente las más grandes. De hecho, en muchos casos, valores para la dimensión latente entre 3 y 100 ofrecieron los mejores resultados. Esto, que inicialmente puede ser contraintuitivo, ya que se podría suponer que un mayor espacio latente permitiría capturar más complejidad en los datos; sugiere que un espacio latente excesivamente grande puede introducir ruido y hacer que el modelo pierda la capacidad de generalizar correctamente.
 
-Las pruebas con diferentes arquitecturas también proporcionaron información valiosa. En el caso de leukemia, se exploraron modelos VAE de  dos, tres y cuatro capas ocultas, así como CVAE con múltiples capas, pero no se observaron mejoras significativas al aumentar la complejidad del modelo. En particular, se encontró que las configuraciones más simples (i.e. dos capas ocultas), ofrecían resultados tan buenos o incluso mejores que sus contrapartes más complejas. Esta observación refuerza la idea de que, en algunos casos, la simplicidad puede ser preferible y que el sobredimensionamiento de la arquitectura no necesariamente se traduce en mejores resultados.
+Las pruebas con diferentes arquitecturas también proporcionaron información valiosa. En el caso de leukemia, se exploraron modelos AV de  dos, tres y cuatro capas ocultas, así como AVC con múltiples capas, pero no se observaron mejoras significativas al aumentar la complejidad del modelo. En particular, se encontró que las configuraciones más simples (i.e. dos capas ocultas), ofrecían resultados tan buenos o incluso mejores que sus contrapartes más complejas. Esta observación refuerza la idea de que, en algunos casos, la simplicidad puede ser preferible y que el sobredimensionamiento de la arquitectura no necesariamente se traduce en mejores resultados.
 
 Por otro lado, los experimentos realizados en el dataset GCM presentaron un desafío diferente. A pesar de la implementación de un AVC de tres capas ocultas, los resultados no mostraron mejoras sustanciales en comparación con un más simple de dos capas. Además, se observó una disminución en la capacidad del modelo para predecir correctamente clases con menor soporte en el conjunto de datos, lo que sugiere que la complejidad del modelo no fue capaz de capturar adecuadamente la variabilidad de las clases menos representadas. Este resultado subraya la dificultad inherente al trabajo con conjuntos de datos multiclase, especialmente cuando las clases tienen distribuciones subyacentes similares, están desbalanceadas o ambos.
 
