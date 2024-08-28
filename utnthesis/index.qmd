@@ -3,4 +3,3 @@
 {{< include Chapters/Capitulo3.qmd >}}
 {{< include Chapters/Capitulo4.qmd >}}
 {{< include Chapters/Capitulo5.qmd >}}
-{{< include Chapters/Capitulo6.qmd >}}

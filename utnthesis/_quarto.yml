@@ -9,7 +9,7 @@ book:
     name: Claudio Sebastian Castillo
     url: https://castillosebastian.com/
   downloads: [pdf]
-  abstract: "La disponibilidad de datos muestrales afecta a los procesos de selección de características, y resulta particularmente condicionante en escenarios de alta dimensionalidad y bajo número de muestras. En el caso de selección de características mediante AGs la falta de datos muestrales impacta negativamente en la función de aptitud, y de esa forma limita la eficacia del algoritmo. Por eso, la técnica de aumentación de datos mediante AVs plantea una posible solución a este problema, ofreciendo distintas alternativas de implementación en el contexto de los AGs."
+  abstract: "La disponibilidad de datos muestrales afecta los procesos de selección de características, y resulta particularmente condicionante en escenarios de alta dimensionalidad y bajo número de muestras. En el caso de selección de características mediante Algoritmos Genéticos la falta de datos impacta negativamente en la función de aptitud, y de esa forma limita la eficacia del algoritmo. Por eso, la técnica de aumentación de datos mediante Autocodificadores Variacionales plantea una posible solución a este problema, ofreciendo distintas alternativas de implementación en el contexto de los Algoritmos Genéticos."
   chapters:
     - index.qmd    
     - references.qmd
@@ -27,12 +27,9 @@ thesis:
   department: Seccional Paraná
   group: UTN     
   quotation:
-    text: We can only see a short distance ahead, but we can see plenty there that needs to be done.
-    attribution: A.M.Turing, Computing Machinery and Intelligence
-  acknowledgements: "Frontmatter/acknowledgements.tex"
-  abbreviations: "Frontmatter/abbreviations.tex"
-  symbols: "Frontmatter/symbols.tex"
-  dedication: "Frontmatter/dedication.tex"
+    text: .
+    attribution: A mis hijos Morella, Sofía, Joquín y Manuel. A mi musa Verónica.
+  acknowledgements: "Frontmatter/acknowledgements.tex"  
   logo: images/utn_logo.png
   logo-height: "3cm"
 
