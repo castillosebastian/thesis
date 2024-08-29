@@ -9,6 +9,14 @@
 \begin{titlepage}
 \begin{center}
 
+$if(thesis.logo)$
+$if(thesis.logo-height)$
+\includegraphics[height=$thesis.logo-height$]{$thesis.logo$} % University/department logo
+$else$
+\includegraphics{$thesis.logo$}
+$endif$
+$endif$
+
 \vspace*{.06\textheight}
 {\scshape\LARGE \univname\par}\vspace{1cm} % University name
 \textsc{\Large Tesis de Maestría}\\[0.5cm] % Thesis type
@@ -46,14 +54,6 @@ $endif$
 \deptname\\[1cm] % Research group name and department name
  
 \vfill
-
-$if(thesis.logo)$
-$if(thesis.logo-height)$
-\includegraphics[height=$thesis.logo-height$]{$thesis.logo$} % University/department logo
-$else$
-\includegraphics{$thesis.logo$}
-$endif$
-$endif$
 
 $if(book.date)$
 {\large $book.date$}\\[1cm] % Date
