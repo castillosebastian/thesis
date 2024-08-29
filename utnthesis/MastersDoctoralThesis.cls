@@ -183,7 +183,7 @@
 %	REQUIRED PACKAGES
 %----------------------------------------------------------------------------------------
 
-\RequirePackage{babel} % Required for automatically changing names of document elements to languages besides english
+\RequirePackage[spanish]{babel} % Required for automatically changing names of document elements to languages besides english
 
 \RequirePackage{scrbase} % Required for handling language-dependent names of sections/document elements
 
@@ -348,17 +348,15 @@ KOMA-script documentation for details.}]{fancyhdr}
 		\thispagestyle{plain}
 		\begin{center}
 			{\normalsize \MakeUppercase{\univname} \par}% University name in capitals
+			{\normalsize \facname \par}% Faculty name
+			{\normalsize \deptname \par}% Department name
+			{\normalsize \degreename\par}% Degree name
 			\bigskip
 			{\huge\textit{\abstractname} \par}
 			\bigskip
-			{\normalsize \facname \par}% Faculty name
-			{\normalsize \deptname \par}% Department name
-			\bigskip
-			{\normalsize \degreename\par}% Degree name
-			\bigskip
 			{\normalsize\bfseries \@title \par}% Thesis title
 			\medskip
-			{\normalsize \byname{} \authorname \par}% Author name
+			{\normalsize \authorname \par}% Author name
 			\bigskip
 		\end{center}
 	}
@@ -413,7 +411,7 @@ KOMA-script documentation for details.}]{fancyhdr}
 		\checktoopen
 		\tttypeout{\acknowledgementname}
 		\thispagestyle{plain}
-		\begin{center}{\huge\textit{\acknowledgementname}\par}\end{center}
+		\begin{center}{\huge{\acknowledgementname}\par}\end{center}
 	}
 	{
 		\vfil\vfil\null
