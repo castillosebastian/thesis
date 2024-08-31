@@ -276,7 +276,95 @@ La búsqueda y ajuste de hiperparámetros para los modelos de AV y AVC ha sido u
 
 Uno de los primeros pasos fue ampliar la búsqueda de hiperparámetros, ajustando variables clave como las dimensiones latentes, las tasas de aprendizaje, y el número de neuronas en las capas ocultas. Un cambio significativo fue la implementación de un mecanismo de paciencia, configurado para detener el entrenamiento si no se observaba mejora en los datos de test durante 10 épocas consecutivas. Esta modificación tuvo un impacto directo en la calidad del modelo, ya que en experimentos iniciales, los modelos seguían entrenándose durante todas las épocas establecidas, lo que en muchos casos resultaba en un sobreajuste. La implementación de este corte temprano no solo mejoró la eficiencia del entrenamiento, sino que también contribuyó a reducir el error y mejorar la capacidad de generalización del modelo.
 
-El análisis de los resultados obtenidos mediante estas configuraciones reveló que un MLP entrenado con datos sintéticos generados por un AV podía igualar o incluso superar el rendimiento de un MLP entrenado con datos reales en algunos casos. Este hallazgo es particularmente relevante, ya que sugiere que, bajo ciertas configuraciones, los datos sintéticos pueden ser tan útiles como los datos reales para el entrenamiento de modelos predictivos. Este fenómeno se observó de manera consistente en varios conjuntos de datos, como Leukemia, Madelon, y Gisette, donde la precisión y la exactitud del modelo entrenado con datos sintéticos alcanzaron o superaron las métricas obtenidas con los datos originales.
+El análisis de los resultados obtenidos mediante estas configuraciones reveló que un MLP entrenado con datos sintéticos generados por un AV puede igualar o incluso superar en ciertos casos el rendimiento de un MLP entrenado con datos reales. Este hallazgo es particularmente relevante, ya que sugiere que, bajo ciertas configuraciones, los datos sintéticos pueden ser tan útiles como los datos reales para el entrenamiento de modelos predictivos. Este fenómeno se observó de manera consistente en varios conjuntos de datos, como Leukemia, Madelon, y GCM, donde la precisión y la exactitud del modelo entrenado con datos sintéticos alcanzaron o superaron las métricas obtenidas con los datos originales.
+
+#### Leukemia
+
+|   Modelo                                          |   Clase   |   Precision   |   Recall   |   F1Scr   |   Support   |
+|---------------------------------------------------|-----------|---------------|------------|--------------|-------------|
+|   MLP con datos reales                            | 0         | 0.76          | 1.00       | 0.87         | 13          |
+|                                                   | 1         | 1.00          | 0.56       | 0.71         | 9           |
+|   Accuracy                                        |           |               |            | 0.81         | 22          |
+|   Macro Avg                                       |           | 0.88          | 0.78       | 0.79         | 22          |
+|   Weighted Avg                                    |           | 0.86          | 0.82       | 0.80         | 22          |
+|                                                                                                                         |
+|   MLP con datos sintéticos                        | 0         | 0.93          | 1.00       | 0.96         | 13          |
+|                                                   | 1         | 1.00          | 0.89       | 0.94         | 9           |
+|   Accuracy                                        |           |               |            | **0.95**     | 22          |
+|   Macro Avg                                       |           | 0.96          | 0.94       | 0.95         | 22          |
+|   Weighted Avg                                    |           | 0.96          | 0.95       | 0.95         | 22          |
+
+#### Madelon
+
+|   Modelo                                          |   Clase   |   Precision   |   Recall   |   F1Scr   |   Support   |
+|---------------------------------------------------|-----------|---------------|------------|--------------|-------------|
+|   MLP con datos reales                            | 0         | 0.56          | 0.55       | 0.55         | 396         |
+|                                                   | 1         | 0.54          | 0.55       | 0.55         | 384         |
+|   Accuracy                                        |           |               |            | 0.55         | 780         |
+|   Macro Avg                                       |           | 0.55          | 0.55       | 0.55         | 780         |
+|   Weighted Avg                                    |           | 0.55          | 0.55       | 0.55         | 780         |
+|                                                                                                                         |
+|   MLP con datos sintéticos                        | 0         | 0.56          | 0.72       | 0.63         | 396         |
+|                                                   | 1         | 0.59          | 0.42       | 0.49         | 384         |
+|   Accuracy                                        |           |               |            | **0.57**     | 780         |
+|   Macro Avg                                       |           | 0.58          | 0.57       | 0.56         | 780         |
+|   Weighted Avg                                    |           | 0.58          | 0.57       | 0.56         | 780         |
+
+#### Gisette
+
+|   Modelo                                          |   Clase   |   Precision   |   Recall   |   F1Scr   |   Support   |
+|---------------------------------------------------|-----------|---------------|------------|--------------|-------------|
+|   MLP con datos reales                            | 0         | 0.98          | 0.98       | 0.98         | 904         |
+|                                                   | 1         | 0.98          | 0.98       | 0.98         | 896         |
+|   Accuracy                                        |           |               |            | **0.97**     | 1800        |
+|   Macro Avg                                       |           | 0.98          | 0.98       | 0.98         | 1800        |
+|   Weighted Avg                                    |           | 0.98          | 0.98       | 0.98         | 1800        |
+|                                                                                                                         |
+|   MLP con datos sintéticos                        | 0         | 0.95          | 0.97       | 0.96         | 904         |
+|                                                   | 1         | 0.97          | 0.95       | 0.96         | 896         |
+|   Accuracy                                        |           |               |            | 0.95         | 1800        |
+|   Macro Avg                                       |           | 0.96          | 0.96       | 0.96         | 1800        |
+|   Weighted Avg                                    |           | 0.96          | 0.96       | 0.96         | 1800        |
+
+#### GCM
+
+|   Modelo                                          |   Clase   |   Precision   |   Recall   |   F1Scr   |   Support   |
+|---------------------------------------------------|-----------|---------------|------------|--------------|-------------|
+|   MLP con datos reales                            | 0         | 0.14          | 0.25       | 0.18         | 4           |
+|                                                   | 1         | 0.00          | 0.00       | 0.00         | 1           |
+|                                                   | 2         | 1.00          | 1.00       | 1.00         | 3           |
+|                                                   | 3         | 1.00          | 0.33       | 0.50         | 6           |
+|                                                   | 4         | 0.89          | 1.00       | 0.94         | 8           |
+|                                                   | 5         | 0.40          | 0.67       | 0.50         | 3           |
+|                                                   | 6         | 0.80          | 0.80       | 0.80         | 5           |
+|                                                   | 7         | 0.50          | 0.75       | 0.60         | 4           |
+|                                                   | 8         | 0.33          | 0.25       | 0.29         | 4           |
+|                                                   | 9         | 0.25          | 0.67       | 0.36         | 3           |
+|                                                   | 10        | 1.00          | 0.25       | 0.40         | 4           |
+|                                                   | 11        | 1.00          | 0.67       | 0.80         | 3           |
+|                                                   | 12        | 1.00          | 0.25       | 0.40         | 4           |
+|                                                   | 13        | 1.00          | 0.20       | 0.33         | 5           |
+|   Accuracy                                        |           |               |            | **0.54**     | 57          |
+|   Macro Avg                                       |           | 0.67          | 0.51       | 0.51         | 57          |
+|   Weighted Avg                                    |           | 0.74          | 0.54       | 0.56         | 57          |
+|                                                                                                                         |
+|   MLP con datos sintéticos                        | 0         | 1.00          | 0.25       | 0.40         | 4           |
+|                                                   | 1         | 0.00          | 0.00       | 0.00         | 1           |
+|                                                   | 2         | 1.00          | 0.67       | 0.80         | 3           |
+|                                                   | 3         | 1.00          | 0.17       | 0.29         | 6           |
+|                                                   | 4         | 1.00          | 1.00       | 1.00         | 8           |
+|                                                   | 5         | 0.43          | 1.00       | 0.60         | 3           |
+|                                                   | 6         | 1.00          | 0.80       | 0.89         | 5           |
+|                                                   | 7         | 0.10          | 0.25       | 0.14         | 4           |
+|                                                   | 8         | 0.67          | 0.50       | 0.57         | 4           |
+|                                                   | 9         | 0.50          | 0.33       | 0.40         | 3           |
+|                                                   | 10        | 0.00          | 0.00       | 0.00         | 4           |
+|                                                   | 11        | 1.00          | 0.67       | 0.80         | 3           |
+|                                                   | 12        | 1.00          | 0.75       | 0.86         | 4           |
+|                                                   | 13        | 0.21          | 0.60       | 0.32         | 5           |
+|   Accuracy                                        |           |               |            | **0.54**     | 57          |
+|   Macro Avg                                       |           | 0.64          | 0.50       | 0.50         | 57          |
+|   Weighted Avg                                    |           | 0.70          | 0.54       | 0.55         | 57          |
 
 Un hallazgo interesante se refiere a las dimensiones latentes del modelo. A medida que se ampliaba la búsqueda de hiperparámetros, se descubrió que las mejores configuraciones para la variable latente no eran necesariamente las más grandes. De hecho, en muchos casos, valores para la dimensión latente entre 3 y 100 ofrecieron los mejores resultados. Esto, que inicialmente puede ser contraintuitivo, ya que se podría suponer que un mayor espacio latente permitiría capturar más complejidad en los datos; sugiere que un espacio latente excesivamente grande puede introducir ruido y hacer que el modelo pierda la capacidad de generalizar correctamente.
 
