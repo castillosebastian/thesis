@@ -270,6 +270,10 @@ Finalmente, la salida $\hat{x}$ es una aproximación reconstruida de la entrada 
 
 Esta arquitectura permite que el AVC capture relaciones condicionales más complejas entre las entradas y sus correspondientes etiquetas.
 
+
+Completar con **classweights** y **custom_loss**.!!!!!!!!!!!!!!!!!!
+
+
 ### Optimización de Hiperparámetros
 
 La búsqueda y ajuste de hiperparámetros para los modelos de AV y AVC ha sido un proceso crucial para optimizar la generación de datos sintéticos y, en última instancia, mejorar el rendimiento de nuestro Algoritmo Genético. A lo largo de esta etapa de investigación, se implementaron diversas estrategias para identificar las configuraciones óptimas de los modelos, así como para evitar el sobreajuste y garantizar la robustez de los resultados.

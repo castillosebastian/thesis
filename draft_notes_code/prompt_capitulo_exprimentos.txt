@@ -1,0 +1,217 @@
+He finalizado mi tesis de Maestría. 
+
+### Contenido de la Tesis:
+'''
+En el campo del aprendizaje automático, la selección de características es una tarea crítica que puede determinar el éxito o fracaso de un modelo predictivo. La alta dimensionalidad y la complejidad inherente a los conjuntos de datos reales hacen que la selección de un subconjunto óptimo de características sea, muchas veces, un paso ineludible para el aprendizaje efectivo.
+
+En este contexto, los Algoritmos Genéticos (AGs) se han consolidado como una herramienta poderosa para resolver problemas de optimización complejos, incluida la selección de características. Estos algoritmos, inspirados en la evolución natural, son capaces de explorar grandes espacios de búsqueda de manera efectiva, proporcionando soluciones cercanas al óptimo en una variedad de escenarios. Por ello, los AGs han sido ampliamente utilizados en problemas de selección, demostrando su eficacia en la identificación de subconjuntos relevantes de características en datos de alta dimensionalidad.
+
+Sin embargo, la eficacia de los AGs depende de la disponibilidad de suficientes datos para evaluar las soluciones en competencia. En contextos donde los datos son limitados, los AGs pueden verse afectados en su capacidad discriminativa, produciendo soluciones subóptimas o inestables. Esta limitación es especialmente crítica en problemas de alta dimensionalidad y bajo número de muestras, donde la función objetivo que guía la búsqueda de soluciones puede degradarse significativamente.
+
+Por esta razón, la investigación de estrategias que mitiguen las limitaciones impuestas por la escasez de datos se ha convertido en un área de interés creciente en el subcampo de la selección de características. Una de las técnicas emergentes en este ámbito es la aumentación de datos mediante Autoencodificadores Variacionales (AVs). Los AVs, como modelos generativos, tienen la capacidad de crear muestras sintéticas que mantienen las propiedades fundamentales de los datos originales, conviertiéndolos en una herramienta prometedora para mejorar la capacidad de los AGs en la selección de características.
+
+El problema central de la tesis que aquí presentamos giró, precísamente, en la restricciones que la escacez de datos impone a los AGs, y cómo superarlas usando AVs. La pregunta que guíó nuestro trabajo ha sido: ¿cómo puede la aumentación de datos mediante autoencodificadores variacionales mejorar el desempeño de los algoritmos genéticos en la selección de características?
+
+Cabe destacar que este desafío y su eventual resolución son importantes por varias razones. La selección de características no solo condiciona la precisión de los modelos predictivos, sino también afecta la eficiencia computacional y la interpretabilidad de los resultados. En problemas de alta dimensionalidad, la capacidad de reducir el número de características relevantes sin perder información útil puede marcar la diferencia entre un modelo efectivo y uno ineficaz, entre uno interpretable y uno de caja negra. Por lo tanto, mejorar este proceso mediante la integración de técnicas de aumentación de datos puede tener un impacto significativo en diversas aplicaciones prácticas, desde la biología molecular hasta la ingeniería y las ciencias sociales.
+
+La hipótesis que hemos llevado a prueba ha sido *que la aumentación de datos mediante AVs mejora la capacidad discriminativa de los AGs, permitiendo la identificación de subconjuntos de características más relevantes y estables en contextos de escasez muestral*. Para evaluarla, hemos propuesto un trabajo experimental que exploró la integración de estas dos técnicas en un marco unificado. La idea de combinar la generación de datos sintéticos mediante AVs con la selección de características mediante AGs, estaba orientada a buscar combinaciones sinérgicas y eficaces entre modelos que mejorasen la selección de características. A estos fines, trabajamos con cuatro conjuntos de datos de referencia, representativos de distintos contextos y niveles de complejidad, para evaluar el desempeño de los modelos propuestos.
+
+A lo largo de este documento, describiremos el proceso de investigación llevado a cabo, desde los estudios iniciales hasta los experimentos finales, pasando por el diseño y construcción de un modelo genérico de AV, y su adaptación a los datasets elegidos y la creación de una estructura combinada de AV + AG para la selección de características. Los resultados obtenidos en cada etapa se analizarán y discutirán en detalle, con el objetivo de identificar las ventajas y limitaciones de la propuesta, así como posibles áreas de mejora y futuros trabajos.
+
+Al finalizar el documento, esperamos poder justificar la eficacia de la aumentación de datos mediante AVs en la selección de características, demostrando que esta técnica puede mejorar significativamente el desempeño de los AGs en contextos de escasez. Además, esperamos identificar las condiciones y contextos en los que esta técnica es más efectiva.
+
+El documento está estructurado de la siguiente manera: en el capítulo 2 se presenta una revisión del estado del arte, destacando las principales contribuciones en el ámbito de la aumentación de datos y la selección de características, así como los resultados de modelos clásicos aplicados a los datasets seleccionados para este trabajo. El capítulo 3 describe el diseño y construcción de nuestro modelo de Autoencodificador Variacional, desde una revisión teórica hasta la implementación particular que hemos desarrollado. En el capítulo 4 se ofrece una breve descripción de los Algoritmos Genéticos, resaltando los aspectos más relevantes de esta técnica aplicada a la selección de características. En el capítulo 5 se presentan y analizan los resultados obtenidos a partir de los experimentos realizados, incluyendo la evaluación de los modelos propuestos. En el capítulo 6, se exponen las conclusiones de la investigación, así como posibles líneas futuras de trabajo.
+'''
+
+### Experimento 1: Leukemia
+
+'''
+Comparar original vs. aumentacion con igual  configuraciíon. El objectivo era tener una primera intución de los resultados de ambos experimentos.  
+0001 
+0002
+PROB_MUT = 1/IND_SIZE(0.0001); PX = 0.75, cromosoma activo es p=0.1, GMAX=20. Los parametros fueron los mismos para los dos grupos de experimentos (con/sin aumento).La autmentación generó 100 muestras. 
+#RESULTADOS#: 
+Resultados simillares en ambos grupos de experimentos respecto de ACC y  NGENES.  La velocidad de convergencia hacia el máximo (1.0) no muestra diferencia sustancial (ver plots /home/sebacastillo/ealab/expga1/plots/leukemia_base_0001_0_accuracy_evolution.png y /home/sebacastillo/ealab/expga1/plots/leukemia_base_0002_0_accuracy_evolution.png). 
+La cantidad de características seleccionadas al menos una vez en todas las pruebas realizadas en cada uno de los dos grupos de experimentos llega a 6779 (datos aumentados) y 6772 (datos originales), quiere decir que la mayoría de las características apareció al menos una vez entre las características encontradas por el GA, para los distintos escenarios de experimentación. Esto sucede porque hay mucha correlación entre las características. Esto me llevó a observar: “Los features están muy correlacionados. Con el 10% de los datos se resuelve el problema, y no importa cuál 10%?” La correlación que tienen las características del dataset muestra estos resultados, para :
+-Número de correlaciones significativas: 80742 (Este es el número total de pares de características que tienen una correlación absoluta mayor a 0.7.
+- Número total de pares posibles de características: 25407756.0
+- Porcentaje de correlaciones significativas: 0.32%
+Los resultados indican que hay una cantidad notable de características altamente correlacionadas, pero estas representan una pequeña fracción del total de pares posibles.
+Se observa, más allá de las semejanzas de resultados entre ambos grupos de experimento,  menor dispersión en los resultados. 
+/home/sebacastillo/ealab/expga1/R1_report_results.ipynb
+------
+En este meta-conjunto de experimentos se intervino de manera más activa, buscando distintas configuracion de hiperparámetros para poner a prueba la arquitectura. 
+DOriginal
+0012
+0013
+DAumentada
+0003
+0006
+0007
+0008
+0008
+0011
+Grupos de experimentos exploratorios donde investigué distintas configuraciones de la arquitectura construida (VAE+GA), y el correspondiente experimento de control con el dataset original. 
+Grupo de experimentos con dataset original.
+- '0012'  original, cromosoma activo 0.01 y alpha 0.5, 30 pruebas.
+- '0013'  original, cromosoma activo 0.005 y alpha 0.5, 30 pruebas.
+Grupo de experimentos con dataset aumentado.
+- '0002  aumentado en 100 observaciones , cromosoma activo 0.1, alpha 0.5, 30 pruebas.  
+- 0003  aumentado en 1000 observaciones , cromosoma activo 0.1, alpha 0.5, 30 pruebas. 
+- 0006  aumentado en 100 observaciones , cromosoma activo 0.01 y alpha 0.3, 10 pruebas.
+- 0007  aumentado en 100 observaciones , cromosoma activo 0.01 y alpha 0.5, 10 pruebas.
+- 0008  aumentado en 100 observaciones , cromosoma activo 0.01 y alpha 0.2, 30 pruebas.
+- 0009  aumentado en 100 observaciones , cromosoma activo 0.01 y alpha 0.5, 30 pruebas.
+- 0011  aumentado en 100 observaciones , cromosoma activo 0.005 y alpha 0.5, 30 pruebas.
+------
+Generación de un dataset de muchas observaciones por clase n=1000 x clase.
+0003
+Aumento en 1000 observaciones sintéticas para cada clase. #RESULTADOS#:
+El acc 1.0, como los demás grupos de experimentos, sin mejora de la velocidad de convergencia, y con un incremento del costo computacional debido a la cantidad de observaciones. 
+------
+Reducción del cromosoma activo a 0.01
+0006 Aumentado
+0009 
+0012 Original
+Aumentado en 100 observaciones por clase, y con cromosoma activo es p=0.01 (n_genes entre [63, 79]). El acc sigue siendo alto pese a la agresiva reducción del espacio de búsqueda. 
+Data set aumentado la convergencia no es más rápida que en el dataset sin aumentación.
+/home/sebacastillo/ealab/expga1/R7_Leukemia_velocidad_convergencia.ipynb
+------
+Reducción del cromosoma activo 0.005.
+0011 Aumentado
+0013 Original
+Cromosoma activo de 0.005 ([24,46]), con acc alto, entre 0.99/1.0. Los resultados son similares en ambos grupos de experimentos. 
+'''
+
+### Experimento 2: Gisette
+'''
+Comparación de original vs aumentado.
+0020 Original
+0022
+—-----------------
+0005 Aumentado
+PROB_MUT = 1/IND_SIZE(0.0002); PX = 0.75, cromosoma activo es p=0.1, GMAX=30. Los parametros fueron los mismos para los dos grupos de experimentos (con/sin aumento). Se generaron 600 datos sintéticos.
+Los resultados no variarion en lo que respecta a la precisión en la clasificación.
+Sin hay una reducción en la cantidad de características seleccionadas.
+------
+Comparación de original vs aumentado.
+Reducción agresiva del espacio de búsqueda
+0024 Original
+0025 Aumentado
+Reducción agresiva del tamaño del cromosoma: Ind p = 0.01, aumentado en 6000 observaciones. Genes [36,60]. El dataset aumentado se desenvuelve mejor. Ver scatterplot gisette.
+/home/sebacastillo/ealab/expga1/R3_report_feature_gisette_madelon.ipynb
+'''
+
+### Experimento 3: Madelon
+'''
+Comparación de original vs aumentado.
+0014 Aumentado
+0023 Original
+0017 Original
+Dataset con 5 características relevante, 15 combinaciones lineales de aquellas y las demás reuido.
+PROB_MUT = 1/IND_SIZE(0.002); PX = 0.75, cromosoma activo es p=0.1, GMAX=30. Los parametros fueron los mismos para los dos grupos de experimentos (con/sin aumento).La autmentación generó 2000 muestras. 
+ #RESULTADOS#:
+El acc para experimentos con aumentación es clarament superior, incluso es superior a todos los intentos de clasificación con los modelos tradicionales. 
+madelon_original     0.749939
+madelon_synthetic    0.827800
+Incremento porcentual en la precisión del 10.4%
+No hay variación sustancial en la velocidad de convergencia del algoritmo al máximo. 
+/home/sebacastillo/ealab/expga1/R3_report_feature_gisette_madelon.ipynb
+/home/sebacastillo/ealab/expga1/R5_report_feature_analyze copy.ipynb
+'''
+
+### Experimento 4: GCM
+'''
+Comparación original vs aumentado
+0026 Original
+0037
+0038
+0039
+0040
+El experimento que tomé como base fue el 0026, sobre dataset original, con la siguiente configuracion: PROB_MUT = 1/IND_SIZE(0.00006); PX = 0.75, cromosoma activo es p=0.1, GMAX=20.
+Le siguieron la serie 27,28,29,30 que se informa más abajo, con acc mucho mas bajos que el 26.
+-----
+Foco en la generación de mas datos de entrenamiento y teteo. 
+0027 Aumentado
+0028 
+0029
+0030
+0027: p = 0.1, 200 muestras sintéticas
+0028: p = 0.1, 1400 muestras sintéticas
+0029: p= 0.01,  1400 muestras sintéticas
+0030: p= 0.01,  1400 muestras sintéticas, testeo (función de fitness) en la partición original.
+
+Peores resultados con aumentación experimentos 27, 28, 29: entiendo que el motivo está en que el AG opera con un dataset que combina datos originales y sintéticos, siendo que los datos sintéticos no son de buena calidad (está trabajando con dos distribuciones de probabilidades disímiles). El 30 tiene un acc que encima de 0.4, que es el doble de los anteriores, la única diferencia importante es que en 30 se está trabajando con la partición original de testeo. 
+Pero 0030: p= 0.01, 1400 muestras sintéticas, los resultados lograr acc mucho mayor que los otros tres. La particularidad del 30 es que el GA entrena con datos mezclados pero el testeo se realiza sobre la partición original de testeo. 
+------
+
+0031
+0032
+0033
+Luego 31,32,33 fueron experimentos individuales, que al igual que el 30 entrenan con la unión de datos originales y sintéticos, y testean en la partición original de test. Se generan 1400 datos sintéticos. La particularidad del grupo es que adopto la estrategia de testear en partición original y pruebo en el experimento 32 un cromosoma construido con ind p=0.3 (5000 caracteríristicas aprox), pero sin mejores resultados que el experimento de referencia. 
+
+----
+0034
+0035
+0036
+Este grupo de experimento centré la atención en la Prob.Mutacion. Para 34 y 35 fije PROB_MUT = 16, mientras que para 0036 160. (los demás parámetros: gen activos p=0.1, PX =0.75, muestras sinteticas 1400) Este grupo de experimentos registra los mejores resultados. Entrené con la partición original de train, y con todos los datos sintéticos. 
+----
+'''
+
+### Resumen de los experimentos
+
+
+Comparación de resultados de entrenamiento de  AG con datasets originales vs datasets aumentados con datos sintéticos generados por VAE.
+Cada punto es el promedio de N experimentos realizados en cada dataset (GCM N=5, Madelon-Gisette-Lukemia = 20/30). 
+En total se realizaron 70 rondas de experimentos, con un total de 524 experimentos individuales. 
+
+#### Análsis de los resultados de los experimentos realizados en los datasets de clases binarias.
+
+Los mejores resultados se obtuvieron en Madelon, y los de menor relevancia en Gisette.
+Los resultados de Madelon empleando aumentación no solo son cláramente mejores en cuanto a la precisión de la clasificación sino 
+también presentan menor dispersion. La estrategia de aumentación está contribuyendo a la estabilidad en la selección de características en el AG.
+
+En leukemia los resultados de los experimentos con aumentación son levemente mejores en terminos de precisión alcanzada que sin aumentación. 
+Quizás la mayor diferencia en estos dos casos se encuentre en la estabilidad de los resultados, donde nuevamente -ratificando los hallazgos de 
+Madelon- el algoritmo presenta mayor estabilidad. 
+
+Resalto que tanto leukemia como gisette son dataset donde los desempeños de los algoritmos de clasificación obtienen resultados muy buenos. Fíjense que estamos con scores de precisión que se mueve entre el 0.95 y el 1.00. Entiendo que esto es muy importante tenerlo presente pues, el dataset más dificil de resolver es, precisamente, donde la estrategia de aumentación muestra sus mejores resultados. 
+
+#### Análisis de los resultados de los experimentos realizados en el dataset de clases multiclase (GCM):
+
+El caso de GCM merece merece un análisis particular.
+La primera seria de experimentos, basados en un la implementación de aumentación y selección de caracteristicas mediante un AG
+con la misma metodología que en los datasets de clases binarias, no arrojaron resultados positivos.
+Aquí los resultados obtenidos con aumentación de datos son bastante peores que sin ella. 
+Debo destacar que realicé experimentos muy agresivos, (ej. probando genes activos = 0.005). 
+Entiendo que aquí el VAE no está pudiendo generar datos que se aproximen a la distribución de probabilidad original. 
+Creo que esto está señalando claramente que el VAE no está generando datos que sean representativos de los datos reales, y por lo tanto el AG no puede generalizar a estos datos.Posiblemente esta circunstancia indica que la divergencia KL tiene un error menor que el error de reconstrucción, lo que hace que el VAE no sea capaz de generar datos que sean representativos de los datos reales, pero sí es capaz de generar un espacio latente que es capaz de separar las clases perfectamente. Por eso aquellos resultados del MLP. 
+No se debe perder de vista que GCM es el dataset más difícil, donde los algoritmos en general (les hice pruebas a varios de los clásicos, con optimización de hiperparàmetros, tienen resultados pobres, alrededor de 0.5 de acc.).
+
+Esto último marcó el camino de una serie de experimentos donde se realizaron varios ajustes. 
+Inicié una serie (006X) partiendo de una subselección de características. 
+La intención era comprobar si acaso el CVAE podía mejorar la reconstrucción de datos, generando sintéticos de mayor calidad. 
+La subselección comprende 1600 características elegidas de los experimentos anteriores y según aquellas de mayor frecuencia. 
+Entiendo que esto es válido pues, en definitiva, la selección de características fue realizada siempre mediante GA. 
+En tal sentido creo que es como una técnia de 'staking' donde un flujo con un CAVE, así: GA-CVAE-GA, 
+Donde:  EspacioOriginal16063=>GA=>EspacioReducido1600=>CVAE=>GA = BalancedAcc > 0.65.
+
+Asimismo se realizaron una serie de ajustes en el AV. 
+Integration of class weights into the custom loss function.
+Inclusion of a weighted random sampler in the data loader.
+
+
+Los resultados de GCM en una nueva serie de experimentos donde se parte de una nuevas particiones de entrenamiento y testeo, y donde NUNCA! se mezclan dichas particiones: el CVAE y el AG solo se entrenan/corren con 'train' y evaluan en 'test'. 
+Viendo el gráfico entiendo que estamos ante un resultado claramente positivo en los casos donde los individuos tenían cromosomas con 750 y 450 genes activos en promedio, mientra que en el caso de una reducción más drástica la diferencia es menor, pero se mantiene tambien.
+
+
+#### Sobre los resultados en la selección de características
+Improvement of a machine learning model, either in terms of learning speed, computational complexity, simplicity/interpretability of the representation or generalization capability?
+Como puede verse en los gráficos de Gisette y Madelon la aumentación de datos está contribuyendo a la selección de características permitiendo al AG, una mayor concentración de las features relevantes. El caso de Madelon, que entendemos resulta el más interesante, es donde mayor reducción del espacio de características se logra a partir de la aumentación, incluso una distribucin más homogenea. 
+En el caso de leukemia el gráfico no permite apreciar esto, porque los valores de ‘n_genes’ están muy polarizados. Por eso ver el siguiente gráfico:
+Las dos distribuciones son similares.
+En el caso particular de Madelon  tenemos las siguientes distribuciones de las 20 características valiosas que contiene el dataset (5 relevantes y 15 combinaciones lineales de aquellas, las demas son ruido). Aquí estamos mostrando las distribuciones de probabilidades de aparición de las 20 features relevantes.
+El dataset aumentado está encontrando más features que el dataset sin aumentación.
+En el próximo gráfico vemos de la frecuencia relativa de aparición de cada caracteŕistica según el grupo de experimentos. Entiendo que el grupo de experimentos con datos sintéticos tenemos saltos marcados de las frecuencias, señalando que hay más aparición de ciertas variables. 
+El caso de gisette, con un cromosoma p=0.001. Están los experimentos 24 y 25. El dataset aumentado se desempeña mejor en esa reducción agresiva del cromosoma. 
+Se degrada menos la performance. Los resultados son más estables
