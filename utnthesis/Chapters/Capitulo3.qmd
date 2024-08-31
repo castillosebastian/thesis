@@ -20,7 +20,8 @@ num_generations = 10
 mutation_rate = 0.1
 
 # Inicializar la población con individuos aleatorios
-population = [[random.randint(0, 1) for _ in range(chromosome_length)] for _ in range(num_individuals)]
+individuals = [random.randint(0, 1) for _ in range(chromosome_length)]
+population = [individuals for _ in range(num_individuals)]
 
 # Ejecutar el Algoritmo Genético
 for generation in range(num_generations):
@@ -122,9 +123,9 @@ Población B, con 5 individuos de longitud 5, de baja diversidad:
 
 -   Individuo 1: `11111`
 -   Individuo 2: `11111`
--   Individuo 3: `11111`
--   Individuo 4: `11111`
--   Individuo 5: `11111`
+-   Individuo 3: `11011`
+-   Individuo 4: `11010`
+-   Individuo 5: `11010`
 
 Como podemos advertir en este ejemplo, cada individuo representa una solución potencial al problema, donde cada bit en la cadena codificada corresponde a una característica que puede ser seleccionada o excluida. En estas poblaciónes los individuos de A son distintos entre sí, lo que permite al AG explorar una variedad de soluciones y adaptarse a las condiciones cambiantes del problema, mientras que los individuos de B son idénticos, lo que limita la capacidad del AG para explorar nuevas regiones del espacio de búsqueda.
 
@@ -177,9 +178,7 @@ Goldberg nos presenta, en relación a este punto, lo que se conoce como la **Ecu
 
 La Ecuación del Esquema predice el número esperado de copias de un esquema $H$ en la próxima generación $t+1$, dado su número de copias en la generación actual $t$. Se expresa de la siguiente manera:
 
-$
-m(H, t+1) \geq m(H, t) \cdot \frac{f(H)}{\bar{f}} \cdot \left[ 1 - p_c \frac{\delta(H)}{l-1} \right] \cdot \left(1 - p_m\right)^{o(H)}
-$
+$m(H, t+1) \geq m(H, t) \cdot \frac{f(H)}{\bar{f}} \cdot \left[ 1 - p_c \frac{\delta(H)}{l-1} \right] \cdot \left(1 - p_m\right)^{o(H)}$
 
 Donde:
 - $m(H, t)$ es el número de copias del esquema $H$ en la generación $t$.
@@ -207,27 +206,27 @@ Consideremos un ejemplo con los siguientes parámetros:
 Aplicando estos valores a la Ecuación del Esquema:
 
 1. **Factor de Selección**: 
-   $
-   \frac{f(H)}{\bar{f}} = \frac{18}{15} = 1.2
-   $
+   
+   $\frac{f(H)}{\bar{f}} = \frac{18}{15} = 1.2$
+
    Esto indica que los individuos que coinciden con el esquema $H$ tienen una aptitud superior a la media y, por lo tanto, es más probable que sean seleccionados.
 
 2. **Probabilidad de Conservación ante el Cruce**:
-   $
-   1 - p_c \frac{\delta(H)}{l-1} = 1 - 0.7 \cdot \frac{4}{6-1} = 1 - 0.7 \cdot 0.8 = 1 - 0.56 = 0.44
-   $
+   
+   $1 - p_c \frac{\delta(H)}{l-1} = 1 - 0.7 \cdot \frac{4}{6-1} = 1 - 0.7 \cdot 0.8 = 1 - 0.56 = 0.44$
+
    Hay un 44% de probabilidad de que el esquema $H$ se conserve tras el cruce.
 
 3. **Probabilidad de Conservación ante la Mutación**:
-   $
-   (1 - p_m)^{o(H)} = (1 - 0.01)^{3} = 0.99^3 \approx 0.9703
-   $
+   
+   $(1 - p_m)^{o(H)} = (1 - 0.01)^{3} = 0.99^3 \approx 0.9703$
+
    El esquema $H$ tiene aproximadamente un 97% de probabilidad de no ser destruido por la mutación.
 
 4. **Cálculo Final**:
-   $
-   m(H, t+1) \geq 20 \cdot 1.2 \cdot 0.44 \cdot 0.9703 \approx 20 \cdot 0.5127 = 10.254
-   $
+   
+   $m(H, t+1) \geq 20 \cdot 1.2 \cdot 0.44 \cdot 0.9703 \approx 20 \cdot 0.5127 = 10.254$
+
    Por lo tanto, en la próxima generación, se espera que haya al menos 10 copias del esquema $H$ en la población.
 
 Este cálculo muestra cómo el esquema $H$, que tiene una aptitud superior a la media y ciertas características de proximidad posicional (es decir, una longitud de definición baja), es favorecido en la reproducción y es probable que se mantenga en la población. 
@@ -277,7 +276,12 @@ X = data.data
 y = data.target
 
 # División del conjunto de datos en entrenamiento y prueba
-Xtrain, Xtest, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+Xtrain, Xtest, y_train, y_test = train_test_split(
+    X, 
+    y, 
+    test_size=0.3, 
+    random_state=42
+)
 
 # Tamaños derivados
 DAT_SIZE = Xtrain.shape[0]
@@ -293,7 +297,10 @@ def fitness(individual, Xtrain, Xtest, y_train, y_test):
     X_train = Xtrain[:, individual]
     X_test = Xtest[:, individual]
 
-    model = MLPClassifier(hidden_layer_sizes=(5, 3), max_iter=1000, random_state=42)
+    model = MLPClassifier(hidden_layer_sizes=(5, 3), 
+        max_iter=1000, 
+        random_state=42
+    )
     model.fit(X_train, y_train)
     
     predictions = model.predict(X_test)
@@ -311,13 +318,18 @@ creator.create("Individual", list, fitness=creator.FitnessMax)
 
 toolbox = base.Toolbox()
 toolbox.register("attr_bool", lambda: random.random() < PM)
-toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_bool, n=IND_SIZE)
+toolbox.register("individual", tools.initRepeat, 
+                    creator.Individual, toolbox.attr_bool, n=IND_SIZE)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 toolbox.register("mate", tools.cxTwoPoint)
 toolbox.register("mutate", tools.mutFlipBit, indpb=PROB_MUT)
 toolbox.register("select", tools.selTournament, tournsize=3)
-toolbox.register("evaluate", fitness, Xtrain=Xtrain, Xtest=Xtest, y_train=y_train, y_test=y_test)
+toolbox.register("evaluate", fitness, 
+                    Xtrain=Xtrain, 
+                    Xtest=Xtest, 
+                    y_train=y_train, 
+                    y_test=y_test)
 
 # Función principal del Algoritmo Genético
 def main():
@@ -358,7 +370,7 @@ def main():
 
         # Recopilación de estadísticas
         fits = [ind.fitness.values[0] for ind in population]
-        print(f"Generación {gen + 1} - Mejor fitness: {max(fits):.4f} - Promedio fitness: {np.mean(fits):.4f}")
+        print(f"Gen:{gen + 1}-Mejor_fit:{max(fits):.4f}-Promedio:{np.mean(fits):.4f}")
 
     # Mejor individuo al finalizar
     best_ind = tools.selBest(population, 1)[0]
