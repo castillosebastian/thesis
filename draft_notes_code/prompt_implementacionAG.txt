@@ -1,0 +1,335 @@
+Quiero que describan de una manera técnica, con lenguaje formal esta implementación de Algoritmo Genético:ç
+
+'''
+# New parametres after dimensionality reduction
+PROB_MUT = 0.1        # ProbabBilidad de mutacion
+PX = 0.75               # Probabilidad de cruza
+GMAX = 15      
+p_indpb = 0.3
+DAT_SIZE = Xtrain.shape[0]  
+IND_SIZE = Xtrain.shape[1]
+PM = 1 / IND_SIZE    # Probabilidad de mutación [aproximadamente 1 gen por cromosoma]
+                            # Experimento 4: con mayor probabilidad de mutación.
+                            # PM = 20./IND_SIZE __experimento 2 mejoró el fitness y acc en 
+                            # la segunda generación pero luego se estancó
+
+# CREAMOS LA FUNCION DE FITNESS
+# Esta función tiene "1 OBJETIVO" a "MAXIMIZAR"
+creator.create(
+    "Fitness",  # Nombre con el que se registra el componente
+    base.Fitness,  # Clase de la que hereda
+    weights=(1.0,),
+)
+# CREAMOS EL CONSTRUCTOR DE INDIVIDUOS
+creator.create(
+    "Individual",  # Nombre con el que se registra el componente
+    list,  # Clase de la que hereda [Tipo de contenedor en este caso]
+    fitness=creator.Fitness,
+    acc=0,
+    ngenes=0,
+)  # Asignamos un método para evaluar el fitness del individuo
+
+# REGISTRAMOS COMPONENTES
+toolbox = base.Toolbox()
+# ---------------------
+# DEFINIMOS COMO CONSTRUIR UN GEN
+# el algoritmo retiene la historia de fitnes de genes activos, contribuyendo !!!IMPORTANTE
+# a la selección de las variables que contribuyen a mejorar el fitness
+toolbox.register("attribute", bin, p=p_indpb)  # Nombre con el que se registra el componente
+
+# DEFINIMOS COMO CONSTRUIR UN INDIVIDUO/CROMOSOMA
+toolbox.register(
+    "individual",  # Nombre con el que se registra el componente
+    tools.initRepeat,  # Método usado para construir el cromosoma
+    creator.Individual,  # ...
+    toolbox.attribute,  # Función para construir cada gen
+    n=IND_SIZE,
+)  # Número de genes del cromosoma/individuo (se repetirá la función construir gen)
+# DEFINIMOS COMO CONSTRUIR LA POBLACION
+toolbox.register(
+    "population",  # Nombre con el que se registra el componente
+    tools.initRepeat,  # Método usado para construir el cromosoma
+    list,
+    toolbox.individual,
+)
+# DEFINIMOS COMO REALIZAR LA CRUZA
+toolbox.register(
+    "mate", tools.cxTwoPoint  # Nombre con el que se registra el componente
+)  #
+# DEFINIMOS COMO REALIZAR LA MUTACION
+toolbox.register(
+    "mutate",  # Nombre con el que se registra el componente
+    mutation,  # Método de mutación (definido como función más arriba)
+    p=PM,
+)  # Parámetro que usa la mutación
+# Otra opciones
+# toolbox.register("mutate", tools.mutFlipBit, indpb=0.05)
+# toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=1, indpb=0.2)
+# DEFINIMOS COMO REALIZAR LA SELECCION DE INDIVIDUOS
+toolbox.register(
+    "select",  # Nombre con el que se registra el componente
+    tools.selTournament,  # Método usado para selección [selRoulette | selTournament | ...]
+    tournsize=5,
+)  # Parámetro que usa el torneo
+
+# ## Definimos las estadísticas a calcular
+# EXTRAEMOS EL FITNESS DE TODOS LOS INDIVIDUOS
+stats_fit = tools.Statistics(key=lambda ind: ind.fitness.values[0])
+# EXTRAEMOS EL ACC DE TODOS LOS INDIVIDUOS
+stats_acc = tools.Statistics(key=lambda ind: ind.acc)
+# EXTRAEMOS LA FRACCION DE GENES ACTIVOS DE TODOS LOS INDIVIDUOS
+stats_frac_active_genes = tools.Statistics(key=lambda ind: ind.ngenes)
+# EXTRAEMOS EL NUMERO DE GENES ACTIVOS DE TODOS LOS INDIVIDUOS
+stats_active_genes = tools.Statistics(key=lambda ind: np.sum(ind))
+mstats = tools.MultiStatistics(
+    fitness=stats_fit,
+    acc=stats_acc,
+    frac_ngenes=stats_frac_active_genes,
+    ngenes=stats_active_genes,
+)
+mstats.register("avg", np.mean)
+mstats.register("std", np.std)
+mstats.register("min", np.min)
+mstats.register("max", np.max)
+
+for nexperiment in range(0, nexperiments):    
+
+    # INICIALIZAMOS UN LOGGER
+    logbook = tools.Logbook()
+
+    # Corremos el modelo con todas las features
+    if nexperiment == 0:
+        allf = fitness(np.ones(Xtrain.shape[1]), Xtrain, Xtest, y_train, y_test)    
+        print(f"All features: FITNESS: {allf[0]:.4} -- NGENES: {int(Xtrain.shape[1])} -- Acc: {allf[1]:.4}\n")    
+    # ================================================
+    # INICIALIZAMOS LA POBLACIÓN
+    # ================================================
+    pop = toolbox.population(n=POP_SIZE)  # Inicializamos una población
+    # ================================================
+    # EVALUAMOS EL FITNESS DE LA POBLACION
+    # ======================================
+    # fitnesses = list(map(toolbox.evaluate, pop))
+    fitnesses = Parallel(n_jobs=16, backend="multiprocessing")(
+        delayed(fitness)(ind, Xtrain, Xtest, y_train, y_test) for ind in pop
+    )
+    # ================================================
+    # ASIGNAMOS A CADA INDIVIDUO SU FITNESS
+    # ========================================
+    for ind, fit in zip(pop, fitnesses):
+        ind.fitness.values = (
+            fit[0],
+        )  # Guardamos el fitness para cada individuo (en el individuo)
+        ind.acc = fit[1]
+        ind.ngenes = fit[2]
+    # ================================================
+    records = mstats.compile(pop)
+    logbook.record(gen=0, **records)
+    # ================================================
+    # COMENZAMOS LA EVOLUCION
+    # ========================================
+    for g in range(1, GMAX):  
+        # ================================================
+        # SELECCIONAMOS INDIVIDUO ELITE
+        # ================================
+        idx_elite = np.argmax(fitnesses, axis=0)[
+            0
+        ]  # Si maximizamos, hay que usar ".argmax()". El indiv. con mejor fitness
+        elite = toolbox.clone(pop[idx_elite])
+        del elite.fitness.values, elite.acc, elite.ngenes
+        # ================================================
+        # HACEMOS UNA COPIA DE LA POBLACION ACTUAL
+        # ==========================================
+        parents = toolbox.select(pop, POP_SIZE)  # Seleccionamos individuos para alcanzar
+        # el tamaño de la población
+        offspring = list(map(toolbox.clone, pop))  # Clonamos para tener nuevos individuos
+        # (contenedores independientes)
+        # ============================================
+        # REALIZAMOS LA CRUZA DE LOS PADRES
+        # ============================================
+        for i in range(POP_SIZE // 2):
+            parent1 = toolbox.clone(parents[random.randint(0, POP_SIZE - 1)])
+            parent2 = toolbox.clone(parents[random.randint(0, POP_SIZE - 1)])
+
+            if random.random() < PX:
+                childs = toolbox.mate(parent1, parent2)
+            else:
+                childs = (parent1, parent2)
+
+            offspring[2 * i] = childs[0]
+            offspring[2 * i + 1] = childs[1]
+        # ================================================
+        # MUTAMOS LOS HIJOS
+        # =================================
+        for mutant in offspring:
+            toolbox.mutate(mutant)
+            del mutant.fitness.values  # , mutant.acc, mutant.ngenes
+        # ================================================
+        # EVALUAMOS EL FITNESS Y SE LO ASIGNAMOS A CADA INDIVIDUO
+        # ======================================
+        offspring[0] = elite
+        fitnesses = Parallel(n_jobs=16, backend="multiprocessing")(
+            delayed(fitness)(ind, Xtrain, Xtest, y_train, y_test) for ind in offspring
+        )
+        for ind, fit in zip(offspring, fitnesses):
+            ind.fitness.values = (
+                fit[0],
+            )  # Guardamos el fitness para cada individuo (en el individuo)
+            ind.acc = fit[1]
+            ind.ngenes = fit[2]
+        # ================================================
+        # CONSTRUIMOS LA NUEVA POBLACION
+        # ================================
+        pop = toolbox.clone(offspring)      
+        # ================================================
+        # CALCULAMOS ESTADÏSTICAS
+        # ============================
+        records = mstats.compile(pop)
+        logbook.record(gen=g, **records)
+
+        # file_path = f"{current_dir}/{experiment_name}.txt"
+        # with open(file_path, 'a') as file:
+        #     if g % 1 == 0:
+        #         file.write("=" * 79 + "\n")
+        #         file.write(f"GENERATION: {g}\n")
+        #         file.write(
+        #             f"Elite -- Fitness: {elite.fitness.values[0]:.4} -- NGENES: {np.sum(elite)} -- Acc: {elite.acc:.4}\n"
+        #         )
+        #         file.write("Poblacion FITNES: " + str(records["fitness"]) + "\n")
+        #         file.write("Poblacion ACC: " + str(records["acc"]) + "\n")
+        #         file.write("Poblacion GENES: " + str(records["ngenes"]) + "\n")
+        #         file.write("#" * 79 + "\n")
+        if g % 1 == 0:
+            print("=" * 79)
+            print(f"GENERATION: {g}")
+            print(
+                f"Elite -- Fitness: {elite.fitness.values[0]:.4} -- NGENES: {np.sum(elite)} -- Acc: {elite.acc:.4}"
+            )
+            print("Poblacion FITNES: ", records["fitness"])
+            print("Poblacion ACC: ", records["acc"])
+            print("Poblacion GENES: ", records["ngenes"])
+        # ================================================
+
+    # After the genetic algorithm finishes, log the final population metrics    
+    final_records = mstats.compile(pop)
+    
+    # Consolidate common features
+    # assign 1 if feature was activated 1 o more times 
+    common_genome_bin = [int(any(column)) for column in zip(*pop)]
+    # calculate the frecuency of activated feature in population
+    common_genome_prob = [sum(column)/POP_SIZE for column in zip(*pop)]
+    # Sort frecuency    
+    common_genome_prob_sort = sorted(common_genome_prob, reverse=True)
+    # Get the ith element of the sorted list of frecuency       
+    ngenome_value = common_genome_prob_sort[round(Xtrain.shape[1] * p_indpb)]
+    # Create a mask list to select features with grater activation frecuency    
+    prob_mask = [1 if feature_include >= ngenome_value else 0 for feature_include in common_genome_prob]
+    # Select the ith features with grater activation frecuency
+    
+    selected_features = [string for string, include in zip(features, prob_mask) if include == 1]
+    selected_features_bin = [string for string, include in zip(features, common_genome_bin) if include == 1]
+
+    print(f'common_genome {np.sum(common_genome_bin)}')
+    print(f'selected_features {len(selected_features)}')
+
+'''
+
+Con estas funciones de configuración
+
+'''
+# Funciones
+# =================================
+def bin(p=0.9):
+    """
+    Esta función genera un bit al azar.
+    """
+    if random.random() < p:
+        return 1
+    else:
+        return 0
+# =================================
+def fitness(features, Xtrain, Xtest, y_train, y_test):
+    """
+    Función de aptitud empleada por nuestro algoritmo.
+    """
+    if not isinstance(features, np.ndarray):
+        features = np.array(features)
+
+    if not isinstance(features[0], bool):
+        features = features.astype(bool)
+
+    X_train = Xtrain[:, features]
+    X_test = Xtest[:, features]
+
+    mlp = MLPClassifier(
+        hidden_layer_sizes=(5, 3),
+        activation="tanh",
+        solver="adam",
+        alpha=0.0001,
+        learning_rate_init=0.001,
+        shuffle=True,
+        momentum=0.9,
+        validation_fraction=0.2,
+        n_iter_no_change=10,
+        random_state=42,
+        max_iter=3000,
+    ).fit(X_train, y_train)
+
+    yp = mlp.predict(X_test)
+
+    acc = (y_test == yp).sum() / len(y_test) # el accuracy es el porcentaje de aciertos
+    
+    # f1 o unweighted accuracy
+
+    n_genes = 1 - (features.sum() / len(features))
+
+    alpha = 0.5
+
+    f = alpha * acc + (1 - alpha) * n_genes
+
+    return f, acc, n_genes
+# =================================
+def plot_evolution(logbook, chapter, y_label,filename=None, 
+                   N_override=None, current_dir = None, experiment_name=None, GMAX = 100):
+    """
+    Plot the evolution of a given statistic (chapter) from the logbook.
+    Parameters:
+    - logbook: The DEAP logbook containing the statistics.
+    - chapter: The name of the chapter in the logbook to plot (e.g., 'fitness', 'acc', 'ngenes').
+    - y_label: The label for the y-axis.
+    - N_override: Optional, override the number of generations to plot.
+    """
+    chapter_data = logbook.chapters[chapter]
+    avg = chapter_data.select("avg")
+    max_ = chapter_data.select("max")
+    min_ = chapter_data.select("min")
+    N = N_override if N_override else GMAX
+    
+    fig, ax = plt.subplots(1, 1, figsize=(20, 6))
+    generations = range(N)
+    ax.plot(generations, avg[:N], "-or", label="Average")
+    ax.plot(generations, max_[:N], "-og", label="Maximum")
+    ax.plot(generations, min_[:N], "-ob", label="Minimum")
+    ax.set_xlabel("Generations", fontsize=16)
+    ax.set_ylabel(y_label, fontsize=16)
+    ax.legend(loc="best")
+    ax.grid(True)
+
+    filename = experiment_name + '_' + filename
+
+    if filename:
+        plot_path = os.path.join(current_dir, filename)
+        plt.savefig(plot_path, format='png', dpi=80)
+        plt.close()
+        return plot_path
+    return None
+
+# ====================================
+def mutation(ind, p):
+    """
+    Esta función recorre el cromosoma y evalúa, para cada gen,
+    si debe aplicar el operador de mutación.
+    """
+    return [abs(i - 1) if random.random() < p else i for i in ind]
+'''
+
+

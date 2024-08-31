@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>cap_ags</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+<script src="cap_AGs_files/libs/clipboard/clipboard.min.js"></script>
+<script src="cap_AGs_files/libs/quarto-html/quarto.js"></script>
+<script src="cap_AGs_files/libs/quarto-html/popper.min.js"></script>
+<script src="cap_AGs_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="cap_AGs_files/libs/quarto-html/anchor.min.js"></script>
+<link href="cap_AGs_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="cap_AGs_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="cap_AGs_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="cap_AGs_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="cap_AGs_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="a-codificación-del-espacio-de-búsqueda" class="level2">
+<h2 class="anchored" data-anchor-id="a-codificación-del-espacio-de-búsqueda">a) Codificación del espacio de búsqueda</h2>
+<p>Los AGs se distinguen de otros algoritmos por su capacidad para operar en un espacio codificado del problema, en lugar de manipular directamente el espacio en su representación original. Esto sucede gracias a la transformación de las soluciones potenciales en cadenas de datos, comúnmente conocidas como cromosomas o genotipos, que son susceptibles a la manipulación mediante operadores genéticos como la mutación y el cruce. La capacidad de los AGs para operar con estas representaciones codificadas determinan su flexibilidad y eficacia en una amplia gama de problemas de optimización.</p>
+<p>En el contexto de los AGs, la codificación adecuada del problema es un paso inicial clave para el correcto desempeño del algoritmo. La elección de la codificación depende de la naturaleza del problema y de las características de las soluciones que se buscan optimizar. Por ejemplo, en problemas de optimización combinatoria, como el reconocido problema del viajante de comercio, las soluciones pueden representarse como permutaciones de ciudades, lo que sugiere una codificación basada en secuencias de números enteros. Por otro lado, en problemas de optimización continua, como la optimización de funciones matemáticas, las soluciones pueden representarse como vectores de números reales, lo que sugiere una codificación real-valuada.</p>
+<p>El mapeo entre el genotipo (la representación interna codificada) y el fenotipo (la solución en el contexto del problema) es un componente del diseño de los AGs. Este mapeo no solo permite interpretar las soluciones generadas por el algoritmo, sino que también contribuye a la eficacia de la búsqueda, al facilitar la exploración de diferentes áreas del espacio de soluciones.</p>
+<p>Una de las principales ventajas de operar en un espacio codificado es la capacidad de los AGs para aplicar operadores genéticos de manera eficiente, lo que permite una exploración exhaustiva del espacio de soluciones. La codificación también facilita la implementación de técnicas de paralelismo, lo que es especialmente beneficioso en entornos de computación de alto rendimiento. Sin embargo, la elección de la codificación adecuada es crítica. Una codificación inapropiada puede llevar a una exploración ineficaz del espacio de soluciones o incluso a la generación de soluciones inviables. Por lo tanto, es fundamental diseñar mecanismos que preserven la viabilidad de las soluciones durante la evolución, lo que puede incluir la reparación de soluciones o el uso de operadores que respeten las restricciones inherentes al problema.</p>
+<p>Un proceso típico de codificación y decodificación en un AG incluye los siguientes pasos:</p>
+<ol type="1">
+<li><strong>Espacio Original</strong>: Representación directa del problema, por ejemplo, valores continuos o categóricos.</li>
+<li><strong>Codificación</strong>: Traducción del espacio original a una forma binaria o simbólica.</li>
+<li><strong>Operadores Genéticos</strong>: Aplicación de mutación, cruce y selección en la representación codificada.</li>
+<li><strong>Decodificación</strong>: Traducción inversa de la solución codificada al espacio original para evaluación.</li>
+</ol>
+<p>En el caso de nuestra investigación, dada la alta dimensionalidad de los datos y la complejidad de los modelos, la codificación adecuada de las soluciones fue un proceso fundamental para garantizar que los AGs puedan encontrar soluciones óptimas o cercanas al óptimo en tiempo razonable.</p>
+</section>
+<section id="b-búsqueda-por-población-de-soluciones" class="level2">
+<h2 class="anchored" data-anchor-id="b-búsqueda-por-población-de-soluciones">b) Búsqueda por <em>población de soluciones</em></h2>
+<p>Una de las características más distintivas de los Algoritmos Genéticos (AGs) es su enfoque en la evaluación de una <strong>población</strong> de soluciones en cada iteración, en lugar de centrarse en una única solución. Esta población de soluciones, también conocida como población de <strong>individuos</strong>, permite a los AGs explorar simultáneamente múltiples regiones del espacio de búsqueda, aumentando así la probabilidad de encontrar soluciones óptimas o cercanas al óptimo.</p>
+<p>La población inicial generalmente se genera de manera aleatoria, y cada individuo dentro de esta población representa una solución potencial al problema. A lo largo de las generaciones, los AGs aplican operadores genéticos como selección, cruce y mutación para producir nuevas generaciones de individuos, mejorando iterativamente la calidad de las soluciones.</p>
+<p>Así, el esquema de búsqueda por población permite a los AGs explorar de manera eficiente el espacio de búsqueda, evitando quedar atrapados en óptimos locales y fomentando la diversidad genética dentro de la población.</p>
+<section id="esquema-del-proceso-de-búsqueda-por-población" class="level3">
+<h3 class="anchored" data-anchor-id="esquema-del-proceso-de-búsqueda-por-población">Esquema del proceso de búsqueda por población:</h3>
+<ol type="1">
+<li><strong>Población Inicial</strong>: Generación aleatoria de un conjunto de individuos que representan soluciones potenciales.</li>
+<li><strong>Evaluación de Población</strong>: Cada individuo es evaluado según una función de aptitud para determinar su calidad.</li>
+<li><strong>Operadores Genéticos</strong>:
+<ul>
+<li><strong>Selección</strong>: Elegir individuos más aptos para reproducirse.</li>
+<li><strong>Cruce (Crossover)</strong>: Combinar partes de dos individuos para crear uno nuevo.</li>
+<li><strong>Mutación</strong>: Alterar aleatoriamente un individuo para introducir variabilidad.</li>
+</ul></li>
+<li><strong>Nueva Generación</strong>: Creación de una nueva población basada en los individuos más aptos.</li>
+<li><strong>Iteración</strong>: Repetición del proceso a través de múltiples generaciones hasta alcanzar un criterio de terminación.</li>
+</ol>
+<p><strong>Ejemplo</strong>:</p>
+<p>Consideremos una población inicial de 5 individuos codificados como sigue:</p>
+<ul>
+<li>Individuo 1: <code>11001</code></li>
+<li>Individuo 2: <code>10110</code></li>
+<li>Individuo 3: <code>01101</code></li>
+<li>Individuo 4: <code>11100</code></li>
+<li>Individuo 5: <code>00011</code></li>
+</ul>
+<p>Cada uno de estos individuos será evaluado para determinar su aptitud (es decir, cuál es su métrica de desempeño en el problema que se está optimizando, considerando una función de aptitud). Los individuos con mayor aptitud tienen más probabilidades de ser seleccionados para formar la siguiente generación, lo que permite que las características beneficiosas se propaguen en la población.</p>
+<p>Este enfoque poblacional permite a los AGs evitar quedar atrapados en óptimos locales y les da la flexibilidad de explorar diferentes áreas del espacio de búsqueda simultáneamente, haciendo el proceso de optimización más robusto y efectivo.</p>
+</section>
+</section>
+<section id="c-función-de-aptitud-y-evaluación-de-soluciones" class="level2">
+<h2 class="anchored" data-anchor-id="c-función-de-aptitud-y-evaluación-de-soluciones">c) Función de aptitud y evaluación de soluciones</h2>
+<p>En el contexto de los Algoritmos Genéticos (AGs), la función de aptitud juega un papel central, ya que es el mecanismo principal para evaluar la calidad de las soluciones generadas durante el proceso evolutivo. La función de aptitud se aplica al <strong>fenotipo</strong> de cada solución, es decir, a su manifestación en el contexto del problema a resolver, después de que el <strong>genotipo</strong> (la representación codificada de la solución) ha sido transformado. Esta evaluación cuantifica qué tan bien una solución potencial cumple con los objetivos del problema, asignándole un valor numérico que refleja su desempeño relativo en comparación con otras soluciones dentro de la población.</p>
+<p>El diseño de la función de aptitud es un aspecto crítico del proceso de modelado en los AGs, ya que guía la dirección de la búsqueda evolutiva. Específicamente, la función de aptitud debe estar alineada con los objetivos del problema, reflejando correctamente las trade-offs necesarios cuando se enfrentan múltiples objetivos. En situaciones de optimización multiobjetivo, donde varios criterios deben ser optimizados simultáneamente, es común que las funciones de aptitud individuales se combinen en una única métrica a través de técnicas como la suma ponderada de los valores de aptitud individuales【22:7†source】.</p>
+<p>La correcta evaluación de las soluciones mediante la función de aptitud no es trivial. Aunque pueda parecer sencillo asignar valores de aptitud más bajos a soluciones peores y valores más altos a soluciones mejores, en la práctica, esto puede requerir consideraciones adicionales. Por ejemplo, en problemas con restricciones, una solución que esté muy cerca del óptimo global pero que viole alguna restricción podría recibir un valor de aptitud menor que una solución factible pero menos óptima. Asimismo, en la optimización multiobjetivo, es necesario determinar cómo ponderar la proximidad al óptimo de cada objetivo, particularmente cuando algunos objetivos pueden ser de menor importancia relativa【22:7†source】.</p>
+<p>Otro aspecto crucial en la función de aptitud es la minimización del número de evaluaciones necesarias para alcanzar el óptimo o una solución lo suficientemente cercana a este. En muchos casos, cada evaluación de aptitud puede ser costosa en términos de tiempo y recursos computacionales, especialmente cuando la evaluación implica la simulación de modelos complejos o el entrenamiento de algoritmos de aprendizaje automático. Por ello, reducir el número de evaluaciones de aptitud es fundamental para mejorar la eficiencia del AG, sin sacrificar la calidad de las soluciones generadas. En situaciones donde las evaluaciones son particularmente costosas, se han desarrollado estrategias como el uso de <strong>meta-modelos</strong> que aproximan la función de aptitud, permitiendo evaluaciones más rápidas y menos costosas【22:8†source】.</p>
+<p>En resumen, la función de aptitud es el núcleo que dirige el proceso evolutivo en los AGs, determinando qué soluciones sobreviven y se propagan a la siguiente generación. Su diseño y correcta implementación son esenciales para asegurar que el AG no solo converja hacia soluciones de alta calidad, sino que también lo haga de manera eficiente y efectiva, especialmente en problemas donde las evaluaciones de aptitud son costosas o complejas.</p>
+</section>
+<section id="d-métodos-probabilísticos-de-transición" class="level2">
+<h2 class="anchored" data-anchor-id="d-métodos-probabilísticos-de-transición">d) Métodos probabilísticos de transición</h2>
+<p>Los Algoritmos Genéticos (AGs) emplean <strong>métodos probabilísticos de transición</strong>, también conocidos como <strong>operadores estocásticos</strong>, en lugar de seguir reglas determinísticas. Este enfoque implica que el proceso de evolución dentro de un AG no sigue un camino fijo y predecible; en su lugar, introduce elementos de aleatoriedad en cada generación. Los operadores genéticos, como la <strong>selección</strong>, el <strong>cruce (crossover)</strong> y la <strong>mutación</strong>, son los principales responsables de incorporar esta aleatoriedad, lo que es fundamental para la generación de nuevas soluciones y para evitar la estancación en óptimos locales.</p>
+<p>El operador de <strong>cruce</strong> permite la combinación del material genético de dos o más soluciones, mezclando sus características en los descendientes. En la representación binaria, un cruce de un punto (one-point crossover) dividirá dos soluciones en una posición elegida aleatoriamente, combinando segmentos de ambas para crear nuevos individuos. Este mecanismo de combinación es esencial para preservar y mejorar características exitosas en la población, aumentando la diversidad genética y la capacidad exploratoria del AG</p>
+<p>El operador de <strong>mutación</strong>, por otro lado, introduce cambios aleatorios en las soluciones existentes. La mutación en los AGs puede variar desde simples alteraciones de bits en cadenas binarias hasta ajustes en representaciones continuas mediante la adición de ruido gaussiano. La tasa de mutación, o la magnitud de estos cambios, es un parámetro crucial que determina la intensidad de la exploración en el espacio de soluciones. Un diseño adecuado de los operadores de mutación asegura que cada punto en el espacio de soluciones sea alcanzable desde cualquier otro, garantizando que el AG mantenga la capacidad de descubrir nuevas áreas del espacio de búsqueda que podrían contener soluciones óptimas</p>
+<p>La naturaleza estocástica de estos operadores permite a los AGs adaptarse dinámicamente a una amplia variedad de problemas, encontrando soluciones efectivas en entornos complejos y variables. El equilibrio entre la exploración de nuevas soluciones y la explotación de las mejores existentes es fundamental para la robustez y la eficiencia de los AGs. Este enfoque estocástico es lo que permite a los AGs evitar la convergencia prematura hacia soluciones subóptimas y mantener la diversidad genética dentro de la población, lo que es esencial para un rendimiento efectivo en la optimización</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
