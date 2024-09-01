@@ -1,0 +1,152 @@
+Análisis de resultados para el dataset Leukemia:
+
+Métrica: pob_accuracy_avg
+
+Grupo: aumentados
+  - Media: 0.992
+  - Desviación Estándar: 0.011
+  - Rango Intercuartil (IQR): 0.016
+
+Grupo: original
+  - Media: 0.989
+  - Desviación Estándar: 0.016
+  - Rango Intercuartil (IQR): 0.029
+
+Comparación entre grupos para pob_accuracy_avg:
+  La media del grupo 'original' es menor que la del grupo 'aumentados'.Cuanto mayor sea la precisión, mejor.
+
+Métrica: pob_ngenes_avg
+
+Grupo: aumentados
+  - Media: 259.167
+  - Desviación Estándar: 302.347
+  - Rango Intercuartil (IQR): 630.250
+
+Grupo: original
+  - Media: 258.909
+  - Desviación Estándar: 301.847
+  - Rango Intercuartil (IQR): 628.500
+
+Comparación entre grupos para pob_ngenes_avg:
+  El número medio de características seleccionadas es menor en el grupo 'original' comparado con el grupo 'aumentados'.
+  Esto sugiere que la selección de características fue menos eficiente en el grupo 'aumentados'.
+
+Prueba estadística para pob_accuracy_avg:
+T-statistic: 0.006, P-value: 0.995
+No hay evidencia suficiente para afirmar que la diferencia en la precisión entre los grupos es significativa.
+
+==================================================
+Análisis de resultados para el dataset Gisette:
+
+Métrica: pob_accuracy_avg
+
+Grupo: aumentados
+  - Media: 0.960
+  - Desviación Estándar: 0.003
+  - Rango Intercuartil (IQR): 0.004
+
+Grupo: original
+  - Media: 0.959
+  - Desviación Estándar: 0.004
+  - Rango Intercuartil (IQR): 0.005
+
+Comparación entre grupos para pob_accuracy_avg:
+  La media del grupo 'original' es menor que la del grupo 'aumentados'.Cuanto mayor sea la precisión, mejor.
+
+Métrica: pob_ngenes_avg
+
+Grupo: aumentados
+  - Media: 424.231
+  - Desviación Estándar: 17.796
+  - Rango Intercuartil (IQR): 8.000
+
+Grupo: original
+  - Media: 436.667
+  - Desviación Estándar: 14.355
+  - Rango Intercuartil (IQR): 21.500
+
+Comparación entre grupos para pob_ngenes_avg:
+  El número medio de características seleccionadas es mayor en el grupo 'original' comparado con el grupo 'aumentados'.
+  Esto sugiere que la selección de características fue más eficiente en el grupo 'aumentados'.
+
+Prueba estadística para pob_accuracy_avg:
+T-statistic: -1.930, P-value: 0.066
+No hay evidencia suficiente para afirmar que la diferencia en la precisión entre los grupos es significativa.
+
+==================================================
+Análisis de resultados para el dataset Madelon:
+
+Métrica: pob_accuracy_avg
+
+Grupo: aumentados
+  - Media: 0.828
+  - Desviación Estándar: 0.023
+  - Rango Intercuartil (IQR): 0.026
+
+Grupo: original
+  - Media: 0.750
+  - Desviación Estándar: 0.038
+  - Rango Intercuartil (IQR): 0.057
+
+Comparación entre grupos para pob_accuracy_avg:
+  La media del grupo 'original' es menor que la del grupo 'aumentados'.Cuanto mayor sea la precisión, mejor.
+
+Métrica: pob_ngenes_avg
+
+Grupo: aumentados
+  - Media: 29.033
+  - Desviación Estándar: 5.599
+  - Rango Intercuartil (IQR): 7.750
+
+Grupo: original
+  - Media: 35.796
+  - Desviación Estándar: 5.335
+  - Rango Intercuartil (IQR): 10.000
+
+Comparación entre grupos para pob_ngenes_avg:
+  El número medio de características seleccionadas es mayor en el grupo 'original' comparado con el grupo 'aumentados'.
+  Esto sugiere que la selección de características fue más eficiente en el grupo 'aumentados'.
+
+Prueba estadística para pob_accuracy_avg:
+T-statistic: -5.304, P-value: 0.000
+La diferencia en la precisión entre los grupos es estadísticamente significativa.
+
+==================================================
+Análisis de resultados para el dataset GCM:
+
+Métrica: pob_accuracy_avg
+
+Grupo: aumentados
+  - Media: 0.517
+  - Desviación Estándar: 0.082
+  - Rango Intercuartil (IQR): 0.103
+
+Grupo: original
+  - Media: 0.467
+  - Desviación Estándar: 0.036
+  - Rango Intercuartil (IQR): 0.042
+
+Comparación entre grupos para pob_accuracy_avg:
+  La media del grupo 'original' es menor que la del grupo 'aumentados'.Cuanto mayor sea la precisión, mejor.
+
+Métrica: pob_ngenes_avg
+
+Grupo: aumentados
+  - Media: 378.477
+  - Desviación Estándar: 281.405
+  - Rango Intercuartil (IQR): 394.375
+
+Grupo: original
+  - Media: 305.160
+  - Desviación Estándar: 288.392
+  - Rango Intercuartil (IQR): 416.000
+
+Comparación entre grupos para pob_ngenes_avg:
+  El número medio de características seleccionadas es menor en el grupo 'original' comparado con el grupo 'aumentados'.
+  Esto sugiere que la selección de características fue menos eficiente en el grupo 'aumentados'.
+
+Prueba estadística para pob_accuracy_avg:
+T-statistic: 0.935, P-value: 0.355
+No hay evidencia suficiente para afirmar que la diferencia en la precisión entre los grupos es significativa.
+
+==================================================

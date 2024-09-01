@@ -1,4 +1,4 @@
-# Experimentos realizados y sus resultados {#sec-Capitulo4}
+## Experimentos realizados y sus resultados {#sec-Capitulo4}
 
 En este capítulo se presentan los experimentos realizados en el marco de la investigación, cuyo objetivo principal fue evaluar la efectividad de la combinación de Algoritmos Genéticos (AGs) y Autoencoders Variacionales (AVs) en la selección de características en contextos de escasez de datos. Para ello, se diseñaron y ejecutaron experimentos utilizando cuatro conjuntos de datos distintos: *leukemia*, *gisette*, *madelon* y *gcm*, cada uno representando diferentes desafíos en términos de dimensionalidad y características de los datos.
 

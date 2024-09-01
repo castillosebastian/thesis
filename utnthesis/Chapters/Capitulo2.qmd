@@ -264,15 +264,19 @@ Finalmente, la salida $\hat{x}$ es una aproximación reconstruida de la entrada 
 
 **Elementos distintivos respecto a la arquitectura anterior**:
 
-- **Incorporación de etiquetas**: Tanto en el codificador como en el decodificador, se concatenan las etiquetas $ y$ con las entradas y el vector latente, respectivamente.
+- **Incorporación de etiquetas**: Tanto en el codificador como en el decodificador, se concatenan las etiquetas $y$ con las entradas y el vector latente, respectivamente.
 - **Dimensiones ajustadas**: Se han ajustado las dimensiones de las capas para acomodar las etiquetas, reflejadas en las matrices de pesos y las normalizaciones por lotes.
 - **Capas adicionales en la fase de decodificación**: Se añaden capas y ajustes para manejar las etiquetas adicionales en el proceso de decodificación.
 
+**Configuraciones específicas para datasets desbalanceados**
+
+Para abordar el problema del desbalance de clases en el dataset GCM, se implementaron ajustes específicos en la configuración del modelo y en las estrategias de entrenamiento. El primero consistió en la asignación de pesos diferenciados a las clases dentro de la función de pérdida, con el objetivo de aumentar la penalización por errores de clasificación en las clases minoritarias. Estos pesos se calcularon de manera inversamente proporcional a la frecuencia de las clases en el conjunto de datos, lo que significa que las clases con menos instancias recibieron pesos más altos. Al incorporar estos pesos de clase en la función de pérdida, nos aseguramos que los errores en las clases con menor representación tuvieran un impacto mayor durante el proceso de optimización, logrando un aprendizaje equilibrado.
+
+Además de ajustar la función de pérdida, se implementó una estrategia de muestreo ponderado en el proceso de entrenamiento. A través de un muestreador aleatorio ponderado, nos aseguramos que cada mini-lote de datos durante el entrenamiento tuviera una representación equilibrada de cada clase, asignando mayor probabilidad de ser seleccionadas a las instancias de clases minoritarias. Esta técnica también tuvo un papel importante en el funcionamiento del modelo, mitigando el sesgo hacia las clases más frecuentes.
+
+Para garantizar que la combinación de ambas estrategias no tuviera un efecto indeseado en el rendimiento del modelo, se llevaron a cabo experimentos con el fin de validar la aplicación simultánea de ambas técnicas. Un efecto ha evitar era, precísamente, que el modelo se volviera excesivamente sensible a las clases minoritarias, en detrimento de su capacidad para generalizar correctamente en clases mayoritarias. Los resultados de estos experimentos mostraron que, implementadas en conjunto, ambas estrategias lograban los mejores resultados.
+
 Esta arquitectura permite que el AVC capture relaciones condicionales más complejas entre las entradas y sus correspondientes etiquetas.
-
-
-Completar con **classweights** y **custom_loss**.!!!!!!!!!!!!!!!!!!
-
 
 ### Optimización de Hiperparámetros
 

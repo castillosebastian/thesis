@@ -1,0 +1,9 @@
+Dataset,Group,Mean,StdDev,IQR
+Leukemia,aumentados,259.167,302.347,630.25
+Leukemia,original,258.909,301.847,628.5
+Gisette,aumentados,424.231,17.796,8.0
+Gisette,original,436.667,14.355,21.5
+Madelon,aumentados,29.033,5.599,7.75
+Madelon,original,35.796,5.335,10.0
+GCM,aumentados,378.477,281.405,394.375
+GCM,original,305.16,288.392,416.0

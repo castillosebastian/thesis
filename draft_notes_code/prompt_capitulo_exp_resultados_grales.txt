@@ -1,0 +1,250 @@
+Quiero que escribas el capítulo donde se describen los resultados obtenidos en el marco de mi investigación.
+Debes realizar una descripción detallada de los resultados.
+Cuando expliques debes procurar interpretar y explicar los resultados.
+El lenguaje debe ser técnico y preciso, dirigido a un público especializado en el campo del aprendizaje automático.
+Puedes agregar información que consideres relevante en cada caso. 
+Debe desarrollar paso a paso los trabajos realizados en el  dataset:
+
+- leukemia,
+- gisette,
+- madelon,
+- gcm.
+
+La información que debes incluir en el desarrollo de cada experimento es la siguiente:
+
+### Contenido general de la investigación:
+
+'''
+En el campo del aprendizaje automático, la selección de características es una tarea crítica que puede determinar el éxito o fracaso de un modelo predictivo. La alta dimensionalidad y la complejidad inherente a los conjuntos de datos reales hacen que la selección de un subconjunto óptimo de características sea, muchas veces, un paso ineludible para el aprendizaje efectivo.
+
+En este contexto, los Algoritmos Genéticos (AGs) se han consolidado como una herramienta poderosa para resolver problemas de optimización complejos, incluida la selección de características. Estos algoritmos, inspirados en la evolución natural, son capaces de explorar grandes espacios de búsqueda de manera efectiva, proporcionando soluciones cercanas al óptimo en una variedad de escenarios. Por ello, los AGs han sido ampliamente utilizados en problemas de selección, demostrando su eficacia en la identificación de subconjuntos relevantes de características en datos de alta dimensionalidad.
+
+Sin embargo, la eficacia de los AGs depende de la disponibilidad de suficientes datos para evaluar las soluciones en competencia. En contextos donde los datos son limitados, los AGs pueden verse afectados en su capacidad discriminativa, produciendo soluciones subóptimas o inestables. Esta limitación es especialmente crítica en problemas de alta dimensionalidad y bajo número de muestras, donde la función objetivo que guía la búsqueda de soluciones puede degradarse significativamente.
+
+Por esta razón, la investigación de estrategias que mitiguen las limitaciones impuestas por la escasez de datos se ha convertido en un área de interés creciente en el subcampo de la selección de características. Una de las técnicas emergentes en este ámbito es la aumentación de datos mediante Autoencodificadores Variacionales (AVs). Los AVs, como modelos generativos, tienen la capacidad de crear muestras sintéticas que mantienen las propiedades fundamentales de los datos originales, conviertiéndolos en una herramienta prometedora para mejorar la capacidad de los AGs en la selección de características.
+
+El problema central de la tesis que aquí presentamos giró, precísamente, en la restricciones que la escacez de datos impone a los AGs, y cómo superarlas usando AVs. La pregunta que guíó nuestro trabajo ha sido: ¿cómo puede la aumentación de datos mediante autoencodificadores variacionales mejorar el desempeño de los algoritmos genéticos en la selección de características?
+
+Cabe destacar que este desafío y su eventual resolución son importantes por varias razones. La selección de características no solo condiciona la precisión de los modelos predictivos, sino también afecta la eficiencia computacional y la interpretabilidad de los resultados. En problemas de alta dimensionalidad, la capacidad de reducir el número de características relevantes sin perder información útil puede marcar la diferencia entre un modelo efectivo y uno ineficaz, entre uno interpretable y uno de caja negra. Por lo tanto, mejorar este proceso mediante la integración de técnicas de aumentación de datos puede tener un impacto significativo en diversas aplicaciones prácticas, desde la biología molecular hasta la ingeniería y las ciencias sociales.
+
+La hipótesis que hemos llevado a prueba ha sido *que la aumentación de datos mediante AVs mejora la capacidad discriminativa de los AGs, permitiendo la identificación de subconjuntos de características más relevantes y estables en contextos de escasez muestral*. Para evaluarla, hemos propuesto un trabajo experimental que exploró la integración de estas dos técnicas en un marco unificado. La idea de combinar la generación de datos sintéticos mediante AVs con la selección de características mediante AGs, estaba orientada a buscar combinaciones sinérgicas y eficaces entre modelos que mejorasen la selección de características. A estos fines, trabajamos con cuatro conjuntos de datos de referencia, representativos de distintos contextos y niveles de complejidad, para evaluar el desempeño de los modelos propuestos.
+
+A lo largo de este documento, describiremos el proceso de investigación llevado a cabo, desde los estudios iniciales hasta los experimentos finales, pasando por el diseño y construcción de un modelo genérico de AV, y su adaptación a los datasets elegidos y la creación de una estructura combinada de AV + AG para la selección de características. Los resultados obtenidos en cada etapa se analizarán y discutirán en detalle, con el objetivo de identificar las ventajas y limitaciones de la propuesta, así como posibles áreas de mejora y futuros trabajos.
+
+Al finalizar el documento, esperamos poder justificar la eficacia de la aumentación de datos mediante AVs en la selección de características, demostrando que esta técnica puede mejorar significativamente el desempeño de los AGs en contextos de escasez. Además, esperamos identificar las condiciones y contextos en los que esta técnica es más efectiva.
+
+El documento está estructurado de la siguiente manera: en el capítulo 2 se presenta una revisión del estado del arte, destacando las principales contribuciones en el ámbito de la aumentación de datos y la selección de características, así como los resultados de modelos clásicos aplicados a los datasets seleccionados para este trabajo. El capítulo 3 describe el diseño y construcción de nuestro modelo de Autoencodificador Variacional, desde una revisión teórica hasta la implementación particular que hemos desarrollado. En el capítulo 4 se ofrece una breve descripción de los Algoritmos Genéticos, resaltando los aspectos más relevantes de esta técnica aplicada a la selección de características. En el capítulo 5 se presentan y analizan los resultados obtenidos a partir de los experimentos realizados, incluyendo la evaluación de los modelos propuestos. En el capítulo 6, se exponen las conclusiones de la investigación, así como posibles líneas futuras de trabajo.
+'''
+
+### Metricas de  Resultado
+'''
+Análisis de resultados para el dataset Leukemia:
+
+Métrica: pob_accuracy_avg
+
+Grupo: aumentados
+  - Media: 0.992
+  - Desviación Estándar: 0.011
+  - Rango Intercuartil (IQR): 0.016
+
+Grupo: original
+  - Media: 0.989
+  - Desviación Estándar: 0.016
+  - Rango Intercuartil (IQR): 0.029
+
+Comparación entre grupos para pob_accuracy_avg:
+  La media del grupo 'original' es menor que la del grupo 'aumentados'.Cuanto mayor sea la precisión, mejor.
+
+Métrica: pob_ngenes_avg
+
+Grupo: aumentados
+  - Media: 259.167
+  - Desviación Estándar: 302.347
+  - Rango Intercuartil (IQR): 630.250
+
+Grupo: original
+  - Media: 258.909
+  - Desviación Estándar: 301.847
+  - Rango Intercuartil (IQR): 628.500
+
+Comparación entre grupos para pob_ngenes_avg:
+  El número medio de características seleccionadas es menor en el grupo 'original' comparado con el grupo 'aumentados'.
+  Esto sugiere que la selección de características fue menos eficiente en el grupo 'aumentados'.
+
+Prueba estadística para pob_accuracy_avg:
+T-statistic: 0.006, P-value: 0.995
+No hay evidencia suficiente para afirmar que la diferencia en la precisión entre los grupos es significativa.
+
+==================================================
+Análisis de resultados para el dataset Gisette:
+
+Métrica: pob_accuracy_avg
+
+Grupo: aumentados
+  - Media: 0.960
+  - Desviación Estándar: 0.003
+  - Rango Intercuartil (IQR): 0.004
+
+Grupo: original
+  - Media: 0.959
+  - Desviación Estándar: 0.004
+  - Rango Intercuartil (IQR): 0.005
+
+Comparación entre grupos para pob_accuracy_avg:
+  La media del grupo 'original' es menor que la del grupo 'aumentados'.Cuanto mayor sea la precisión, mejor.
+
+Métrica: pob_ngenes_avg
+
+Grupo: aumentados
+  - Media: 424.231
+  - Desviación Estándar: 17.796
+  - Rango Intercuartil (IQR): 8.000
+
+Grupo: original
+  - Media: 436.667
+  - Desviación Estándar: 14.355
+  - Rango Intercuartil (IQR): 21.500
+
+Comparación entre grupos para pob_ngenes_avg:
+  El número medio de características seleccionadas es mayor en el grupo 'original' comparado con el grupo 'aumentados'.
+  Esto sugiere que la selección de características fue más eficiente en el grupo 'aumentados'.
+
+Prueba estadística para pob_accuracy_avg:
+T-statistic: -1.930, P-value: 0.066
+No hay evidencia suficiente para afirmar que la diferencia en la precisión entre los grupos es significativa.
+
+==================================================
+Análisis de resultados para el dataset Madelon:
+
+Métrica: pob_accuracy_avg
+
+Grupo: aumentados
+  - Media: 0.828
+  - Desviación Estándar: 0.023
+  - Rango Intercuartil (IQR): 0.026
+
+Grupo: original
+  - Media: 0.750
+  - Desviación Estándar: 0.038
+  - Rango Intercuartil (IQR): 0.057
+
+Comparación entre grupos para pob_accuracy_avg:
+  La media del grupo 'original' es menor que la del grupo 'aumentados'.Cuanto mayor sea la precisión, mejor.
+
+Métrica: pob_ngenes_avg
+
+Grupo: aumentados
+  - Media: 29.033
+  - Desviación Estándar: 5.599
+  - Rango Intercuartil (IQR): 7.750
+
+Grupo: original
+  - Media: 35.796
+  - Desviación Estándar: 5.335
+  - Rango Intercuartil (IQR): 10.000
+
+Comparación entre grupos para pob_ngenes_avg:
+  El número medio de características seleccionadas es mayor en el grupo 'original' comparado con el grupo 'aumentados'.
+  Esto sugiere que la selección de características fue más eficiente en el grupo 'aumentados'.
+
+Prueba estadística para pob_accuracy_avg:
+T-statistic: -5.304, P-value: 0.000
+La diferencia en la precisión entre los grupos es estadísticamente significativa.
+
+==================================================
+Análisis de resultados para el dataset GCM:
+
+Métrica: pob_accuracy_avg
+
+Grupo: aumentados
+  - Media: 0.517
+  - Desviación Estándar: 0.082
+  - Rango Intercuartil (IQR): 0.103
+
+Grupo: original
+  - Media: 0.467
+  - Desviación Estándar: 0.036
+  - Rango Intercuartil (IQR): 0.042
+
+Comparación entre grupos para pob_accuracy_avg:
+  La media del grupo 'original' es menor que la del grupo 'aumentados'.Cuanto mayor sea la precisión, mejor.
+
+Métrica: pob_ngenes_avg
+
+Grupo: aumentados
+  - Media: 378.477
+  - Desviación Estándar: 281.405
+  - Rango Intercuartil (IQR): 394.375
+
+Grupo: original
+  - Media: 305.160
+  - Desviación Estándar: 288.392
+  - Rango Intercuartil (IQR): 416.000
+
+Comparación entre grupos para pob_ngenes_avg:
+  El número medio de características seleccionadas es menor en el grupo 'original' comparado con el grupo 'aumentados'.
+  Esto sugiere que la selección de características fue menos eficiente en el grupo 'aumentados'.
+
+Prueba estadística para pob_accuracy_avg:
+T-statistic: 0.935, P-value: 0.355
+No hay evidencia suficiente para afirmar que la diferencia en la precisión entre los grupos es significativa.
+
+==================================================
+''''
+
+### Interpreatación
+'''
+Comparación de resultados de entrenamiento de  AG con datasets originales vs datasets aumentados con datos sintéticos generados por AV.
+Cada punto es el promedio de N experimentos realizados en cada dataset (GCM N=5, Madelon-Gisette-Lukemia = 20/30). 
+En total se realizaron 70 rondas de experimentos, con un total de 524 experimentos individuales. 
+
+#### Análsis de los resultados de los experimentos realizados en los datasets de clases binarias.
+
+Los mejores resultados se obtuvieron en Madelon, y los de menor relevancia en Gisette.
+Los resultados de Madelon empleando aumentación no solo son cláramente mejores en cuanto a la precisión de la clasificación sino 
+también presentan menor dispersion. La estrategia de aumentación está contribuyendo a la estabilidad en la selección de características en el AG.
+
+En leukemia los resultados de los experimentos con aumentación son levemente mejores en terminos de precisión alcanzada que sin aumentación. 
+Quizás la mayor diferencia en estos dos casos se encuentre en la estabilidad de los resultados, donde nuevamente -ratificando los hallazgos de 
+Madelon- el algoritmo presenta mayor estabilidad. 
+
+Resalto que tanto leukemia como gisette son dataset donde los desempeños de los algoritmos de clasificación obtienen resultados muy buenos. Fíjense que estamos con scores de precisión que se mueve entre el 0.95 y el 1.00. Entiendo que esto es muy importante tenerlo presente pues, el dataset más dificil de resolver es, precisamente, donde la estrategia de aumentación muestra sus mejores resultados. 
+
+#### Análisis de los resultados de los experimentos realizados en el dataset de clases multiclase (GCM):
+
+El caso de GCM merece merece un análisis particular.
+La primera seria de experimentos, basados en un la implementación de aumentación y selección de caracteristicas mediante un AG
+con la misma metodología que en los datasets de clases binarias, no arrojaron resultados positivos.
+Aquí los resultados obtenidos con aumentación de datos son bastante peores que sin ella. 
+Debo destacar que realicé experimentos muy agresivos, (ej. probando genes activos = 0.005). 
+Entiendo que aquí el AV no está pudiendo generar datos que se aproximen a la distribución de probabilidad original. 
+Creo que esto está señalando claramente que el AV no está generando datos que sean representativos de los datos reales, y por lo tanto el AG no puede generalizar a estos datos.Posiblemente esta circunstancia indica que la divergencia KL tiene un error menor que el error de reconstrucción, lo que hace que el AV no sea capaz de generar datos que sean representativos de los datos reales, pero sí es capaz de generar un espacio latente que es capaz de separar las clases perfectamente. Por eso aquellos resultados del MLP. 
+No se debe perder de vista que GCM es el dataset más difícil, donde los algoritmos en general (les hice pruebas a varios de los clásicos, con optimización de hiperparàmetros, tienen resultados pobres, alrededor de 0.5 de acc.).
+
+Esto último marcó el camino de una serie de experimentos donde se realizaron varios ajustes. 
+Inicié una serie (006X) partiendo de una subselección de características. 
+La intención era comprobar si acaso el CAV podía mejorar la reconstrucción de datos, generando sintéticos de mayor calidad. 
+La subselección comprende 1600 características elegidas de los experimentos anteriores y según aquellas de mayor frecuencia. 
+Entiendo que esto es válido pues, en definitiva, la selección de características fue realizada siempre mediante GA. 
+En tal sentido creo que es como una técnia de 'staking' donde un flujo con un CAVE, así: GA-CAV-GA, 
+Donde:  EspacioOriginal16063=>GA=>EspacioReducido1600=>CAV=>GA = BalancedAcc > 0.65.
+
+Asimismo se realizaron una serie de ajustes en el AV. 
+Integration of class weights into the custom loss function.
+Inclusion of a weighted random sampler in the data loader.
+
+
+Los resultados de GCM en una nueva serie de experimentos donde se parte de una nuevas particiones de entrenamiento y testeo, y donde NUNCA! se mezclan dichas particiones: el CAV y el AG solo se entrenan/corren con 'train' y evaluan en 'test'. 
+Viendo el gráfico entiendo que estamos ante un resultado claramente positivo en los casos donde los individuos tenían cromosomas con 750 y 450 genes activos en promedio, mientra que en el caso de una reducción más drástica la diferencia es menor, pero se mantiene tambien.
+
+
+#### Sobre los resultados en la selección de características
+Improvement of a machine learning model, either in terms of learning speed, computational complexity, simplicity/interpretability of the representation or generalization capability?
+Como puede verse en los gráficos de Gisette y Madelon la aumentación de datos está contribuyendo a la selección de características permitiendo al AG, una mayor concentración de las features relevantes. El caso de Madelon, que entendemos resulta el más interesante, es donde mayor reducción del espacio de características se logra a partir de la aumentación, incluso una distribucin más homogenea. 
+En el caso de leukemia el gráfico no permite apreciar esto, porque los valores de ‘n_genes’ están muy polarizados. Por eso ver el siguiente gráfico:
+Las dos distribuciones son similares.
+En el caso particular de Madelon  tenemos las siguientes distribuciones de las 20 características valiosas que contiene el dataset (5 relevantes y 15 combinaciones lineales de aquellas, las demas son ruido). Aquí estamos mostrando las distribuciones de probabilidades de aparición de las 20 features relevantes.
+El dataset aumentado está encontrando más features que el dataset sin aumentación.
+En el próximo gráfico vemos de la frecuencia relativa de aparición de cada caracteŕistica según el grupo de experimentos. Entiendo que el grupo de experimentos con datos sintéticos tenemos saltos marcados de las frecuencias, señalando que hay más aparición de ciertas variables. 
+El caso de gisette, con un cromosoma p=0.001. Están los experimentos 24 y 25. El dataset aumentado se desempeña mejor en esa reducción agresiva del cromosoma. 
+Se degrada menos la performance. Los resultados son más estables
