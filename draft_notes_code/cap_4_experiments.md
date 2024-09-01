@@ -1,4 +1,4 @@
-## Experimentos realizados y sus resultados {#sec-Capitulo4}
+# Experimentos realizados y sus resultados {#sec-Capitulo4}
 
 En este capítulo se presentan los experimentos realizados en el marco de la investigación, cuyo objetivo principal fue evaluar la efectividad de la combinación de Algoritmos Genéticos (AGs) y Autoencoders Variacionales (AVs) en la selección de características en contextos de escasez de datos. Para ello, se diseñaron y ejecutaron experimentos utilizando cuatro conjuntos de datos distintos: *leukemia*, *gisette*, *madelon* y *gcm*, cada uno representando diferentes desafíos en términos de dimensionalidad y características de los datos.
 
@@ -6,9 +6,9 @@ El enfoque experimental adoptado fue comparativo, enfrentando la capacidad de lo
 
 La metodología seguida para cada experimento se describe a continuación
 
-### Leukemia
+## Leukemia
 
-#### Metodología
+### Metodología
 
 El conjunto de datos *leukemia* es conocido por su alta dimensionalidad relativa al número de muestras, lo que lo convierte en un candidato ideal para evaluar la capacidad de los AVs para generar datos sintéticos que puedan mejorar el desempeño de los AGs en la selección de características. En este experimento, el objetivo fue realizar una comparación directa entre el rendimiento de los AGs sobre los datos originales y sobre un conjunto de datos aumentado con muestras generadas por un AV.
 
@@ -28,11 +28,11 @@ Inicialmente, los AGs fueron aplicados tanto al conjunto de datos original como 
 
 Se realizaron múltiples pruebas exploratorias para investigar distintas configuraciones del cromosoma activo y el número de muestras generadas por el AV, buscando determinar el impacto de estas variables sobre el desempeño del AG. Por ejemplo, se redujo el tamaño del cromosoma activo a p = 0.01 y luego a p = 0.005 para observar cómo afectaba esto a la selección de características.
 
-#### Resultados
+### Resultados
 
 En los experimentos realizados sobre el conjunto de datos leukemia, los resultados mostraron una ligera mejora en la precisión (accuracy) cuando se utilizó la aumentación de datos mediante AVs en comparación con el uso de datos originales. Específicamente, la precisión media del grupo de datos aumentados fue de 0.992, con una desviación estándar de 0.011, mientras que la precisión media del grupo de datos originales fue de 0.989, con una desviación estándar de 0.016.
 
-![Precisión en Leukemia](utnthesis/boxplot_leukemia_combined.png)
+![Precisión en Leukemia](boxplot_leukemia_combined.png)
 
 Interpretación: La diferencia en la precisión es mínima y estadísticamente no significativa (p-value: 0.995), lo que sugiere que en este conjunto de datos, donde los modelos ya alcanzan una precisión cercana al 100%, la aumentación de datos no produce una mejora sustancial en la precisión. Sin embargo, es notable que la estabilidad de los resultados es ligeramente mejor en los datos aumentados, reflejada en una menor dispersión de la precisión.
 
@@ -41,9 +41,9 @@ El análisis del número de características seleccionadas promedio (pob_ngenes_
 
 Interpretación: La similitud en la cantidad de características seleccionadas sugiere que la estructura de correlación entre las características en el conjunto de datos leukemia permite al AG encontrar soluciones similares, independientemente de la aumentación de datos. Esto puede deberse a la alta correlación entre las características del conjunto de datos, lo que facilita la tarea del AG, incluso sin la necesidad de datos adicionales.
 
-### Gisette
+## Gisette
 
-#### Metodología
+### Metodología
 
 El conjunto de datos *gisette* es un problema de clasificación binaria con alta dimensionalidad y un número equilibrado de muestras en ambas clases. Este conjunto de datos fue seleccionado para evaluar cómo la aumentación de datos afecta la selección de características en un contexto donde el espacio de características es grande, pero la relación señal-ruido es moderada.
 
@@ -59,7 +59,7 @@ Se generaron 600 muestras sintéticas adicionales utilizando un AV. Los experime
 
 En este experimento, se prestó especial atención a la reducción del espacio de búsqueda mediante la disminución del tamaño del cromosoma activo y la observación de cómo esta reducción, combinada con la aumentación de datos, afectaba la eficiencia del AG. Se investigó también el impacto de generar un número mucho mayor de muestras sintéticas (6000), reduciendo agresivamente el tamaño del cromosoma para evaluar si el modelo podría identificar características relevantes en un espacio de búsqueda más limitado.
 
-#### Resultados
+### Resultados
 
 En el caso del conjunto de datos gisette, los resultados fueron similares a los observados en leukemia. La precisión media fue ligeramente superior en los experimentos con datos aumentados (0.960) en comparación con los datos originales (0.959), pero nuevamente, la diferencia no fue estadísticamente significativa (p-value: 0.066).
 
@@ -70,9 +70,9 @@ El análisis de pob_ngenes_avg reveló una diferencia más notable en la eficien
 
 Interpretación: La reducción en el número de características seleccionadas en los datos aumentados sugiere que la aumentación ayuda al AG a concentrarse en un subconjunto más relevante de características. Esta observación es importante, ya que una selección más eficiente de características puede mejorar la interpretabilidad y reducir la complejidad del modelo, sin comprometer la precisión.
 
-### Madelon
+## Madelon
 
-#### Metodología
+### Metodología
 
 El conjunto de datos *madelon* es un caso especial donde solo cinco características son relevantes, mientras que otras quince son combinaciones lineales de estas, y el resto es ruido. Este conjunto de datos fue utilizado para evaluar si la combinación de AVs y AGs podría mejorar la identificación de las características relevantes en un entorno donde la señal está oculta entre una gran cantidad de ruido.
 
@@ -89,7 +89,7 @@ Se generaron 2000 muestras sintéticas para incrementar el número de observacio
 
 Se realizaron experimentos comparativos entre los datos originales y los aumentados, manteniendo constantes los parámetros del AG. El objetivo fue observar si el AV podía generar datos sintéticos que preservaran la estructura subyacente de las características relevantes, permitiendo al AG identificar correctamente las cinco características esenciales. Se monitoreó especialmente la precisión en la clasificación y la estabilidad de la selección de características a lo largo de las generaciones.
 
-#### Resultados
+### Resultados
 
 El conjunto de datos madelon mostró resultados significativamente diferentes en comparación con leukemia y gisette. La precisión media en los experimentos con datos aumentados fue de 0.828, lo que representa un aumento del 10.4% en comparación con la precisión de los datos originales (0.750). Esta diferencia fue estadísticamente significativa (p-value: 0.000), lo que indica que la aumentación de datos tuvo un impacto positivo en el desempeño del AG.
 
@@ -101,9 +101,9 @@ El análisis de pob_ngenes_avg reveló que, en promedio, el número de caracter�
 Interpretación: La capacidad del AG para seleccionar un subconjunto más pequeño de características relevantes en el grupo de datos aumentados refuerza la hipótesis de que la aumentación de datos puede mejorar tanto la precisión como la eficiencia de la selección de características, especialmente en conjuntos de datos con una estructura compleja de características.
 
 
-### Experimento 4: GCM
+## Experimento 4: GCM
 
-#### Metodología 
+### Metodología 
 
 El conjunto de datos *gcm* representa un desafío aún mayor debido a la alta dimensionalidad y el bajo número de muestras. Este conjunto fue seleccionado para evaluar la capacidad del AV de generar datos sintéticos que ayuden a los AGs a seleccionar características en un escenario donde los datos originales son extremadamente limitados.
 
@@ -117,7 +117,7 @@ Se realizaron múltiples experimentos exploratorios con diferentes tamaños de m
 
 Se exploraron varias configuraciones, incluyendo la mezcla de datos originales y sintéticos durante el entrenamiento del AG, así como la evaluación del modelo en una partición original del conjunto de datos. Se prestó especial atención a la calidad de las muestras generadas por el AV y su impacto en la selección de características, así como a la posibilidad de que los AGs estuvieran sobreajustándose a los datos sintéticos, en detrimento de su capacidad de generalización.
 
-#### Resultados
+### Resultados
 
 El conjunto de datos gcm, que presenta un desafío significativo debido a su alta dimensionalidad y bajo número de muestras, mostró resultados mixtos. La precisión media fue ligeramente superior en los experimentos con datos aumentados (0.517) en comparación con los datos originales (0.467). Sin embargo, la diferencia no fue estadísticamente significativa (p-value: 0.355).
 

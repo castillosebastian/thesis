@@ -1,4 +1,4 @@
-# Marco específico de trabajo {#sec-Capitulo2}
+# Marco específico de trabajo {#sec-Capitulo1}
 
 En este capítulo revisaremos el desempeño de algoritmos clásicos en la solución de los dataset elegidos para nuestra investigación. Describiremos brevemente la composición de los conjuntos de datos, los algoritmos seleccionados para su tratamiento y los resultados obtenidos para cada uno. Luego, analizando y comparando dichos resultados, elegiremos un modelo para emplear como función de fitness en nuestro Algoritmo Genético. Finalmente, haremos un breve repaso de la aplicaciones de Autocodificaciones Variacionales al problema de la aumentación de datos, como antesala al capítulo siguiente.  
 

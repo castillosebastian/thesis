@@ -32,7 +32,7 @@ Se realizaron múltiples pruebas exploratorias para investigar distintas configu
 
 En los experimentos realizados sobre el conjunto de datos leukemia, los resultados mostraron una ligera mejora en la precisión (accuracy) cuando se utilizó la aumentación de datos mediante AVs en comparación con el uso de datos originales. Específicamente, la precisión media del grupo de datos aumentados fue de 0.992, con una desviación estándar de 0.011, mientras que la precisión media del grupo de datos originales fue de 0.989, con una desviación estándar de 0.016.
 
-![Precisión en Leukemia](utnthesis/boxplot_leukemia_combined.png)
+![Precisión en Leukemia](boxplot_leukemia_combined.png)
 
 Interpretación: La diferencia en la precisión es mínima y estadísticamente no significativa (p-value: 0.995), lo que sugiere que en este conjunto de datos, donde los modelos ya alcanzan una precisión cercana al 100%, la aumentación de datos no produce una mejora sustancial en la precisión. Sin embargo, es notable que la estabilidad de los resultados es ligeramente mejor en los datos aumentados, reflejada en una menor dispersión de la precisión.
 

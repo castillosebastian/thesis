@@ -1,5 +1,5 @@
 
-# Algoritmos Genéticos {#sec-Capitulo4}
+# Algoritmos Genéticos {#sec-Capitulo3}
 
 En este capítulos presentamos una descripción general de los AGs, exponemos brevemente sus características y describimos la implementación realizada en nuestro trabajo. Específicamente, comentaremos su componentes y operadores básicos, y presentaremos un script genérico de un AG implementado con la librería `DEAP` de Python, que puede ser adaptado para la selección de características en problemas de alta dimensionalidad. En el capítulo siguiente nos enfocaremos finalmente en los resultados obtenidos combinando ambas tecnologías para resolver problemas de selección de características.
 
