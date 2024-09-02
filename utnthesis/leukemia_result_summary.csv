@@ -1,0 +1,7 @@
+experiment_group,group,all_features_fitness,all_feature_ngenes,all_feature_acc,pob_accuracy_avg,pob_ngenes_avg,pob_accuracy_std,pob_ngenes_std
+leukemia_base_0001,original,0.46,7129.0,0.91,0.99,682.3,0.0,0.0
+leukemia_base_0002,aumentados,0.45,7129.0,0.91,1.0,683.43,0.0,0.01
+leukemia_base_0009,aumentados,0.48,7129.0,0.95,0.99,62.73,0.0,0.09
+leukemia_base_0011,aumentados,0.47,7129.0,0.94,0.99,31.33,0.0,0.0
+leukemia_base_0012,original,0.46,7129.0,0.91,0.99,64.96,0.0,0.11
+leukemia_base_0013,original,0.46,7129.0,0.91,0.98,29.47,0.0,0.03
