@@ -82,9 +82,9 @@ En efecto, en Gisette se observa una diferencia más importante en la eficiencia
 
 ### Metodología
 
-El conjunto de datos *Madelon* es un caso especial donde solo cinco características son relevantes, mientras que otras quince son combinaciones lineales de estas, y el resto son datos aleatorios. Así, este conjunto representa un desafío único para evaluar la capacidad de los AGs para identificar características útiles en un entorno donde la señal está oculta entre una gran cantidad de ruido.
+El conjunto de datos *Madelon* es un caso especial donde solo cinco características son relevantes, mientras que otras quince son combinaciones lineales de estas, y el resto son datos aleatorios. Así, este conjunto representa un desafío interesante para evaluar la capacidad de los AGs para identificar características útiles en un entorno donde la señal está oculta entre una gran cantidad de ruido.
 
-La metodología seguida en los experimentos con *madelon* fue similar a la utilizada en *leukemia* y *gisette*. La configuración del AG fue la siguiente:
+La metodología seguida en los experimentos con *Madelon* fue similar a la utilizada en *Leukemia* y *Gisette*. La configuración del AG fue la siguiente:
 
 - **Mutación:** PROB_MUT = 1/IND_SIZE (0.002)
 - **Probabilidad de cruce:** PX = 0.75
@@ -95,48 +95,48 @@ Se generaron 2000 muestras sintéticas para incrementar el número de observacio
 
 ### Resultados
 
-El conjunto de datos madelon mostró resultados significativamente diferentes a Leukemia y Gisette. La precisión media en los experimentos con datos aumentados fue de 0.83, lo que representa un aumento del 10.4% en comparación con la precisión de los datos originales de 0.75. Esta diferencia es estadísticamente significativa, lo que indica que la aumentación de datos tuvo un impacto positivo en el desempeño del AG.
+Los experimentos en Madelon mostraron resultados significativamente diferentes a Leukemia y Gisette. La precisión media en los experimentos con datos aumentados fue de 0.83, lo que representa un aumento del 10.4% en comparación con la precisión de los datos originales de 0.75. Esta diferencia es estadísticamente significativa, lo que indica que la aumentación de datos tuvo un impacto positivo en el desempeño del AG.
 
 ![Precisión en Madelon](boxplot_madelon_combined.png)
 
 Estos resultados sugieren que la aumentación de datos puede ser especialmente efectiva en conjuntos de datos con características complejas y un alto nivel de ruido, como es el caso de Madelon. La generación de muestras sintéticas permitió al AG identificar mejor las características relevantes, lo que se tradujo en una mejora significativa en la precisión del modelo.
 
-Por otro lado, el análisis de selección de características reveló que, en promedio, el número de características seleccionadas fue menor en los experimentos con datos aumentados (29) en comparación con los datos originales (35). Este también resalta una mayor eficiencia en la selección de características cuando se utiliza aumentación de datos.
+Por otro lado, el análisis de selección de características reveló que, en promedio, el número de características seleccionadas fue menor en los experimentos con datos aumentados (29) en comparación con los datos originales (35). Este hallazgo, también resalta la eficiencia de la aumentación de datos en la selección de características.
 
-Podemos destacar también que de los algoritmos clásicos evaluados (a cuyo reporte remitimos en el capítulo 1) solo 2 de los 18 logra superan los valores de precisión obtenidos con el AG en los datos aumentados. Ambos modelos, AdaBoost y Baggind, pasaron por un proceso de optimización de hiperparámetros. El resto de los modelos clásicos oscila entre 0.5 y 0.7 de precisión, lo que refuerza la idea de que la aumentación de datos puede ser una estrategia efectiva para mejorar el desempeño de los AGs en conjuntos de datos complejos.
+Finalmente, podemos destacar también que de los algoritmos clásicos evaluados (cuyo reporte hicimos en el Capítulo 1) solo 2 de los 18 logra superan los valores de precisión obtenidos con el AG en los datos aumentados. Ambos modelos, AdaBoost y Baggind, pasaron por un proceso de optimización de hiperparámetros. El resto de los modelos clásicos oscila entre 0.5 y 0.7 de precisión, lo que refuerza la idea de que la aumentación de datos puede ser una estrategia efectiva para mejorar el desempeño de los AGs en conjuntos de datos complejos.
 
 ## Experimento 4: GCM
 
-PENDIENTE
-
-## Resumen de los resultados
-
-PENDIENTE
-
-![Precisión en los 4 datasets](boxplot_resultados_precision.png)
-![Número de características seleccionadas en los 4 datasets](boxplot_resultados_ngenes.png)
-
-
-
-
 ### Metodología 
 
-El conjunto de datos *GCM* representa un desafío aún mayor que los anteriores no solo debido a la alta dimensionalidad y bajo número de muestras, sino también por las múltiples clases y la complejidad de las relaciones entre las características. 
+El conjunto de datos *GCM* representa un desafío aún mayor que los anteriores no solo debido a la alta dimensionalidad y bajo número de muestras, sino también por las múltiples clases y el desbalance entre ellas.  El dataset consiste en perfiles de expresión de 190 muestras de tumores que representan 14 clases de cáncer humano, con 16063 atributos (biomarcadores).
 
-El tratamiento metodológico de los experimentos con *gcm* fue similar al de los conjuntos de datos anteriores, con la diferencia de que se adoptó un doble proceso de selección de características. Así, el proceso consistió en encadenar una secuencia de AG, AVC y finalmente un AG. El primer AG se encargó de seleccionar un subconjunto inicial de características, que fue utilizado para entrenar un AVC. El AVC generó muestras sintéticas que se integraron con los datos originales para entrenar un segundo AG, que se encargó de seleccionar un subconjunto final de características.
+El proceso de experimentación en GCM estuvo dividido en dos partes. En la primera parte, se realizaron experimentos exploratorios con diferentes configuraciones del AG y el AVC para evaluar la efectividad de la aumentación de datos. En la segunda parte, se realizaron ajustes en la metodología, el modelo de AVC y el diseño de la integración AVC-AG.
+
+Al enfrentarnos a GCM asumíamos que la generación sintética de muestras y ulterior proceso de selección de características plantearía un desafío significativo al AG debido a la complejidad del dataset. La calidad de reconstrucción lograda en los datos  sintéticos generados por el AVC presentado en el Capítulo 2, aunque capaz de preservar la estructura subyacente del conjuntos de datos de GCM, no permitía suponer una mejora significativa en la precisión de la clasificación con un AG. Por ello, se esperaba que los experimentos con datos aumentados presentaran resultados mixtos, con posibles mejoras en la estabilidad de la selección de características, pero sin mejoras significativa en la precisión. 
+
+Respescto de los recursos de hardware utilizados, dado que la aumentación de datos requeriría un poder de cómputo proporcional a la cantidad de muestras sintéticas generadas, se optó por utilizar un entorno en la nube para ejecutar los experimentos de manera eficiente y paralela. Para este propósito, se trabajó con una máquina virtual en Google Cloud Platform con 8 vCPUs y 30 GB de RAM.
 
 La configuración del AG fue la siguiente:
 
 - **Mutación:** PROB_MUT = 1/IND_SIZE (0.00006)
 - **Probabilidad de cruce:** PX = 0.75
-- **Cromosoma activo:** p = 0.1
+- **Cromosoma activo:** p = 0.1,0.01,0.005,0.003,0.001 
 - **Número máximo de generaciones:** GMAX = 20
 
-La primera etapa de subselección de características se realizó con un cromosoma activo que representaba el 10% de las características totales, limitado a un máximo de 20 generaciones. El AVC se entrenó con un conjunto de datos aumentado que incluía 200 muestras sintéticas generadas por un AV específico para este conjunto de datos. El segundo AG se entrenó con un conjunto de datos que combinaba las muestras originales y las sintéticas, utilizando un cromosoma activo del 5% y un máximo de 20 generaciones.
+La cantidad de muestras sintéticas generadas fue ajustada a lo largo de los experimentos, conforme se exploraban opciones de mejora. Ello dio lugar a la siguiente tabla de experimentos por cantidad de muestras analizadas, donde la primera fila representa la cantidad de muestras originales:
 
-Se realizaron múltiples experimentos exploratorios con diferentes tamaños de muestras sintéticas (desde 200 hasta 1400) y diferentes configuraciones del cromosoma activo, buscando identificar las condiciones óptimas para la selección de características en este conjunto de datos.
+| n_muestras        | cantidad_experimentos |
+|-------------------|-----------------------|
+| 133               | 20                    |
+| 3129              | 15                    |
+| 1322              | 4                     |
+| 1323              | 4                     |
+| 1304              | 2                     |
+| 254               | 2                     |
+| 6106              | 1                     |
 
-Se exploraron varias configuraciones, incluyendo la mezcla de datos originales y sintéticos durante el entrenamiento del AG, así como la evaluación del modelo en una partición original del conjunto de datos. Se prestó especial atención a la calidad de las muestras generadas por el AV y su impacto en la selección de características, así como a la posibilidad de que los AGs estuvieran sobreajustándose a los datos sintéticos, en detrimento de su capacidad de generalización.
+La primera etapa de experimentos se realizó con un cromosoma activo que representaba el 10% de las características totales, limitado a un máximo de 20 generaciones. El AG se corrió con datos originales y con un conjunto de datos aumentado que incluía 254 muestras sintéticas. Se emplearon distintas configuraciones del cromosoma activo, buscando identificar las condiciones óptimas para la selección de características.
 
 ### Resultados Parte 1
 
@@ -147,6 +147,7 @@ El primer conjunto de experimentos con el conjunto de datos gcm mostró resultad
 Para abordar las limitaciones observadas, se realizaron ajustes en la metodología, como la integración de pesos de clase en la función de pérdida personalizada del AV y la inclusión de un muestreador aleatorio ponderado en el cargador de datos. Estos ajustes, junto con una subselección inicial de características, mejoraron significativamente los resultados en una serie posterior de experimentos, alcanzando una precisión balanceada superior al 0.65 en algunos casos.
 
 
+Finalmente, en lo estrictamente metodológico, los experimentos con *GCM* fue similares a los anteriores, con la diferencia de que se adoptó un doble proceso de selección de características. Así, el proceso consistió en encadenar una secuencia de AG, AVC y finalmente un AG. El primer AG se encargó de seleccionar un subconjunto inicial de características, que fue utilizado para entrenar un AVC. El AVC generó muestras sintéticas que se integraron con los datos originales para entrenar un segundo AG, que se encargó de seleccionar un subconjunto final de características.
 
 
 
@@ -163,6 +164,26 @@ Interpretación: La mayor cantidad de características seleccionadas en los expe
 
 
 Interpretación: Estos resultados sugieren que, si bien la aumentación de datos mediante AVs puede enfrentar desafíos significativos en conjuntos de datos complejos como gcm, es posible mejorar la calidad de los datos sintéticos mediante ajustes en la arquitectura del AV y en la metodología de selección de características. La combinación de AVs y AGs en un flujo de trabajo iterativo y refinado demostró ser una estrategia prometedora para mejorar la precisión y la eficiencia en la selección de características.
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Resumen de los resultados
+
+PENDIENTE
+
+![Precisión en los 4 datasets](boxplot_resultados_precision.png)
+![Número de características seleccionadas en los 4 datasets](boxplot_resultados_ngenes.png)
+
 
 
 
