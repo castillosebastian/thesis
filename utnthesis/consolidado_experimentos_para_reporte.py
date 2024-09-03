@@ -34,7 +34,7 @@ madelon.loc[:, 'group'] = madelon['experiment_group'].apply(lambda x: 'original'
 gcm_original_data = ['gcm_base_0065', 'gcm_base_0063', 'gcm_base_0067', 'gcm_base_0070']
 gcm = categorize_experiments(data, gcm_original_data, 'gcm', 13)
 # Filter out some experiments containing 'gcm_base_006' or 'gcm_base_007'
-gcm = gcm[gcm['experiment_group'].str.contains('gcm_base_006|gcm_base_007')].copy()
+gcm = gcm[gcm['experiment_group'].str.contains('0061|0066|0064|0069|0065|0063|0067|0070')].copy()
 
 # Combine all filtered datasets into one
 combined_data = pd.concat([leukemia, gisette, madelon, gcm])

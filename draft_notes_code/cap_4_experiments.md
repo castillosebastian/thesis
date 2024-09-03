@@ -107,22 +107,45 @@ Finalmente, podemos destacar también que de los algoritmos clásicos evaluados 
 
 ## Experimento 4: GCM
 
-### Metodología 
+### Metodología parte 1
 
-El conjunto de datos *GCM* representa un desafío aún mayor que los anteriores no solo debido a la alta dimensionalidad y bajo número de muestras, sino también por las múltiples clases y el desbalance entre ellas.  El dataset consiste en perfiles de expresión de 190 muestras de tumores que representan 14 clases de cáncer humano, con 16063 atributos (biomarcadores).
+El conjunto de datos *GCM* representa un desafío aún mayor que los anteriores no solo debido a la alta dimensionalidad y bajo número de muestras, sino también por las múltiples clases y el desbalance entre ellas.  El dataset consiste en 16063 atributos (biomarcadores), sobre 190 muestras de tumores que refieren a 14 clases de cáncer humano.
 
-El proceso de experimentación en GCM estuvo dividido en dos partes. En la primera parte, se realizaron experimentos exploratorios con diferentes configuraciones del AG y el AVC para evaluar la efectividad de la aumentación de datos. En la segunda parte, se realizaron ajustes en la metodología, el modelo de AVC y el diseño de la integración AVC-AG.
+El proceso de experimentación en GCM estuvo dividido en dos partes. En la primera parte, se realizaron experimentos exploratorios con diferentes configuraciones del AVC y el AG. El objetivo de esta etapa fue establecer una línea base para evaluar la efectividad de la aumentación de datos. En la segunda parte, se realizaron ajustes en la metodología, el modelo de AVC y el diseño de la integración AVC-AG. Esta vez, el objetivo era mejorar la calidad de los datos sintéticos y la eficiencia de la selección de características.
 
-Al enfrentarnos a GCM asumíamos que la generación sintética de muestras y ulterior proceso de selección de características plantearía un desafío significativo al AG debido a la complejidad del dataset. La calidad de reconstrucción lograda en los datos  sintéticos generados por el AVC presentado en el Capítulo 2, aunque capaz de preservar la estructura subyacente del conjuntos de datos de GCM, no permitía suponer una mejora significativa en la precisión de la clasificación con un AG. Por ello, se esperaba que los experimentos con datos aumentados presentaran resultados mixtos, con posibles mejoras en la estabilidad de la selección de características, pero sin mejoras significativa en la precisión. 
+Al enfrentarnos a GCM asumíamos que la generación sintética de muestras y ulterior proceso de selección de características plantearía un desafío significativo al AG debido a la complejidad del dataset. La calidad de reconstrucción lograda en los datos  sintéticos generados por el AVC presentado en el Capítulo 2, aunque capaz de preservar la estructura subyacente del conjuntos de datos de GCM, no permitía suponer una mejora significativa en la precisión de la clasificación con un AG. Por ello, esperabamos que los experimentos con datos aumentados presentaran resultados mixtos, con posibles mejoras en la estabilidad de la selección de características, pero sin mejoras significativa en la precisión. 
 
-Respescto de los recursos de hardware utilizados, dado que la aumentación de datos requeriría un poder de cómputo proporcional a la cantidad de muestras sintéticas generadas, se optó por utilizar un entorno en la nube para ejecutar los experimentos de manera eficiente y paralela. Para este propósito, se trabajó con una máquina virtual en Google Cloud Platform con 8 vCPUs y 30 GB de RAM.
+Respecto de los recursos de hardware utilizados, dado que la aumentación de datos requeriría un poder de cómputo proporcional a al tamaño del dataset por la cantidad de muestras sintéticas generadas, se optó por utilizar un entorno en la nube para ejecutar los experimentos de manera eficiente. Para este propósito, se trabajó con una máquina virtual en Google Cloud Platform con 8 vCPUs y 30 GB de RAM.
 
-La configuración del AG fue la siguiente:
+La configuración inicial del AG fue la siguiente:
 
 - **Mutación:** PROB_MUT = 1/IND_SIZE (0.00006)
 - **Probabilidad de cruce:** PX = 0.75
-- **Cromosoma activo:** p = 0.1,0.01,0.005,0.003,0.001 
+- **Cromosoma activo:** p = 0.1
 - **Número máximo de generaciones:** GMAX = 20
+
+En la primera etapa se experimentó con un cromosoma activo que representaba el 10% de las características totales, al rededor de 1600 genes por cromosoma, tanto para el grupo de experimentos con datos originales como al grupo de experimentos con datos aumentados. En el caso de estos últimos, el dataset mixto de datos incluía 1400 muestras sintéticas (100 instancias sintéticas por clase) y la partición original de entrenamiento. El proceso evolutivo se configuró para correr por 20 generaciones. 
+
+### Resultados parte 1
+
+Los resultados, como anticipabamos, nos fueron favorables. La precisión media fue ligeramente superior en los experimentos con datos originales (0.538) en comparación con los datos aumentados (0.512), pero la diferencia no fue estadísticamente significativa. La estabilidad de la selección de características fue similar en ambos grupos, con una dispersión similar en la cantidad de características seleccionadas, como se puede observar en el siguiente gráfico.
+
+![GCM Resultados exploratorios](boxplot_gcm_combined_part1.png)
+
+Se descartó un grupo de experimentos que partían de un cromosoma del 30% de las características totales, dado que los resultados mostraron una acentuada degradación en la precisión (en el rango de 0.2 y 0.35).
+
+- Falla VAE. 
+- Verificación de un MLP
+- Probar VAE pero con subselectores de características. Este fue el puente hacia la segunda parte de los experimentos.
+
+### Metodología Parte 2
+
+GA entrenado con dataset mixto.
+
+Para abordar las limitaciones observadas, se realizaron ajustes en la metodología, como la integración de pesos de clase en la función de pérdida personalizada del AV y la inclusión de un muestreador aleatorio ponderado en el cargador de datos. Estos ajustes, junto con una subselección inicial de características, mejoraron significativamente los resultados en una serie posterior de experimentos, alcanzando una precisión balanceada superior al 0.65 en algunos casos.
+
+
+Finalmente, en lo estrictamente metodológico, los experimentos con *GCM* fue similares a los anteriores, con la diferencia de que se adoptó un doble proceso de selección de características. Así, el proceso consistió en encadenar una secuencia de AG, AVC y finalmente un AG. El primer AG se encargó de seleccionar un subconjunto inicial de características, que fue utilizado para entrenar un AVC. El AVC generó muestras sintéticas que se integraron con los datos originales para entrenar un segundo AG, que se encargó de seleccionar un subconjunto final de características.
 
 La cantidad de muestras sintéticas generadas fue ajustada a lo largo de los experimentos, conforme se exploraban opciones de mejora. Ello dio lugar a la siguiente tabla de experimentos por cantidad de muestras analizadas, donde la primera fila representa la cantidad de muestras originales:
 
@@ -136,18 +159,9 @@ La cantidad de muestras sintéticas generadas fue ajustada a lo largo de los exp
 | 254               | 2                     |
 | 6106              | 1                     |
 
-La primera etapa de experimentos se realizó con un cromosoma activo que representaba el 10% de las características totales, limitado a un máximo de 20 generaciones. El AG se corrió con datos originales y con un conjunto de datos aumentado que incluía 254 muestras sintéticas. Se emplearon distintas configuraciones del cromosoma activo, buscando identificar las condiciones óptimas para la selección de características.
-
-### Resultados Parte 1
-
-El primer conjunto de experimentos con el conjunto de datos gcm mostró resultados mixtos. La precisión media fue ligeramente superior en los experimentos con datos originales en comparación con los datos aumentados.
-### Metodología Parte 2
 
 
-Para abordar las limitaciones observadas, se realizaron ajustes en la metodología, como la integración de pesos de clase en la función de pérdida personalizada del AV y la inclusión de un muestreador aleatorio ponderado en el cargador de datos. Estos ajustes, junto con una subselección inicial de características, mejoraron significativamente los resultados en una serie posterior de experimentos, alcanzando una precisión balanceada superior al 0.65 en algunos casos.
 
-
-Finalmente, en lo estrictamente metodológico, los experimentos con *GCM* fue similares a los anteriores, con la diferencia de que se adoptó un doble proceso de selección de características. Así, el proceso consistió en encadenar una secuencia de AG, AVC y finalmente un AG. El primer AG se encargó de seleccionar un subconjunto inicial de características, que fue utilizado para entrenar un AVC. El AVC generó muestras sintéticas que se integraron con los datos originales para entrenar un segundo AG, que se encargó de seleccionar un subconjunto final de características.
 
 
 
