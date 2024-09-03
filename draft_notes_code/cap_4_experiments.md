@@ -18,7 +18,7 @@ Como hemos señalado, la innovación en este enforque estuvo en el uso de un AV 
 
 La configuración experimental del AG que empleamos en Leukemia fue la siguiente:
 
-- **Mutación:** PROB_MUT = 1/IND_SIZE (0.0001)
+- **Mutación:** PROB_MUT = 1/IND_SIZE (~0.0001)
 - **Probabilidad de cruce:** PX = 0.75
 - **Cromosoma activo:** p = 0.1
 - **Número máximo de generaciones:** GMAX = 20
@@ -54,7 +54,7 @@ La metodología seguida en los experimentos con *gisette* fue similar a la utili
 
 La configuracion del AG fue la siguiente:
 
-- **Mutación:** PROB_MUT = 1/IND_SIZE (0.0002)
+- **Mutación:** PROB_MUT = 1/IND_SIZE (~0.0002)
 - **Probabilidad de cruce:** PX = 0.75
 - **Cromosoma activo:** p = 0.1
 - **Número máximo de generaciones:** GMAX = 30
@@ -86,7 +86,7 @@ El conjunto de datos *Madelon* es un caso especial donde solo cinco característ
 
 La metodología seguida en los experimentos con *Madelon* fue similar a la utilizada en *Leukemia* y *Gisette*. La configuración del AG fue la siguiente:
 
-- **Mutación:** PROB_MUT = 1/IND_SIZE (0.002)
+- **Mutación:** PROB_MUT = 1/IND_SIZE (~0.002)
 - **Probabilidad de cruce:** PX = 0.75
 - **Cromosoma activo:** p = 0.1
 - **Número máximo de generaciones:** GMAX = 30
@@ -119,20 +119,54 @@ Respecto de los recursos de hardware utilizados, dado que la aumentación de dat
 
 La configuración inicial del AG fue la siguiente:
 
-- **Mutación:** PROB_MUT = 1/IND_SIZE (0.00006)
-- **Probabilidad de cruce:** PX = 0.75
+- **Mutación:** PROB_MUT = 1,16,160/IND_SIZE (~0.0006, 0.01, 0.1)
+- **Probabilidad de cruce:** PX = 0.75 
 - **Cromosoma activo:** p = 0.1
 - **Número máximo de generaciones:** GMAX = 20
 
-En la primera etapa se experimentó con un cromosoma activo que representaba el 10% de las características totales, al rededor de 1600 genes por cromosoma, tanto para el grupo de experimentos con datos originales como al grupo de experimentos con datos aumentados. En el caso de estos últimos, el dataset mixto de datos incluía 1400 muestras sintéticas (100 instancias sintéticas por clase) y la partición original de entrenamiento. El proceso evolutivo se configuró para correr por 20 generaciones. 
+En la primera etapa se experimentó con un cromosoma activo que representaba el 10% de las características totales, al rededor de 1600 genes por cromosoma, tanto para el grupo de experimentos con datos originales como al grupo de experimentos con datos aumentados. Esta medida se adoptó luego de realizados dos experimentos exploratorios con cromosomas activos en valores del 20% y 30% de las características totales, donde se observó una acentuada degradación en la precisión (en el rango de 0.2 y 0.35). 
+
+Asimismo se varió la probabilidad de mutación en tres valores: 0.0006, 0.01 y 0.1, para instar una exploración más amplia del espacio de búsqueda. La probabilidad de cruce se mantuvo constante en 0.75, y el número máximo de generaciones fue de 20.
+
+Respecto del grupo de experimentos con datos aumentados, el dataset mixto de entrenamiento incluía 1400 muestras sintéticas (100 instancias por clase) y la partición original de entrenamiento (con 133 observaciones). La evaluación se realizó sobre los datos originales de testeo (57 observaciones). 
 
 ### Resultados parte 1
 
-Los resultados, como anticipabamos, nos fueron favorables. La precisión media fue ligeramente superior en los experimentos con datos originales (0.538) en comparación con los datos aumentados (0.512), pero la diferencia no fue estadísticamente significativa. La estabilidad de la selección de características fue similar en ambos grupos, con una dispersión similar en la cantidad de características seleccionadas, como se puede observar en el siguiente gráfico.
+Los resultados, como anticipabamos, nos fueron favorables. La precisión media fue ligeramente superior en los experimentos con datos originales (0.538) en comparación con los datos aumentados (0.512). La estabilidad de la selección de características fue similar en ambos grupos, con una dispersión similar en la cantidad de características seleccionadas, como se puede observar en el siguiente gráfico.
 
 ![GCM Resultados exploratorios](boxplot_gcm_combined_part1.png)
 
-Se descartó un grupo de experimentos que partían de un cromosoma del 30% de las características totales, dado que los resultados mostraron una acentuada degradación en la precisión (en el rango de 0.2 y 0.35).
+Como resultado de esta primera etapa de experimentos se identificaron dos limitaciones principales en la metodología utilizada. En primer lugar, la calidad de los datos sintéticos generados por el AVC no fue suficiente para superar las limitaciones impuestas por la alta dimensionalidad y la complejidad del conjunto de datos. Ante esta circunstancia se procedió a realizar un test de diagnóstico para evaluar la calidad de los datos sintéticos. Se generaron 3000 muestras, se entrenó y evaluó un MLP con estos datos. Los resultados en la partición sintética de testeo fueron los siguientes:
+
+
+| Clase | Precisión | Recall | F1-Score | Support |
+|-------|-----------|--------|----------|---------|
+| 0     | 1.00      | 1.00   | 1.00     | 23      |
+| 1     | 1.00      | 1.00   | 1.00     | 28      |
+| 2     | 1.00      | 1.00   | 1.00     | 31      |
+| 3     | 1.00      | 1.00   | 1.00     | 31      |
+| 4     | 0.97      | 1.00   | 0.98     | 32      |
+| 5     | 1.00      | 0.97   | 0.99     | 34      |
+| 6     | 0.96      | 1.00   | 0.98     | 26      |
+| 7     | 1.00      | 0.97   | 0.98     | 31      |
+| 8     | 1.00      | 1.00   | 1.00     | 30      |
+| 9     | 1.00      | 1.00   | 1.00     | 38      |
+| 10    | 1.00      | 1.00   | 1.00     | 30      |
+| 11    | 1.00      | 1.00   | 1.00     | 31      |
+| 12    | 1.00      | 1.00   | 1.00     | 26      |
+| 13    | 1.00      | 1.00   | 1.00     | 29      |
+| **Exactitud**  | \multicolumn{4}{c|}{1.00 (420)} |
+| **Macro avg**  | 1.00      | 1.00   | 1.00     | 420     |
+| **Weighted avg** | 1.00      | 1.00   | 1.00     | 420     |
+
+Estos resultados sugieren que el MLP fue capaz de aprender perfectamente la estructura de los datos sintéticos, lo que se tradujo en una precisión del 100% en la clasificación, sin embargo, el mismo modelo evaluado en los datos de test originales arrojó una precisión de 0.5. Esta discrepancia sugiere que la distribución de probabilidad de los datos sintéticos no es representativa de la que caracteriza a los datos reales, lo que limita la capacidad del AG para identificar un subconjunto relevante de características. 
+
+En este punto, entendemos que un problema importante que tuvo nuestro modelo de AVC remite directamente a la función de pérdida. En efecto, la función de pérdida del AVC, al priorizar la regularización del espacio latente a través de la divergencia KL, puede caer en un subajuste durante el proceso de reconstrucción. Esto significa que el modelo podría enfocarse más en mantener una distribución latente regular y bien distribuida, a expensas de la precisión en la reconstrucción de los datos originales. Esta situación es particularmente problemática cuando los datos presentan relaciones complejas o no lineales, las cuales son difíciles de capturar por la arquitectura del AVC, resultando en datos sintéticos que no reflejan adecuadamente la riqueza y diversidad de los datos reales. Ante esta problemática se abrió un camino de investigación que se propone ajustar los pesos de la divergencia KL y la reconstrucción para que el AVC sea capaz de generar datos que sean representativos de los datos reales. O bien, explorar la aplicación del AVC a un subespacio de características seleccionadas por un AG, lo que podría reducir la complejidad del problema y mejorar la calidad de los datos sintéticos. En la segunda parte de los experimentos, se exploró esta última opción. 
+
+
+En segundo lugar, la selección de características fue menos eficiente en los experimentos con datos aumentados, lo que sugiere que el AG tuvo dificultades para identificar un subconjunto relevante de características cuando se le proporcionaron datos sintéticos que no representaban adecuadamente la estructura original del conjunto de datos.
+
+En las 
 
 - Falla VAE. 
 - Verificación de un MLP
@@ -167,7 +201,7 @@ La cantidad de muestras sintéticas generadas fue ajustada a lo largo de los exp
 
 El conjunto de datos gcm, que presenta un desafío significativo debido a su alta dimensionalidad y bajo número de muestras, mostró resultados mixtos. La precisión media fue ligeramente superior en los experimentos con datos aumentados (0.517) en comparación con los datos originales (0.467). Sin embargo, la diferencia no fue estadísticamente significativa (p-value: 0.355).
 
-Interpretación: La falta de una mejora significativa en la precisión sugiere que, en el caso de gcm, la calidad de los datos sintéticos generados por el AV no fue suficiente para superar las limitaciones impuestas por la alta dimensionalidad y la complejidad del conjunto de datos. Es posible que el AV no haya sido capaz de capturar adecuadamente la distribución de probabilidad original, lo que limitó la capacidad del AG para generalizar a partir de los datos sintéticos.
+Interpretación: 
 
 Selección de Características
 El análisis de pob_ngenes_avg mostró que el número promedio de características seleccionadas fue mayor en los datos aumentados (378.477) en comparación con los datos originales (305.160). Esto sugiere que la selección de características fue menos eficiente en los experimentos con datos aumentados.
