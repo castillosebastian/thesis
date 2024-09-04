@@ -117,14 +117,14 @@ Análisis de resultados para el dataset GCM:
 Métrica: pob_accuracy_avg
 
 Grupo: aumentados
-  - Media: 0.507
-  - Desviación Estándar: 0.052
-  - Rango Intercuartil (IQR): 0.078
+  - Media: 0.541
+  - Desviación Estándar: 0.033
+  - Rango Intercuartil (IQR): 0.048
 
 Grupo: original
-  - Media: 0.467
-  - Desviación Estándar: 0.036
-  - Rango Intercuartil (IQR): 0.042
+  - Media: 0.497
+  - Desviación Estándar: 0.022
+  - Rango Intercuartil (IQR): 0.023
 
 Comparación entre grupos para pob_accuracy_avg:
   La media del grupo 'original' es menor que la del grupo 'aumentados'.Cuanto mayor sea la precisión, mejor.
@@ -132,21 +132,21 @@ Comparación entre grupos para pob_accuracy_avg:
 Métrica: pob_ngenes_avg
 
 Grupo: aumentados
-  - Media: 363.742
-  - Desviación Estándar: 277.501
-  - Rango Intercuartil (IQR): 289.200
+  - Media: 600.818
+  - Desviación Estándar: 175.230
+  - Rango Intercuartil (IQR): 329.320
 
 Grupo: original
-  - Media: 305.160
-  - Desviación Estándar: 288.392
-  - Rango Intercuartil (IQR): 416.000
+  - Media: 621.500
+  - Desviación Estándar: 169.593
+  - Rango Intercuartil (IQR): 320.750
 
 Comparación entre grupos para pob_ngenes_avg:
-  El número medio de características seleccionadas es menor en el grupo 'original' comparado con el grupo 'aumentados'.
-  Esto sugiere que la selección de características fue menos eficiente en el grupo 'aumentados'.
+  El número medio de características seleccionadas es mayor en el grupo 'original' comparado con el grupo 'aumentados'.
+  Esto sugiere que la selección de características fue más eficiente en el grupo 'aumentados'.
 
 Prueba estadística para pob_accuracy_avg:
-T-statistic: 0.672, P-value: 0.506
+T-statistic: -0.261, P-value: 0.797
 No hay evidencia suficiente para afirmar que la diferencia en la precisión entre los grupos es significativa.
 
 ==================================================

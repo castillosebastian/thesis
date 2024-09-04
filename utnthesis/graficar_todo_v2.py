@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Leer los datos
-data = pd.read_csv('filtered_experiment_data.csv')
+data = pd.read_csv('src/filtered_experiment_data.csv')
 
 # Filtrar los datos para cada dataset y categorizar los experimentos
 leukemia = data[data['experiment_name'].str.contains('leukemia')].copy()
@@ -14,6 +14,13 @@ madelon = data[data['experiment_name'].str.contains('mandelon')].copy()
 madelon['group'] = pd.Categorical(madelon['group'], categories=['aumentados', 'original'], ordered=True)
 gcm = data[data['experiment_name'].str.contains('gcm')].copy()
 gcm['group'] = pd.Categorical(gcm['group'], categories=['aumentados', 'original'], ordered=True)
+
+
+# split Gcm in two dataset where pob_ngenes_avg is greater less that 400 and grater than 400
+gcm_low = gcm[gcm['pob_ngenes_avg'] < 400]
+gcm_high = gcm[gcm['pob_ngenes_avg'] >= 400]
+gcm_low_low = gcm_low[gcm_low['pob_ngenes_avg'] < 100]
+gcm_low_high =gcm_low[gcm_low['pob_ngenes_avg'] >= 100]
 
 # Configuración de la paleta de colores
 custom_palette = {'original': 'gray', 'aumentados': 'pink'}
@@ -46,7 +53,10 @@ def plot_combined(dataset, dataset_name):
 plot_combined(leukemia, 'Leukemia')
 plot_combined(gisette, 'Gisette')
 plot_combined(madelon, 'Madelon')
-plot_combined(gcm, 'GCM')
+plot_combined(gcm_high, 'GCM')
+
+plot_combined(gcm_low_low, 'GCM_45_med')
+plot_combined(gcm_low_high, 'GCM_200_med')
 
 # Gráfico combinado original (pob_accuracy_avg) para los 4 datasets
 fig, axes = plt.subplots(2, 2, figsize=(14, 10))
@@ -76,8 +86,8 @@ axes[1, 0].set_ylabel('')
 axes[1, 0].set_xticks([])  # Remove x-axis labels
 
 # GCM
-sns.boxplot(ax=axes[1, 1], x='group', y='pob_accuracy_avg', data=gcm, palette=custom_palette)
-sns.stripplot(ax=axes[1, 1], x='group', y='pob_accuracy_avg', data=gcm, color='darkgrey', dodge=True)
+sns.boxplot(ax=axes[1, 1], x='group', y='pob_accuracy_avg', data=gcm_high, palette=custom_palette)
+sns.stripplot(ax=axes[1, 1], x='group', y='pob_accuracy_avg', data=gcm_high, color='darkgrey', dodge=True)
 axes[1, 1].set_title('GCM')
 axes[1, 1].set_xlabel('')
 axes[1, 1].set_ylabel('')
@@ -126,8 +136,8 @@ axes[1, 0].set_ylabel('')
 axes[1, 0].set_xticks([])  # Remove x-axis labels
 
 # GCM
-sns.boxplot(ax=axes[1, 1], x='group', y='pob_ngenes_avg', data=gcm, palette=custom_palette)
-sns.stripplot(ax=axes[1, 1], x='group', y='pob_ngenes_avg', data=gcm, color='darkgrey', dodge=True)
+sns.boxplot(ax=axes[1, 1], x='group', y='pob_ngenes_avg', data=gcm_high, palette=custom_palette)
+sns.stripplot(ax=axes[1, 1], x='group', y='pob_ngenes_avg', data=gcm_high, color='darkgrey', dodge=True)
 axes[1, 1].set_title('GCM')
 axes[1, 1].set_xlabel('')
 axes[1, 1].set_ylabel('')
@@ -193,5 +203,5 @@ plt.xlabel('Numero de características - grupo de experimento')
 plt.ylabel('Precisión')
 plt.tight_layout(rect=[0, 0.2, 1, 0.95])  # Adjust the bottom margin
 plt.xticks(rotation=45)
-plt.savefig('boxplot_gcm_ngenes_precision.png')
+plt.savefig('boxplot_gcm_ngenes_accuracy.png')
 plt.show()

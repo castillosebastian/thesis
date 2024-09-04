@@ -6,11 +6,15 @@ from scipy.stats import ttest_ind
 data = pd.read_csv('src/filtered_experiment_data.csv')
 
 # Ajuste del filtro para 'Madelon'
+data
+
+
 datasets = {
     'Leukemia': data[data['experiment_name'].str.contains('leukemia')].copy(),
     'Gisette': data[data['experiment_name'].str.contains('gisette')].copy(),
     'Madelon': data[data['experiment_name'].str.contains('mandelon')].copy(),
-    'GCM': data[data['experiment_name'].str.contains('gcm')].copy(),
+    # gcm_high = gcm[gcm['pob_ngenes_avg'] >= 400]
+    'GCM': data[(data['experiment_name'].str.contains('gcm')) & (data['pob_ngenes_avg'] >= 400)].copy(),
 }
 
 # Configurar la categoría 'group' para cada dataset
