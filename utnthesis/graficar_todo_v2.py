@@ -22,6 +22,15 @@ gcm_high = gcm[gcm['pob_ngenes_avg'] >= 400]
 gcm_low_low = gcm_low[gcm_low['pob_ngenes_avg'] < 100]
 gcm_low_high =gcm_low[gcm_low['pob_ngenes_avg'] >= 100]
 
+gcm_high_high = gcm_high[gcm_high['pob_ngenes_avg'] >= 700]
+gcm_high_low = gcm_high[gcm_high['pob_ngenes_avg'] < 700]
+# group by 'group' and calculate the mean pob_ngenes_avg 
+# Group by 'group' and calculate the mean of 'pob_ngenes_avg'
+gcm_high_low_ngenes = gcm_high_low.groupby('group').agg({'pob_ngenes_avg': 'mean'}).reset_index()
+gcm_high_high_ngenes = gcm_high_high.groupby('group').agg({'pob_ngenes_avg': 'mean'}).reset_index()
+print(f"High low: {gcm_high_low_ngenes}")
+print(f"High high: {gcm_high_high_ngenes}")
+
 # Configuración de la paleta de colores
 custom_palette = {'original': 'gray', 'aumentados': 'pink'}
 

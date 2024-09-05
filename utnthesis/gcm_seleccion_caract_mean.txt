@@ -1,0 +1,7 @@
+
+High low:         group  pob_ngenes_avg
+0  aumentados         453.696
+1    original         461.600
+High high:         group  pob_ngenes_avg
+0  aumentados          784.72
+1    original          781.40

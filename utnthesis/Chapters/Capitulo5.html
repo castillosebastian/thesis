@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>capitulo5</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+<script src="Capitulo5_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Capitulo5_files/libs/quarto-html/quarto.js"></script>
+<script src="Capitulo5_files/libs/quarto-html/popper.min.js"></script>
+<script src="Capitulo5_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Capitulo5_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Capitulo5_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Capitulo5_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Capitulo5_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Capitulo5_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Capitulo5_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="sec-Capitulo5" class="level1">
+<h1>Próximos Pasos: complejización del modelo y exploración de nuevas arquitecturas</h1>
+<p>A partir de los resultados obtenidos en los experimentos, es evidente que la aumentación de datos mediante Autocodificadores Variacionales (AVs) y su combinación con Algoritmos Genéticos (AGs) es una estrategia prometedora en la selección de características. Para maximizar el potencial de este enfoque, es posible avanzar en varias direcciones, tanto en términos de complejización del modelo AV/AVC como en la integración y encadenamiento de modelos más complejos. En este capítulo, abordaremos los próximos pasos necesarios para continuar mejorando la eficiencia y precisión de los modelos aplicados en escenarios de alta dimensionalidad y ruido, explorando nuevas arquitecturas y estrategias de integración.</p>
+<section id="complejización-del-modelo-av" class="level2">
+<h2 class="anchored" data-anchor-id="complejización-del-modelo-av">1. Complejización del modelo AV</h2>
+<p>Entendemos que uno de los primeros pasos para mejorar la calidad de los datos sintéticos generados es la complejización del modelo AV/AVC. Aunque las versiones creadas en el marco de la presente investigación han mostrado ser efectivas en los contextos de experimenatión planteados, como en <em>Madelon</em> y, en menor medida, con <em>GCM</em>, es necesario optimizar su capacidad para capturar mejor las estructuras subyacentes de los datos reales. Para lograr esto, se proponen dos líneas de trabajo:</p>
+<section id="mejora-en-la-función-de-pérdida" class="level3">
+<h3 class="anchored" data-anchor-id="mejora-en-la-función-de-pérdida">Mejora en la función de pérdida</h3>
+<p>La función de pérdida del AV/AVC desempeña un papel fundamental en la calidad de las muestras generadas. Como vimos en los experimentos de GCM, la divergencia KL puede dominar el proceso de regularización del espacio latente, lo que lleva a una reconstrucción insuficiente de los datos originales. Para mitigar este problema, se propone una modificación de la función de pérdida, donde se ajusten los pesos entre la pérdida de reconstrucción y la divergencia KL, dando mayor importancia a la precisión en la reconstrucción. Adicionalmente, se pueden explorar técnicas como la Inferencia Variacional Recocida (<em>Annealed Variational Inference</em>, <span class="citation" data-cites="huangImprovingExplorabilityVariational2018">@huangImprovingExplorabilityVariational2018</span> ), que ajusta gradualmente el peso de la divergencia KL durante el entrenamiento, permitiendo una transición más suave y efectiva en la regularización del espacio latente.</p>
+</section>
+<section id="uso-de-avs-jerárquicos" class="level3">
+<h3 class="anchored" data-anchor-id="uso-de-avs-jerárquicos">Uso de AVs jerárquicos</h3>
+<p>Otra línea de trabajo posible es la utilización de Autocodificadores Variacionales Jerárquicos (<span class="citation" data-cites="vahdatNVAEDeepHierarchical2020">@vahdatNVAEDeepHierarchical2020</span>). Estos modelos permiten la representación de características en múltiples niveles de abstracción, lo que podría ser particularmente útil para capturar relaciones complejas en conjuntos de datos como <em>GCM</em>. Al incorporar un nivel adicional de complejidad, los HVAEs podrían generar datos sintéticos que no solo preserven mejor la estructura de los datos originales, sino que también mejoren la capacidad del AG para identificar características relevantes en escenarios de alta dimensionalidad.</p>
+</section>
+</section>
+<section id="integración-av-ag-optimizada" class="level2">
+<h2 class="anchored" data-anchor-id="integración-av-ag-optimizada">2. Integración AV-AG optimizada</h2>
+<p>Aunque los resultados iniciales con la integración AV-AG son prometedores, es necesario explorar maneras más eficientes de combinar ambos modelos. El flujo de trabajo encadenado que involucra <em>selección-generación-selección</em> mostró ser efectivo en los experimentos con <em>GCM</em>, pero puede beneficiarse de ajustes adicionales en su implementación.</p>
+<section id="selección-dinámica-de-características" class="level3">
+<h3 class="anchored" data-anchor-id="selección-dinámica-de-características">2.1 Selección dinámica de características</h3>
+<p>En lugar de aplicar el AG sobre la totalidad de las características de manera uniforme, una opción interesante sería implementar un proceso dinámico de selección de características en múltiples etapas. En este enfoque, el AG se aplicaría inicialmente sobre un subconjunto reducido de características, optimizando en función de la estabilidad y relevancia de los subconjuntos seleccionados. Posteriormente, los AVs generarían datos sintéticos solo para las características seleccionadas, reduciendo así el ruido y permitiendo una exploración más eficiente del espacio de búsqueda.</p>
+</section>
+<section id="optimización-conjunta-de-av-y-ag" class="level3">
+<h3 class="anchored" data-anchor-id="optimización-conjunta-de-av-y-ag">2.2 Optimización conjunta de AV y AG</h3>
+<p>En los experimentos actuales, el AV y el AG se entrenan de manera secuencial y separada, lo que puede limitar la sinergia entre ambos modelos. Un enfoque prometedor sería la optimización conjunta, donde los parámetros de ambos modelos se ajusten simultáneamente durante el entrenamiento. De esta forma, el AV podría generar muestras sintéticas que maximicen directamente la eficacia del AG en la selección de características, permitiendo una retroalimentación continua entre ambos procesos y una mejora en la calidad del conjunto de datos aumentado.</p>
+</section>
+</section>
+<section id="exploración-de-encadenamientos-y-stacks-de-modelos" class="level2">
+<h2 class="anchored" data-anchor-id="exploración-de-encadenamientos-y-stacks-de-modelos">3. Exploración de encadenamientos y stacks de modelos</h2>
+<p>Los resultados obtenidos sugieren que una única iteración del proceso AV-AG puede no ser suficiente para capturar completamente las relaciones entre características en problemas altamente complejos. En este contexto, la construcción de arquitecturas más complejas mediante el encadenamiento de varios modelos (stacks) o la integración de ensambles, similar a los Bosques Aleatorios, se presenta como una vía interesante de investigación.</p>
+<section id="stacks-de-avs-y-ags" class="level3">
+<h3 class="anchored" data-anchor-id="stacks-de-avs-y-ags">3.1 Stacks de AVs y AGs</h3>
+<p>Una posibilidad es el diseño de un <em>stack</em> de AVs y AGs, donde varias instancias de ambos modelos se encadenen de manera secuencial o paralela. En este esquema, el primer AV-AG generaría un conjunto de características y datos sintéticos, que luego sería alimentado a un segundo AV-AG con configuraciones más específicas. Este proceso de encadenamiento podría permitir una mayor refinación en la selección de características, especialmente en conjuntos de datos donde las relaciones entre las características son extremadamente complejas o no lineales.</p>
+</section>
+<section id="ensambles-basados-en-av-ag" class="level3">
+<h3 class="anchored" data-anchor-id="ensambles-basados-en-av-ag">3.2 Ensambles basados en AV-AG</h3>
+<p>Al igual que los Bosques Aleatorios combinan múltiples árboles de decisión para mejorar la precisión y la robustez del modelo, se puede explorar la creación de un ensamble de AVs y AGs. Este enfoque involucraría el entrenamiento de múltiples AVs y AGs con diferentes configuraciones y subconjuntos de datos, cuyas salidas se combinarían para producir una solución más robusta. Los ensambles suelen ser efectivos para reducir la varianza de los modelos individuales, lo que podría resultar en una selección de características más estable y en un rendimiento más consistente.</p>
+</section>
+</section>
+<section id="exploración-de-arquitecturas-híbridas-y-meta-aprendizaje" class="level2">
+<h2 class="anchored" data-anchor-id="exploración-de-arquitecturas-híbridas-y-meta-aprendizaje">4. Exploración de arquitecturas híbridas y meta-aprendizaje</h2>
+<p>Por último, se abre la posibilidad de explorar arquitecturas híbridas que combinen AVs y AGs con otros enfoques de aprendizaje automático, como los algoritmos de meta-aprendizaje. Estos modelos podrían ser entrenados para aprender a seleccionar automáticamente los mejores hiperparámetros y configuraciones para cada conjunto de datos, adaptándose dinámicamente a las características específicas del problema.</p>
+<section id="meta-aprendizaje-para-ags" class="level3">
+<h3 class="anchored" data-anchor-id="meta-aprendizaje-para-ags">4.1 Meta-aprendizaje para AGs</h3>
+<p>En lugar de fijar los parámetros del AG a priori, el meta-aprendizaje permitiría que el AG aprenda automáticamente cuáles son los mejores parámetros en función de la estructura de los datos. Este enfoque podría incluir la selección adaptativa del tamaño del cromosoma activo, las tasas de mutación y cruce, y el número de generaciones, optimizando el rendimiento del AG en cada iteración.</p>
+</section>
+<section id="integración-de-modelos-basados-en-aprendizaje-profundo" class="level3">
+<h3 class="anchored" data-anchor-id="integración-de-modelos-basados-en-aprendizaje-profundo">4.2 Integración de modelos basados en aprendizaje profundo</h3>
+<p>Además, se puede explorar la integración de modelos basados en redes neuronales profundas en el flujo de trabajo AV-AG. Por ejemplo, las redes neuronales convolucionales o los modelos basados en <em>Transformers</em> podrían complementar al AV en la generación de datos sintéticos, especialmente en problemas donde la estructura de los datos es altamente no lineal.</p>
+</section>
+</section>
+<section id="conclusión" class="level2">
+<h2 class="anchored" data-anchor-id="conclusión">Conclusión</h2>
+<p>La investigación hasta el momento ha demostrado que la combinación de Autocodificadores Variacionales y Algoritmos Genéticos es una estrategia prometedora para la selección de características en escenarios de alta dimensionalidad y ruido. Sin embargo, los resultados también sugieren que existe un margen significativo para la mejora mediante la complejización de los modelos AV, la optimización de la integración AV-AG, y la exploración de arquitecturas más avanzadas basadas en encadenamientos y ensambles de modelos. En este sentido, los próximos pasos deben centrarse en la construcción de soluciones más robustas y adaptativas, capaces de abordar la complejidad inherente a los datos modernos.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
