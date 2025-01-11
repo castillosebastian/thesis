@@ -1,85 +1,125 @@
 # Marco específico de trabajo {#sec-Capitulo1}
 
-En este capítulo revisaremos el desempeño de algoritmos clásicos en la solución de los dataset elegidos para nuestra investigación. Describiremos brevemente la composición de los conjuntos de datos, los algoritmos seleccionados para su tratamiento y los resultados obtenidos para cada uno. Luego, analizando y comparando dichos resultados, elegiremos un modelo para emplear como función de fitness en nuestro Algoritmo Genético. Finalmente, haremos un breve repaso de la aplicaciones de Autocodificaciones Variacionales al problema de la aumentación de datos, como antesala al capítulo siguiente.  
 
-El propósito de esta etapa del trabajo es doble. Por un lado, identificar los modelos más apropiados para servir de *función de fitness* en la implementación de nuestro algoritmo genético. Esto permitirá construir una implementación robusta, que cuenta con una función efectiva y computacionalmente conveniente para evaluar cada solución. Al mismo tiempo, disponer de métricas acerca del desempeño que logran distintas estrategias de clasificación, a partir de las cuales comparar el resultado de nuestras propias soluciones. Por ultimo, revisar ejemplos de aplicación de los AVs en escenarios de aumentación de datos para preparar nuestro trabajo del capítulo siguiente. 
+En este capítulo revisaremos el desempeño de algoritmos clásicos en la solución de los conjuntos de datos elegidos para nuestra investigación. Describiremos brevemente la composición de los mismos, los algoritmos seleccionados para su tratamiento y los resultados obtenidos para cada uno. Luego, analizando y comparando dichos resultados, elegiremos un modelo para emplear como función de aptitud en nuestro algoritmo genético. Finalmente, haremos un breve repaso de las aplicaciones de Autocodificadores Variacionales (AVs) al problema de la aumentación de datos, como antesala al capítulo siguiente. 
+
+
+El propósito de esta etapa del trabajo es doble. Por un lado, identificar los modelos más apropiados para servir de *función de aptitud* en la implementación de nuestro algoritmo genético. Esto permitirá construir una función adecuada para evaluar cada solución. Al mismo tiempo, disponer de métricas acerca del desempeño que logran distintas estrategias de clasificación, a partir de las cuales comparar el resultado de nuestras propias soluciones. Por último, revisar ejemplos de aplicación de los AVs en escenarios de aumentación de datos para preparar nuestro trabajo del capítulo siguiente.
+
 
 ## Datos elegidos en nuestro estudio
 
+
 El conjunto de datos elegidos en este trabajo incluye:
 
-1.  *Madelon*: conjunto artificial de datos con 500 características, donde el objetivo es un XOR multidimensional con 5 características relevantes y 15 características resultantes de combinaciones lineales de aquellas (i.e. 20 características redundantes). Las otras 480 características fueron generadas aleatoreamente (no tienen poder predictivo). Madelon es un problema de clasificación de dos clases con variables de entrada binarias dispersas. Las dos clases están equilibradas, y los datos se dividen en conjuntos de entrenamiento y prueba. Fue creado para el desafío de Selección de Características [NIPS_2003](http://clopinet.com/isabelle/Projects/NIPS2003/), y está disponible en el Repositorio [UCI](https://archive.ics.uci.edu/dataset/171/madelon). Los datos están divididos en un conjunto de entrenamiento y un conjunto de testeo.\
-2.  *Gisette:* es un dataset creado para trabajar el problema de reconocimiento de dígitos escritos a mano [@isabelleguyonGisette2004]. Este conjunto de datos forma parte de los cinco conjuntos utilizados en el desafío de selección de características de NIPS 2003. Tiene 13500 observaciones y 5000 atributos. El desafío radica en diferenciar los dígitos '4' y '9', que suelen ser fácilmente confundibles entre sí. Los dígitos han sido normalizados en tamaño y centrados en una imagen fija de 28x28 píxeles. Además, se crearon características de orden superior como productos de estos píxeles para sumergir el problema en un espacio de características de mayor dimensión. También se añadieron características distractoras denominadas "sondas", que no tienen poder predictivo. El orden de las características y patrones fue aleatorizado. Los datos están divididos en un conjunto de entrenamiento y un conjunto de testeo.\
-3.  *Leukemia*: El análisis de datos de expresión génica obtenidos de micro-datos de ADN se estudia en Golub [-@golubMolecularClassificationCancer1999] para la clasificación de tipos de cáncer. Construyeron un conjunto de datos con 7129 mediciones de expresión génica en las clases ALL (leucemia linfocítica aguda) y AML (leucemia mielogénica aguda). El problema es distinguir entre estas dos variantes de leucemia (ALL y AML). Los datos se dividen originalmente en dos subconjuntos: un conjunto de entrenamiento y un conjunto de testeo.\
+
+1.  *Madelon*: conjunto artificial de datos con 500 características, donde el objetivo es resolver un problema XOR multidimensional con 5 características relevantes y 15 características corresponden a combinaciones lineales de aquellas (i.e. 15 características redundantes). Las otras 480 características fueron generadas aleatoriamente (no tienen poder predictivo). Madelon es un problema de clasificación de dos clases con variables de entrada binarias dispersas. Las dos clases están equilibradas, y los datos se dividen en conjuntos de entrenamiento y prueba. Fue creado para el desafío de Selección de Características [NIPS_2003](http://clopinet.com/isabelle/Projects/NIPS2003/), y está disponible en el Repositorio [UCI](https://archive.ics.uci.edu/dataset/171/madelon). Los datos están divididos en un conjunto de entrenamiento y un conjunto de testeo.\
+2.  *Gisette:* es un dataset creado para trabajar el problema de reconocimiento de dígitos escritos a mano [@isabelleguyonGisette2004]. Este conjunto de datos forma parte de los cinco conjuntos utilizados en el desafío de selección de características NIPS 2003. Tiene 13500 observaciones y 5000 atributos. El desafío radica en diferenciar los dígitos '4' y '9', que suelen ser fácilmente confundibles entre sí. Los dígitos han sido normalizados en tamaño y centrados en una imagen fija de 28x28 píxeles. Además, se crearon nuevas características como combinación de las existentes para construir un espacio de mayor dimensión. También se añadieron características distractoras denominadas "sondas", que no tienen poder predictivo. El orden de las características y patrones fue aleatorizado. Los datos están divididos en un conjunto de entrenamiento y un conjunto de testeo.\
+3.  *Leukemia*: El análisis de datos de expresión génica obtenidos de microarreglos de ADN se estudia en Golub [-@golubMolecularClassificationCancer1999] para la clasificación de tipos de cáncer. Construyeron un conjunto de datos con 7129 mediciones de expresión génica en las clases ALL (leucemia linfocítica aguda) y AML (leucemia mielogénica aguda). El problema es distinguir entre estas dos variantes de leucemia (ALL y AML). Los datos se dividen originalmente en dos subconjuntos: un conjunto de entrenamiento y un conjunto de testeo.\
 4.  *GCM*: El conjunto de datos GCM fue compilado en Ramaswamy [-@ramaswamyMulticlassCancerDiagnosis2001] y contiene los perfiles de expresión de 198 muestras de tumores que representan 14 clases comunes de cáncer humano. Aquí el enfoque estuvo en 190 muestras de tumores después de excluir 8 muestras de metástasis. Finalmente, cada matriz se estandarizó a una media de 0 y una varianza de 1. El conjunto de datos consta de un total de 190 instancias, con 16063 atributos (biomarcadores) cada una, y distribuidos en 14 clases desequilibradas. Los datos están divididos en un conjunto de entrenamiento y un conjunto de testeo.
 
-Para la etapa de experimentos hemos incluido un quinto dataset para validar resultados. Este nuevo conjunto posee las siguientes características:
 
-5.  *All Leukemia*: Es un dataset empleado en el estudio de pacientes pediátricos con leucemia linfoblástica aguda (LLA). Incluye 327 muestras con información de 12600 variables (i.e.genes). Está commpuesto por 14 clases desequilibradas. Fue compilado por Yeoh, Eng-Juh y ot., en *Classification, subtype discovery, and prediction of outcome in pediatric acute lymphoblastic leukemia by gene expression profiling*, Cancer Cell, Volume 1, Issue 2, 133 - 143. [link](https://www.cell.com/cancer-cell/fulltext/S1535-6108(02)00032-6?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS1535610802000326%3Fshowall%3Dtrue)
-
-## El desempeño de algoritmos clásicos 
-
-Para disponer de métricas de base para la comparación de nuestra solución y, al mismo tiempo, evaluar el grado de complejidad que presentan los datos incluidos en nuestro estudio hemos seleccionado una serie de modelos ampliamente usados el campo del aprendizaje automático. A fin de estandarizar la implementación de estos algoritmos hemos empleado la librería `scikit-learn` que provee abstracciones convenientes para nuestro entorno de experimentación. 
-Los modelos elegidos son:    
-
-**Modelos lineales**    
-
-Los modelos lineales son un conjunto de algoritmos que predicen la salida en función de una combinación lineal de características de entrada. Son particularmente útiles cuando se espera que haya una relación lineal entre variables.    
-
-  - `LDA`: Análisis Discriminante Lineal, empleado para dimensiones reducidas y asumiendo distribuciones gaussianas.
-  - `QDA`: Análisis Discriminante Cuadrático, similar a LDA pero con covarianzas distintas por clase.
-  - `Ridge`: Regresión de Cresta, empleado para tratar con multicolinealidad mediante regularización L2.
-  - `SGD`: Descenso de Gradiente Estocástico, estrategia central del aprendizaje automático, empleado para optimizar modelos lineales.
-  
-**Modelos basados en árboles**     
-  
-Los modelos basados en árboles implican la segmentación del espacio de características en regiones simples dentro de las cuales las predicciones son más o menos uniformes. Son potentes y flexibles, capaces de capturar relaciones no lineales y complejas en los datos.      
-
-  - `AdaBoost`: Estrategia que entrena modelos débiles secuencialmente, enfocándose en las instancias u observaciones previamente difíciles de clasificar.
-  - `Bagging`: Estrategia que combina predicciones de múltiples modelos para reducir la varianza.
-  - `Extra Trees Ensemble`: Estrategia que construye múltiples árboles con splits aleatorios de características y umbrales.
-  - `Gradient Boosting`: Estrategia que mejora modelos de forma secuencial minimizando el error residual.
-  - `Random Forest`: Estrategia basada en conjunto de árboles de decisión, cada uno entrenado con subconjuntos aleatorios de datos.
-  - `DTC`: Árbol de Decisión Clásico, modelo intuitivo que divide el espacio de características.
-  - `ETC`: Árboles Extremadamente Aleatorizados, variante de Random Forest con más aleatoriedad.
-
-**Modelos de Naive Bayes**    
-  
-Los modelos de Naive Bayes son clasificadores probabilísticos basados en el teorema de Bayes que presupone independencia entre las características. Son modelos de rápida ejecución y eficientes.    
-
-  - `BNB`: Naive Bayes Bernoulli, se emplea para características de variables binarias.
-  - `GNB`: Naive Bayes Gaussiano, se emplea para distribución normal de los datos.
-
-**Modelos de vecinos más cercanos**    
-  
-KNN es un método de clasificación no paramétrico que clasifica una muestra basándose en cómo están clasificadas las muestras más cercanas en el espacio de características. Es simple y efectivo, particularmente para datos donde las relaciones entre características son complejas o desconocidas.     
-
-  - `KNN`: K-Vecinos más Cercanos, clasifica según la mayoría de votos de los vecinos.
-
-**Modelos de redes neuronales**    
-
-El Perceptrón Multicapa es un tipo de red neuronal que consiste en múltiples capas de neuronas con funciones de activación no lineales. Puede modelar relaciones complejas y no lineales entre entradas y salidas, y es altamente adaptable a la estructura de los datos.       
-
-  - `MLP`: Perceptrón Multicapa, red neuronal con una o más capas ocultas.   
-
-**Modelos de Máquinas de Vectores de Soporte**    
-  
-Las Máquinas de Soporte Vectorial son un conjunto de algoritmos supervisados que buscan la mejor frontera de decisión que puede separar diferentes clases en el espacio de características. Ofrecen alta precisión y son muy efectivos en espacios de alta dimensión y en casos donde el número de dimensiones supera al número de muestras.     
-
-  - `LSVC`: Máquina de Vectores de Soporte Lineal, se emplea en espacios de alta dimensión.
-  - `NuSVC`: SVC con parámetro Nu, que controla el número de vectores de soporte.
-  - `SVC`: Máquina de Vectores de Soporte, se emplea para espacios de dimensiones intermedias y altas.
+Para la etapa de experimentos hemos incluido un quinto dataset para validar resultados. Este quinto dataset posee las siguientes características:
 
 
-Finalmente, es preciso destacar que para el dataset GCM, que contiene 14 clases en la variable objetivo, hemos excluido modelos no compatibles o ineficientes para problemas de clasificación multiclases. 
+5.  *All Leukemia*: Es un dataset empleado en el estudio de pacientes pediátricos con leucemia linfoblástica aguda (LLA). Incluye 327 muestras con información de 12600 variables (genes). Está compuesto por 14 clases desequilibradas. Fue compilado por Yeoh et al., y descripto en *Classification, subtype discovery, and prediction of outcome in pediatric acute lymphoblastic leukemia by gene expression profiling*, Cancer Cell, Volume 1, Issue 2, 133 - 143. [link](https://www.cell.com/cancer-cell/fulltext/S1535-6108(02)00032-6?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS1535610802000326%3Fshowall%3Dtrue)
+
+
+## El desempeño de algoritmos clásicos
+
+
+Para disponer de métricas de base para la comparación de nuestra solución y, al mismo tiempo, evaluar el grado de dificultad que conlleva la resolución de las tareas asociadas a los datos incluidos en nuestro estudio, hemos seleccionado una serie de modelos ampliamente usados en el campo del aprendizaje automático para tomar su desempeño como indicador. A fin de estandarizar la implementación de estos algoritmos, hemos empleado la librería `scikit-learn` que provee abstracciones convenientes para nuestro entorno de experimentación.
+Los modelos elegidos son:   
+
+
+**Modelos lineales**   
+
+
+Los modelos lineales son un conjunto de algoritmos que predicen la salida en función de una combinación lineal de características de entrada (ver EEL). Son particularmente útiles cuando se espera que haya una relación lineal entre variables.   
+
+
+ - `LDA`: Análisis Discriminante Lineal, empleado para dimensiones reducidas y asumiendo distribuciones gaussianas.
+ - `QDA`: Análisis Discriminante Cuadrático, similar a LDA pero con covarianzas distintas por clase.
+ - `Ridge`: Regresión de Cresta, empleado para tratar con multicolinealidad mediante regularización L2.
+ - `SGD`: Descenso de Gradiente Estocástico, estrategia central del aprendizaje automático, empleado para optimizar modelos lineales.
+
+
+ **Modelos basados en árboles**
+    
+ Los modelos basados en árboles implican la segmentación del espacio de características en regiones simples dentro de las cuales las predicciones son más o menos uniformes (Ver CITA). Son potentes y flexibles, capaces de capturar relaciones complejas en los datos.     
+
+
+
+
+ - `DTC`: Árbol de Decisión Clásico, modelo intuitivo que divide el espacio de características.
+ - `AdaBoost`: Estrategia que entrena modelos débiles secuencialmente, enfocándose en que cada nuevo modelo procese las instancias u observaciones previamente difíciles de clasificar.
+ - `Bagging`: Estrategia que combina predicciones de múltiples modelos para reducir la varianza.
+ - `Extra Trees Ensemble`: Estrategia que construye múltiples árboles con particiones aleatorias de características y umbrales.
+ - `Gradient Boosting`: Estrategia que mejora modelos de forma secuencial minimizando el error residual.
+ - `Random Forest`: Estrategia basada en conjunto de árboles de decisión, cada uno entrenado con subconjuntos aleatorios de datos.
+ - `ETC`: Árboles Extremadamente Aleatorizados, variante de Random Forest con más aleatoriedad.
+
+
+**Modelos de Naive Bayes**   
+ Los modelos de Naive Bayes son clasificadores probabilísticos basados en el teorema de Bayes que presupone independencia entre las características (ver CITA). Son modelos eficientes y de rápida ejecución.   
+
+
+ - `BNB`: Naive Bayes Bernoulli, se emplea para características de variables binarias.
+ - `GNB`: Naive Bayes Gaussiano, es adecuado cuando los datos poseen  distribución normal.
+
+
+**Modelos de vecinos más cercanos**   
+ El modelo de k vecinos más cercanos (KNN) es un método de clasificación no paramétrico que permite clasificar una muestra basándose en la proporción de  clases de las muestras más cercanas en el espacio de características. Es simple y efectivo, particularmente para datos donde las relaciones entre características son complejas o desconocidas.    
+
+
+ - `KNN`: K-Vecinos más Cercanos, clasifica asignando la clases mayoritaria en la vecindad considerada.
+
+
+**Modelos de redes neuronales**   
+
+
+El Perceptrón Multicapa (MLP, por sus siglas en inglés) es un tipo de red neuronal que consiste en múltiples capas de neuronas con funciones de activación no lineales. Puede modelar relaciones complejas y no lineales entre entradas y salidas, y es altamente adaptable a la estructura de los datos.      
+
+
+**Modelos de Máquinas de Soporte Vectorial**   
+ Las Máquinas de Soporte Vectorial (SVM) son un conjunto de algoritmos supervisados que buscan la mejor frontera de decisión lineal que puede separar diferentes clases en el espacio de características. Ofrecen alta precisión y son muy efectivos en espacios de alta dimensión y en casos donde el número de dimensiones supera al número de muestras.    
+
+
+ - `LSVC`: Máquinas de Soporte vectorial  Lineal, se emplea en espacios de alta dimensión.
+ - `NuSVC`: SVC con parámetro Nu, que controla el número de vectores de soporte.
+
+
+Finalmente, es preciso destacar que para GCM, que contiene 14 clases en la variable objetivo, hemos excluido modelos no compatibles o ineficientes para problemas de clasificación multiclases.
+
 
 ## Configuración de los Modelos
 
-Para evaluar los modelos clásicos hemos decidido su configuración a partir de la búsqueda de la mejor combinación de parámetros. A tal fin, hemos seleccionado aquellos parámetros más importantes en cada modelo y respecto de cada uno establecimos una búsqueda en grilla de sus respectivos valores. Hemos seleccionado para parámetros numéricos un mínimo de 3 valores y máximo de 20, y para no numéricos hemos decidido la configuración estándar según cada modelo. El espacio de búsqueda resultante para cada modelo puede verse en el siguiente link.    
+
+Para evaluar los modelos clásicos hemos decidido su configuración a partir de la búsqueda de la mejor combinación de parámetros. A tal fin, hemos seleccionado aquellos parámetros más importantes en cada modelo y establecimos una búsqueda en grilla de sus respectivos valores. Hemos seleccionado para parámetros numéricos un mínimo de 3 valores y máximo de 20, y para no numéricos hemos decidido la configuración estándar según cada modelo. El espacio de búsqueda resultante para cada modelo puede verse en el siguiente link.   
+
+
+[Incluir Tabla]
+
 
 ## Resultados Obtenidos
 
-En la siguiente tabla resumimos los resultos obtenidos del entrenamiento de los modelos en los dataset estudiados.   
+
+En la siguiente tabla resumimos los resultados obtenidos del entrenamiento de los modelos en los dataset estudiados.  
+
+
+[
+-Tal vez se podrían trazar líneas horizontales para separar los "tipos" de modelos? Por ejemplo, lineales de árboles, de svm, etc.
+Además, tal vez dejaría sólo los resultados de test, que son los que uno busca analizar generalmente. Otra opción podría ser poner el resultado de test y, entre paréntesis el de train, pero me parece muy rebuscado.
+-Sugiero resaltar en negrita el mejor resultado por columna, en lugar de fila, ya que queremos analizar cuán complejo es resolver la tarea para cada dataset.
+-Qué métrica se está analizando?
+-Los resultados son para test? Qué esquema de particionado se empleó? El propuesto previamente?
+]
+
+
+
+
+
+
 
 
 | Models            | Leukemia Train | Leukemia Test | Madelon Train | Madelon Test | Gisette Train | Gisette Test | GCM Train | GCM Test |
@@ -103,20 +143,32 @@ En la siguiente tabla resumimos los resultos obtenidos del entrenamiento de los 
 | SVC               | 1.0            | 1.0           | 1.0           | 0.61         | 1.0           | 0.99         | 1.0       | 0.58     |
 | MLP               | 1.0            | 0.96          | 1.0           | 0.58         | 1.0           | 0.99         | 1.0       | 0.68     |
 
-Estos valores dan forma a la siguiente representación:   
+
+Estos valores dan forma a la siguiente representación:  
+
 
 ![algoritmosclasicos](model_performance_heatmap_grouped.png)
 
-## El uso de AVs como técnica de aumentación
 
-La aplicación de AVs como técnica de aumentación de datos en el contexto de distintos problemas de aprendizaje automático es extendida fuera del campo de los AGs. Se aplica al tratamiento de imágenes [@fajardoOversamplingImbalancedData2021; @aiGenerativeOversamplingImbalanced2023; @khmaissiaConfidenceGuidedDataAugmentation2023; @kwarciakDeepGenerativeNetworks2023], texto [@zhangImproveDiverseText2019] , habla [@blaauwModelingTransformingSpeech2016; @latifVariationalAutoencodersLearning2020] y música [@robertsHierarchicalLatentVector2019], y distintos formatos de datos: tabulares [@leelarathnaEnhancingRepresentationLearning2023], longitudinales [@ramchandranLearningConditionalVariational2022] y grafos [@liuConstrainedGraphVariational2018]. En lo que sigue repasaremos las experiencias más afines a nuestro enfoque sobre el impacto de la aumentación en el aprendizaje y la selección de características.
+[DESARROLLAR]Podría resaltarse en estos resultados que hay problemas en los datasets desbalanceados (que es un poco la hipótesis de trabajo de la tesis: los VAEs pueden ayudar a balancear de forma efectiva los conjuntos de datos para que las tareas posteriores se realizan de forma correcta)
 
-En @fajardoOversamplingImbalancedData2021 se investiga si los AVs y las redes generativas antagónicas (GAN) pueden aumentar datos desbalanceados via sobremuestreo de las clases minoritarias, y mejorar así el rendimiento de un clasificador. Para ello se crean versionanes desbalanceadas de reconocidos datos multiclases MNIST [@lecunGradientBasedLearningApplied1998] y Fashion MNIST [@xiaoFashionMNISTNovelImage2017], a los cuales, posteriormente, se los re-balancea agregándoles muestras sintéticas generadas por un AV condicionado por clase (AV Condicional). Para la tarea de clasificación se emplea un Perceptrón Multicapa (MLP), y se evalúa su desempeño promediando métricas de precisión, exhaustividad y F1 sobre distintos experimentos. La evaluación incluye la comparación de resultados del clasificador con datos aumentados por sobremuestreo aleatorio, mediante SMOTE [@blagusSMOTEHighdimensionalClassimbalanced2013], GAN y AVs. El resultado muestra a los AVs -en su versión condicional- como el mejor modelo generativo para resolver el problema de datos desbalanceados mediante sobremuestreo de las clases minoritarias. 
 
-@aiGenerativeOversamplingImbalanced2023 vuelve sobre los problemas planteados en @fajardoOversamplingImbalancedData2021, proponiento una nueva metodología que superaría sus resultados. La propuesta en esta oportunidad plantea la aumentación de datos de la clase minoritaria condicionada a las características de la distribución que tienen los datos de la clase mayoritaria. El método se llama AV-Guiado-por-la-Mayoría (*Majority-Guided VAE* o MGVAE) y procura incorporar en la generación no solo información intraclase sino también interclases, con el fin de propagar la diversidad y riqueza de la mayoría en la minoría, y mitigar así riesgos de sobreajuste en los modelos. Este modelo se preentrena utilizando muestras de la clase mayoritaria, y luego se ajusta con datos de la clase minoritaria aplicando la regularización EWC [@kirkpatrickOvercomingCatastrophicForgetting2017] para retener el aprendizaje de la etapa previa. Para evaluar la eficacia de MGVAE, se realizaron experimentos en varios conjuntos de datos de imágenes y tabulares, utilizando diversas métricas de evaluación como Precisión Balanceada (B-ACC), Precisión Específica Promedio por Clase (ACSA) y Media Geométrica (GM). Los resultados muestran que MGVAE supera a otros métodos de sobremuestreo en tareas de clasificación.
+## El uso de Autocodificadores Variacionales como técnica de aumentación
+
+
+La aplicación de AVs como técnica de aumentación de datos en el contexto de distintos problemas de aprendizaje automático es extendida fuera del campo de la selección de características. Se aplica al tratamiento de imágenes [@fajardoOversamplingImbalancedData2021; @aiGenerativeOversamplingImbalanced2023; @khmaissiaConfidenceGuidedDataAugmentation2023; @kwarciakDeepGenerativeNetworks2023], texto [@zhangImproveDiverseText2019] , habla [@blaauwModelingTransformingSpeech2016; @latifVariationalAutoencodersLearning2020] y música [@robertsHierarchicalLatentVector2019], y distintos formatos de datos: tabulares [@leelarathnaEnhancingRepresentationLearning2023], longitudinales [@ramchandranLearningConditionalVariational2022] y grafos [@liuConstrainedGraphVariational2018]. En lo que sigue repasaremos las experiencias más afines a nuestro enfoque sobre el impacto de la aumentación en el aprendizaje y la selección de características.
+
+
+En @fajardoOversamplingImbalancedData2021 se investiga si los AVs y las redes generativas antagónicas (GAN) pueden aumentar datos desbalanceados vía sobremuestreo de las clases minoritarias, y mejorar así el rendimiento de un clasificador. Para ello se crean versiones desbalanceadas de reconocidos datos multiclases tales como MNIST [@lecunGradientBasedLearningApplied1998] y Fashion MNIST [@xiaoFashionMNISTNovelImage2017], a los cuales, posteriormente, se los re-balancea agregándoles muestras sintéticas generadas por un AV condicionado por clase (AV Condicional). Para la tarea de clasificación se emplea un Perceptrón Multicapa (MLP), y se evalúa su desempeño promediando métricas de precisión, exhaustividad [controlar-concepto] y F1 score sobre distintos experimentos. La evaluación incluye la comparación de resultados del clasificador con datos aumentados por sobre-muestreo aleatorio, mediante SMOTE [@blagusSMOTEHighdimensionalClassimbalanced2013], GAN y AVs. El resultado muestra a los AVs -en su versión condicional- como el mejor modelo generativo para resolver el problema de datos desbalanceados mediante sobre-muestreo de las clases minoritarias.
+
+
+@aiGenerativeOversamplingImbalanced2023 vuelve sobre los problemas planteados en @fajardoOversamplingImbalancedData2021, proponiendo una nueva metodología que superaría sus resultados. La propuesta en esta oportunidad plantea la aumentación de datos de la clase minoritaria condicionada a las características de la distribución que tienen los datos de la clase mayoritaria. El método se llama AV-Guiado-por-la-Mayoría (*Majority-Guided VAE* o MGVAE) y procura incorporar en la generación no solo información intra-clase sino también inter-clase, con el fin de propagar la diversidad y riqueza de la mayoría en la minoría, y mitigar así riesgos de sobre-ajuste en los modelos. Este modelo se pre-entrena utilizando muestras de la clase mayoritaria, y luego se ajusta con datos de la clase minoritaria para retener el aprendizaje de la etapa previa [@kirkpatrickOvercomingCatastrophicForgetting2017]. Para evaluar la eficacia de MGVAE, se realizaron experimentos en varios conjuntos de datos de imágenes y tabulares, utilizando diversas métricas de evaluación como Precisión Balanceada (B-ACC), Precisión Específica Promedio por Clase (ACSA) y Media Geométrica (GM). Los resultados muestran que MGVAE supera a otros métodos de sobre-muestreo en tareas de clasificación.
+
 
 Un problema diferente es tratado en @khmaissiaConfidenceGuidedDataAugmentation2023 donde se emplean AVs para aumentar datos en una tarea de clasificación con enfoque semi-supervisado. Aquí el desafío no pasa por el desbalance entre clases, sino en la búsqueda de mejorar el clasificador en regiones del espacio de características con bajo desempeño (ratios de error altos). Para eso, se mapea el espacio de características entrenando un modelo de WideResNet [@zagoruykoWideResidualNetworks2017] y luego se seleccionan las muestras mal clasificadas o con bajo nivel de confianza en la clasificación. Estas muestras se utilizan para entrenar un AV y generar datos sintéticos. Finalmente, las imágenes sintéticas se usan junto con las imágenes originales etiquetadas para entrenar un nuevo modelo de manera semi-supervisada. Se evalúan los resultados sobre STL10 y CIFAR-100 obteniendo mejoras en la clasificación de imágenes en comparación con los enfoques supervisados.
 
-Finalmente, antecedente interesante es el presentado por @martinsVariationalAutoencodersEvolutionary2022b pues pese a no estar directamente vinculado a la aumentación de datos, incluye la generación sintética de muestras mediante AV y la selección de características por AG. En efecto, el artículo propone la generación de individuos y optimización de características orientados al diseño de proteínas (específicamente variantes de Luciferasa bacteriana *luxA*). Partiendo de muestras de ADN de proteinas obtenidas de un subconjunto de datos de la base InterPro (identificados bajo el código "IPR011251") se generan conjuntos de individuos combinando datos originales, datos muestreados de la capa latente -*encoder*- del AV (configurado como MSA-AV para procesar sequencias alineadas de ADN) y datos optimizados por aplicación del AG. En el caso del algoritmo genético se emplean dos tipos de optimización: de objetivo único y multiobjetivos, con funciones asociadas a la búsqueda de propiedades deseables en las muestras de ADN (solubilidad, síntesis, estabilidad y agregación de proteínas). El resultado de los experimentos realizados muestra que el diseño de proteínas guiado por la optimización mediante AG resultó en mejores soluciones que las obtenidas mediante muestreo directo, y que por su parte la optimización multiobjetivos permitió la selección de proteínas con el mejor conjunto de propiedades.
 
-Los casos mencionados en el apartado nos ofrecen un conjunto de experiencias significativas a considerar al momento de resolver el problema planteado en este trabajo. Otras experiencias, como por ejemplo la configuración evolutiva de un AV [@wuEVAEEvolutionaryVariational2023], el ensamble de AVs [@leelarathnaEnhancingRepresentationLearning2023], por mencionar algunas novedosas, escapan al recorte que hemos fijado. 
+Finalmente, antecedente interesante es el presentado por @martinsVariationalAutoencodersEvolutionary2022b, pues pese a no estar directamente vinculado a la aumentación de datos, incluye la generación sintética de muestras mediante AV y la selección de características por AG. En efecto, el artículo propone la generación de individuos y optimización de características orientados al diseño de proteínas (específicamente variantes de Luciferasa bacteriana *luxA*). Partiendo de muestras de ADN de proteínas obtenidas de un subconjunto de datos de la base InterPro (identificados bajo el código "IPR011251") se generan conjuntos de individuos combinando datos originales, datos muestreados de la capa latente -*encoder*- del AV (configurado como MSA-AV para procesar sequencias alineadas de ADN) y datos optimizados por aplicación del AG. En el caso del algoritmo genético se emplean dos enfoques de optimización: de objetivo único y multiobjetivos, con funciones asociadas a la búsqueda de propiedades deseables en las muestras de ADN (solubilidad, síntesis, estabilidad y agregación de proteínas). El resultado de los experimentos realizados muestra que el diseño de proteínas guiado por la optimización mediante AG resultó en mejores soluciones que las obtenidas mediante muestreo directo, y que por su parte la optimización multiobjetivos permitió la selección de proteínas con el mejor conjunto de propiedades.
+
+
+Los casos mencionados en el apartado nos ofrecen un conjunto de experiencias significativas a considerar al momento de resolver el problema planteado en este trabajo. Otras experiencias, como por ejemplo la configuración evolutiva de un AV [@wuEVAEEvolutionaryVariational2023], el ensamble de AVs [@leelarathnaEnhancingRepresentationLearning2023], por mencionar algunas novedosas, escapan al recorte que hemos fijado.
