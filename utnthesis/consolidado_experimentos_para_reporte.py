@@ -5,6 +5,8 @@ data = pd.read_csv('expga1/experiments_results.csv')
 
 # Helper function to categorize experiments
 def categorize_experiments(df, original_data_list, experiment_prefix, group_length):
+    if experiment_prefix == 'leukemia':
+        df = df[~df['experiment_name'].str.contains('all_leukemia', na=False)]
     df = df[df['experiment_name'].str.contains(experiment_prefix)].copy()
     df.loc[:, 'experiment_group'] = df['experiment_name'].apply(lambda x: x[:group_length])
     df.loc[:, 'group'] = df['experiment_group'].apply(lambda x: 'original' if x in original_data_list else 'aumentados')
@@ -36,11 +38,17 @@ gcm = categorize_experiments(data, gcm_original_data, 'gcm', 13)
 # Filter out some experiments containing 'gcm_base_006' or 'gcm_base_007'
 gcm = gcm[gcm['experiment_group'].str.contains('0061|0066|0064|0069|0065|0063|0067|0070')].copy()
 
+# All-Leukima
+all_leukemia_original_data = ['all_leukemia_base_0076', 'all_leukemia_base_0078', 'all_leukemia_base_0080']
+all_leukemia = categorize_experiments(data, all_leukemia_original_data, 'all_leukemia', 22)
+all_leukemia = all_leukemia[all_leukemia['experiment_group'].str.contains('0075|0076|0077|0078|0079|0080')]
+
+
 # Combine all filtered datasets into one
-combined_data = pd.concat([leukemia, gisette, madelon, gcm])
+combined_data = pd.concat([leukemia, gisette, madelon, gcm, all_leukemia])
 
 # Save the combined data to a new CSV file
-combined_data.to_csv('filtered_experiment_data.csv', index=False)
+combined_data.to_csv('filtered_experiment_data_v2.csv', index=False)
 
 # Display the combined data (optional)
 print(combined_data.head())

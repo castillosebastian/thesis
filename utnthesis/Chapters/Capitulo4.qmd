@@ -209,6 +209,30 @@ Finalmente, se realizó un experimento con 6000 muestras sintéticas, donse se o
 
 Todo lo anterior sugiere que, si bien la aumentación de datos mediante AVs puede enfrentar desafíos significativos en conjuntos de datos complejos como gcm, es posible mejorar la calidad de los datos sintéticos mediante ajustes en la arquitectura del AV y en la metodología de selección de características. La combinación de AVs y AGs en un flujo de trabajo encadenado demostró ser una estrategia prometedora para mejorar la precisión y la eficiencia en la selección de características.
 
+## All-Leukemia
+
+Con el fin de validar el tratamiento dado a GCM, particularmente la estrategia de encadenamiento de procesos de *selección-generación-selección*, se decidió aplicar la misma metodología a un nuevo dataset *All-Leukemia*. Este dataset, que contiene 12600 variables (i.e. genes) y 327 muestras, es un caso de estudio clásico en la literatura de clasificación de tumores.
+
+Se repitió el procedimiento de busqueda de la mejor combinación de hiperparámetros para el AVC, con el fin de lograr la mejor reconstrucción de los datos originales. Se mantuvo la misma configuración del modelo AVC utilizado en GCM, descripto en el Capítulo 2.
+
+Al igual que en GCM, se realizaron experimentos con datos originales y aumentados. Los experimentos con aumentación consistieron en la generación de 1000 muestras sintéticas creadas por un AVC entrenado en un subespacio de características relevantes, seleccionadas por un AG. Tanto para la generación como para la selección siempre se trabajó con las particiones de datos originales de entrenamiento y teteo. 
+
+Se probaron 3 escenarios de reducción de características, con un ratio de genes activos de 0.003, 0.015 y 0.025, dando como resultado un tamaño de cromosoma a torno a las 35, 180 y 300 variables. El algoritmo genético utilizado en esta oportunidad realizaba 15 generaciones.
+
+Los resultados generales se pueden observar en el siguiente gráfico.
+
+![All-Leukemia Resultados](boxplot_all_leukemia_ngenes_accuracy.png)
+
+Como puede advertirse, los experimentos muestran que la estrategia de encadenamiento de procesos de *selección-generación-selección* presenta una ligera mejora en la precisión de clasificación en los casos de drástica reducción de características en torno a los 35 y 200 genes activos. No se evidencia diferencia significativa entre los experimentos con 300 genes activos. 
+
+Respecto de la eficacia en la selección de características, no se observa una diferencia significativa entre los experimentos con datos originales y los datos aumentados como puede apreciarse en los siguientes gráficos.
+
+![All-Leukemia Resultados](boxplot_all_leukemia_35_med_combined.png)
+
+![All-Leukemia Resultados](boxplot_all_leukemia_180_med_combined.png)
+
+En el caso del experimento con 35 genes activos (promedio) se advierte, pese a la mejora en la precisión, una leve degradación en la estabilidad de los resultados. Entendemos que esto se explica por la reducción en la cantidad de genes activos y la sensibilidad del AG a parámetros como la probabilidad de mutación. En este caso, el experimento tuvo una probabilidad de mutación de 0.028, operando una importante variabilidad en la estructura de los cromosomas y afectando la estabilidad de la selección.
+
 ## Resumen de los resultados
 
 Los experimentos realizados en los cuatro conjuntos de datos (*Leukemia*, *Gisette*, *Madelon* y *GCM*) evidencian una tendencia general sobre el impacto de la aumentación de datos mediante Autocodificacadores Variacionales en la selección de características utilizando Algoritmos Genéticos. 
@@ -217,11 +241,16 @@ Los experimentos realizados en los cuatro conjuntos de datos (*Leukemia*, *Giset
 
 ![Número de características seleccionadas en los 4 datasets](boxplot_resultados_ngenes.png)
 
-El uso de datos aumentados no siempre produjo mejoras estadísticamente significativas en la precisión de clasificación, pero sí marcó una diferencia relevante ante los casos más difíciles. En efecto, en problemas con métricas saturadas su aporte agrega un valor marginal, asociado a la estabilidad de los resultados, como se vió en *Leukemia* y *Gisette*. Ambos datasets representan desafíos donde los modelos ya alcanzan una alta performance procesando los datos en su estado original. Sin embargo, en dataset más complejos, donde el margen de majora en las predicciones es mayor, como los casos de *Madelon* y *GCM*, la técnica de aumentación generó un salto del 9% y 10% en el resultado final. Este hallazgo sugiere que la aumentación de datos puede contribuir a generar modelos más consistentes a lo largo de múltiples generaciones, lo cual es particularmente relevante en escenarios de alta dimensionalidad y escasez muestral.
+
+Dicha tendencia tiene confirmación en los resultados obtenidos en el dataset *All-Leukemia*:
+
+![Precisión en el dataset de validación](boxplot_all_leukemia_ngenes_accuracy.png)
+
+El uso de datos aumentados no siempre produjo mejoras estadísticamente significativas en la precisión de clasificación, pero sí marcó una diferencia relevante ante los casos más difíciles. En efecto, en problemas con métricas saturadas su aporte agrega un valor marginal, asociado a la estabilidad de los resultados, como se vió en *Leukemia* y *Gisette*. Ambos datasets representan desafíos donde los modelos ya alcanzan una alta performance procesando los datos en su estado original. Sin embargo, en dataset más complejos, donde el margen de majora en las predicciones es mayor, como los casos de *Madelon*, *GCM* y *All-Leukemia*, la técnica de aumentación generó resultados positivos, particularmente en los dos primeros donde se observó un salto del 9% y 10% en el resultado final. Este hallazgo sugiere que la aumentación de datos puede contribuir a generar modelos más consistentes a lo largo de múltiples generaciones, lo cual es particularmente relevante en escenarios de alta dimensionalidad y escasez muestral.
 
 En el caso del conjunto de datos *Madelon*, donde el problema de selección de características presenta una clara distinción entre señales relevantes y ruido, la aumentación de datos mostró una mejora significativa en la precisión, incrementando la capacidad del AG para identificar las características correctas en un espacio de búsqueda extremadamente ruidoso. Este resultado resalta la utilidad de la aumentación en problemas donde la presencia de señales distractoras dificulta la tarea de selección.
 
-Por otro lado, los experimentos con *GCM* ilustran las limitaciones de la aumentación en conjuntos de datos con una distribución de clases desbalanceada y de alta complejidad. Sin embargo los ajustes en la arquitectura del AVC y en la configuración experimental permitieron mejoras importantes, alcanzando una generación de datos sintéticos de mayor calidad y una selección de características más eficiente. En este sentido, la integración de estrategias más complejas, como la combinación de selección de características previa a la aumentación, demostró ser una vía prometedora para mejorar los resultados.
+Por otro lado, los experimentos con *GCM* ilustran las limitaciones de la aumentación en conjuntos de datos con una distribución de clases desbalanceada y de alta complejidad. Sin embargo los ajustes en la arquitectura del AVC y en la configuración experimental permitieron mejoras importantes, alcanzando una generación de datos sintéticos de mayor calidad y una selección de características más eficiente. Resultados que se validaron mediante los experimentos en *All-Leukemia*. En este sentido, la integración de estrategias más complejas, como la combinación de selección de características previa a la aumentación, demostró ser una vía prometedora para mejorar los resultados.
 
 En conjunto, los hallazgos de este capítulo sugieren que la aumentación de datos, cuando se utiliza en combinación con AGs, puede ser una herramienta efectiva en la selección de características, especialmente en contextos donde la dimensionalidad y el ruido dificultan la tarea. Asimismo, se destaca que el éxito de esta técnica depende críticamente de la calidad de los datos sintéticos generados y de la adecuada configuración de los modelos subyacentes, lo que subraya la importancia de ajustar las metodologías de manera específica para cada tipo de conjunto de datos.
 
