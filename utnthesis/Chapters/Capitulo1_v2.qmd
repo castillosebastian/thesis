@@ -77,7 +77,7 @@ En el contexto actual del aprendizaje automático, los datos presentan una serie
 
 Un problema frecuente se presenta cuando disponemos de pocas muestras en un espacio vectorial de alta dimensionalidad, es decir, cuando el número de muestras ($m$) es menor que el número de características ($n$), siendo $n$ particularmente grande. Esta situación, que combina alta dimensionalidad y escasez muestral, es común en campos como el análisis genético, reconocimiento facial y procesamiento de información médica. La escasez de muestras dificulta el tratamiento de la información, ya que la cantidad de datos disponibles para entrenar un modelo es insuficiente para capturar la variabilidad inherente a los datos. En tales circunstancias, el proceso de aprendizaje tiende a sobreajustarse a las observaciones disponibles, lo que puede llevar a modelos poco generalizables. 
 
-Como veremos mas adelante, tres de los datasets elegidos para nuestro estudio -vinculados al ámbito biomédico- se encuentran en esta situación. En tales circunstancias, la selección de características tiene severas limitaciones, ya que la alta dimensionalidad de los datos dificulta la distinción entre información relevante y irrelevante.
+Como veremos mas adelante, tres de los datasets elegidos para nuestro estudio -vinculados al ámbito biomédico- se encuentran en esta situación. En tales circunstancias, la selección de características tiene severas limitaciones, ya que la alta dimensionalidad de los datos dificulta la distinción entre información relevante y irrelevante. Es aquí donde la generación sintética de datos puede ofrecer una solución, ya que al permitir aumentar la cantidad de datos disponibles para el aprendizaje, podría mitigar el problema de la escasez muestral.
 
 ### Desbalance de clases
 
@@ -94,23 +94,51 @@ Para atacar este problema, se han propuesto diversas soluciones, que pueden cate
 
 2. **Modificación algorítmica**: Este enfoque adapta los métodos de aprendizaje para que sean más sensibles a los problemas de desbalance. Por ejemplo, el uso de la distancia de Hellinger como criterio de división en árboles de decisión, que ha demostrado ser insensible al sesgo, capturando la divergencia en las distribuciones sin ser dominada por las probabilidades previas de clase.
 
-3. **Aprendizaje sensible al costo**: Esta solución puede incorporar elementos a nivel de datos, a nivel de algoritmos, o ambos a la vez, asignando costos más altos a la clasificación errónea de ejemplos de la clase positiva (minoritaria). Como mencionamos antes, en diversos escenarios de datos desbalanceados el costo de falsos positivos es mayor que el de pasos negativos. Por ejemplo, en el diagnóstico médico, resulta más importante reconocer la presencia de una enfermedad rara que su ausencia, por ello el costo de un falso negativo es mayor que el de un falso positivo.
+1. **Aprendizaje sensible al costo**: Esta solución puede incorporar elementos a nivel de datos, a nivel de algoritmos, o ambos a la vez, asignando costos más altos a la clasificación errónea de ejemplos de la clase positiva (minoritaria). Como mencionamos antes, en diversos escenarios de datos desbalanceados el costo de falsos positivos es mayor que el de pasos negativos. Por ejemplo, en el diagnóstico médico, resulta más importante reconocer la presencia de una enfermedad rara que su ausencia, por ello el costo de un falso negativo es mayor que el de un falso positivo.
+
+Ante el problema del desbalance de clases, la generación sintética de datos puede ofrecer una solución alternativa a los métodos tradicionales, ya se por la generación de muestras sintéticas en proporciones que permitan re-balancear las clases, o por la generación un cantidad de muestras tal que permita que el modelo aprenda a discriminar entre las clases pese a su desigual distribución.
 
 ### Complejidad 
 
-La complejidad de los datos puede manifestarse en tres aspectos fundamentales, que pueden coexistir en un mismo problema:
+La complejidad de los datos puede manifestarse en tres aspectos fundamentales, y todos ellos pueden coexistir en un mismo problema:
 
-1. **Ambigüedad de clases**: Surge cuando los casos no pueden distinguirse mediante ningún algoritmo de clasificación utilizando las características disponibles, ya sea porque los conceptos de clase están mal definidos o porque las características seleccionadas son insuficientes.
+1. **Ambigüedad de clases**: Surge cuando los casos no pueden distinguirse utilizando las características disponibles, ya sea porque los conceptos de clase están mal definidos y por lo tanto son intrínsecamente indistinguibles, o porque las características seleccionadas son insuficientes para discriminar las clases.
 
-2. **Complejidad de fronteras**: Se refiere a situaciones donde para trazar los límites entre clases es necesario descripción extensas o de una complejidad tal, que incluso pueden requerir la enumeración de todos los puntos con sus etiquetas de clase. Este aspecto de dificultad se debe a la naturaleza del problema y no a la muestra o selección de características, indicando que una completa separación entre clases es un problema dificil de resolver.
+2. **Complejidad de fronteras**: Se refiere a situaciones donde los límites entre clases requieren una descripción extensa de la frontera de decisión, llegando a demandar, en el caso extremos de complejidad, la enumeración exhaustiva de todos los puntos con sus etiquetas de clase. Este aspecto de dificultad se debe a la naturaleza del problema y no a la muestra o selección de características, indicando que una completa separación entre clases es un problema difícil de resolver.
 
-3. **Dispersión de muestras**: La combinación de pocas muestras y alta dimensionalidad genera una dispersión que dificulta la generación de fronteras de decisión.
+3. **Dispersión de muestras**: La combinación de pocas muestras y alta dimensionalidad genera una dispersión que dificulta la generación de fronteras de decisión. 
 
-### Ruido y valores atípicos
+Los casos 1 y 2 son problemas ante los cuales la selección de características no puede ofrecer una solución efectiva. El caso 3, asociado con la alta dimensionalidad, podría ser mitigado por la generación de muestras sintéticas debido a que éstas permitirían aumentar la densidad de puntos en el espacio de características, facilitando así la identificación de patrones y la construcción de fronteras de decisión más robustas.
 
-Los datos del mundo real raramente están libres de imperfecciones. El ruido puede provenir de diversas fuentes como dispositivos de medición defectuosos, errores de transcripción o irregularidades en la transmisión. Los valores atípicos (*outliers*), definidos como observaciones que se desvían significativamente del resto, pueden ser indicadores de errores en los datos o de casos especiales que requieren atención particular.
+### Ruido 
 
-Estas características problemáticas de los datos no son mutuamente excluyentes y frecuentemente se presentan de manera simultánea, complicando aún más la tarea de selección de características. La comprensión de estos desafíos es fundamental para desarrollar estrategias efectivas de selección que permitan obtener modelos robustos y confiables.
+Los datos del mundo real siempre están expuestos a imperfecciones, ruido, proveniente de entornos dinámicos donde las dimensiones de interés de un fenómeno coexisten en espacios de interacciones permanentes. Así, aún considerando un escenario artificial, completamente libre de interferencia, la inperfección puede provenir de diversas fuentes como dispositivos de medición defectuosos o limitados, errores de transcripción o irregularidades en la transmisión de información.
 
+Ante tales circunstancias, existen cuatro enfoques principales para abordar estas imperfecciones en los conjuntos de datos:
 
+1. **Conservación del ruido**: En este enfoque, se mantiene el conjunto de datos tal como está, con sus instancias ruidosas. Los algoritmos que utilizan los datos se diseñan para ser robustos, es decir, capaces de tolerar cierta cantidad de ruido. Una estrategia común es desarrollar algoritmos que eviten el sobreajuste al modelo (como sucede en el caso de los árboles de decisión) mediante técnicas de poda.
+
+2. **Limpieza de datos**: Este método implica descartar las instancias que se consideran ruidosas según ciertos criterios de evaluación. El clasificador se construye utilizando únicamente las instancias retenidas en un conjunto de datos más pequeño pero más limpio. Sin embargo, este enfoque presenta dos debilidades significativas:
+   - Al eliminar instancias completas, se puede descartar información potencialmente útil, como valores de características no corrompidos.
+   - Cuando existe una gran cantidad de ruido, la información restante en el conjunto de datos limpio puede resultar insuficiente para construir un clasificador eficaz.
+
+3. **Transformación de datos**: Este enfoque busca corregir las instancias ruidosas en lugar de eliminarlas. Las instancias identificadas como ruidosas se reparan reemplazando los valores corrompidos por otros más apropiados, y luego se reintroducen en el conjunto de datos.
+
+4. **Reducción de datos**: Esta estrategia implica reducir la cantidad de datos mediante la agregación de valores o la eliminación y agrupación de atributos redundantes. La reducción de dimensionalidad -y consecuentemente la selección de características- es una de las técnicas más populares para eliminar características ruidosas (es decir, irrelevantes) y redundantes.
+
+Ante esta vicisitud, la generación sintética de datos -como veremos en el capítulo 3- puede ofrecer un herramienta de mitigación del ruido, debido a que el proceso de codificación-decodificiación que lo hace posible implica la reconstrucción de los rasgos relevantes de los datos reales, y consecuentemente una reducción del ruido que contienen. 
+
+### Métodos de selección de características
+
+Los métodos de selección de características pueden dividirse según dos enfoques: evaluación individual y evaluación de subconjuntos. La evaluación individual, también conocida como ranking de características, asigna pesos a las características individuales según su grado de relevancia. Por otro lado, la evaluación de subconjuntos produce candidatos basados en una estrategia de búsqueda determinada. Cada subconjunto candidato se evalúa mediante una medida específica y se compara con el mejor anterior respecto a esta medida. 
+
+Mientras que la evaluación individual es incapaz de eliminar características redundantes (porque estas tienden a tener rankings similares), el enfoque de evaluación de subconjuntos puede manejar tanto la redundancia como la relevancia de las características. Sin embargo, los métodos en este marco pueden sufrir un problema inevitable causado por la necesidad de buscar entre todos los subconjuntos posibles, razón por la cual ambos enfoques merecen ser estudiados.
+
+Más allá de esta clasificación, se pueden distinguir tres enfoques principales basados en la relación entre el algoritmo de selección de características y el método de aprendizaje inductivo usado para inferir un modelo:
+
+1. **Filtros**: Se basan en las características generales de los datos de entrenamiento y realizan la selección de características como un paso de preprocesamiento, independiente del algoritmo de inducción. Este modelo es ventajoso por su bajo costo computacional y buena capacidad de generalización.
+
+2. **Wrappers**: Involucran un algoritmo de aprendizaje como caja negra y consisten en usar su rendimiento predictivo para evaluar la utilidad relativa de subconjuntos de variables. En otras palabras, el algoritmo de selección de características utiliza el método de aprendizaje como una subrutina, con la carga computacional que implica llamar al algoritmo de aprendizaje para evaluar cada subconjunto de características. Sin embargo, esta interacción con el clasificador tiende a dar mejores resultados de rendimiento que los filtros.
+
+3. **Métodos embebidos**: Realizan la selección de características durante el proceso de entrenamiento y suelen ser específicos para determinadas máquinas de aprendizaje. Por lo tanto, la búsqueda de un subconjunto óptimo de características está integrada en la construcción del clasificador y puede verse como una búsqueda en el espacio combinado de subconjuntos de características e hipótesis. Este enfoque es capaz de capturar dependencias a un costo computacional menor que los wrappers.
 
