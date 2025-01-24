@@ -1,3 +1,4 @@
+{{< include Chapters/Capitulo1_v2.qmd >}}
 {{< include Chapters/Capitulo1.qmd >}}
 {{< include Chapters/Capitulo2.qmd >}}
 {{< include Chapters/Capitulo3.qmd >}}
