@@ -82,7 +82,7 @@ Experimentos VAEs. Describir la motivación del capítulo (evaluación de métod
 Capítulo 4: 
 
 Integración de VAEs a los AG (o algo así): Describir la motivación del capítulo (evaluación de métodos para aumentación de datos en el contexto de los AG y su impacto) y la teoría de los algoritmos genéticos. La descripción de estos algoritmos debe ser a nivel teórico, general, de manera que se entienda el funcionamiento. Las implementaciones se pueden mencionar luego en los capítulos correspondientes (y el detalle de las mismas puede ir a un apéndice). Se puede reutilizar lo escrito en los Capítulos 3 y 4. Faltaría completar con más tablas, gráficos y resultados obtenidos. Hay que tener en claro que habrá experimentos con y sin VAEs, así que debe ser clara la lógica en que se presentan los experimentos.
-
+y67
     -Descripción teórica de los AG
     -Integración de VAEs a los AG
     -Descripción de los experimentos
