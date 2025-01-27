@@ -30,7 +30,7 @@ Entendemos que esta variedad de datasets cubre un amplio espectro de problemas d
 
 ## El desempeño de algoritmos clásicos
 
-Pasando a la evaluación de los modelos clásicos, hemos seleccionado una serie de modelos ampliamente usados en el campo del aprendizaje automático para tomar su desempeño como indicador. Entre ellos, encontramos modelos lineales, basados en árboles, de Naive Bayes, de vecinos más cercanos, de redes neuronales y de Máquinas de Soporte Vectorial. A fin de estandarizar la implementación de estos algoritmos, hemos empleado la librería `scikit-learn` que provee abstracciones convenientes para nuestro entorno de experimentación.
+Pasando a la evaluación de los modelos clásicos, hemos seleccionado una serie de modelos ampliamente usados en el campo del aprendizaje automático para tomar su desempeño como indicador. Entre ellos, encontramos: *modelos lineales*, *modelos basados en árboles*, *modelos de Naive Bayes*, *modelos de vecinos más cercanos*, *modelos de redes neuronales* y *modelos de Máquinas de Soporte Vectorial*. Cuando fue posible dada la naturaleza y características de los datasets, hemos evaluado todos los modelos. En caso contrario, hemos seleccionado aquellos modelos más apropiados para el contexto, dejando de lado los que no resultaban adecuados para el problema (como es el caso de GCM y Gisette, dada la dimensionalidad de ambos, y la naturaleza multiclase del primero). Finalmente, a fin de estandarizar la implementación de estos algoritmos, hemos empleado la librería `scikit-learn` que provee abstracciones convenientes para nuestro entorno de experimentación.
 
 Los modelos lineales se basan en la premisa de que la variable objetivo puede expresarse como una función lineal de los predictores o características. Normalmente asumen que, para cada observación, la suma ponderada de las características (potencialmente con un término independiente o “bias”) determina la respuesta. Entre los modelos lineales que incluimos en nuestro estudio se encuentran: el Análisis Discriminante Lineal (LDA), el Análisis Discriminante Cuadrático (QDA), la Regresión de Cresta (Ridge), y el Descenso de Gradiente Estocástico (SGD) [@hastieElementStatisticalLearning2009]. El Análisis Discriminante Lineal (LDA) asume que cada clase proviene de una distribución normal multivariada con igual matriz de covarianzas y distinta media, y busca el hiperplano que maximiza la separabilidad entre clases proyectando los datos a un subespacio. El Análisis Discriminante Cuadrático (QDA) relaja el supuesto de matriz de covarianzas compartida, permitiendo que cada clase tenga su propia matriz y mejorando así la capacidad de modelar fronteras de decisión más complejas, aunque con un mayor riesgo de sobreajuste cuando se cuenta con poca muestra. La Regresión de Cresta (Ridge) introduce una penalización L2 sobre los coeficientes para controlar la varianza de la solución y mitigar la multicolinealidad, lo cual es especialmente útil si existe una gran correlación entre características. El Descenso de Gradiente Estocástico (SGD), por su parte, consiste en un procedimiento incremental de optimización que actualiza los parámetros de un modelo lineal luego de cada observación (o mini-batch), resultando muy eficiente en problemas de alta dimensión o grandes volúmenes de datos.
 
@@ -46,13 +46,28 @@ Por último, las Máquinas de Soporte Vectorial (SVM) parten del principio de en
 
 ### Configuración de los Modelos
 
-Para evaluar los modelos clásicos hemos decidido su configuración a partir de la búsqueda de la mejor combinación de parámetros. A tal fin, hemos seleccionado aquellos parámetros más importantes en cada modelo y establecimos una búsqueda en grilla de sus respectivos valores. Hemos seleccionado para parámetros numéricos un mínimo de 3 valores y máximo de 20, y para no numéricos hemos decidido la configuración estándar según cada modelo. 
+Para evaluar el desempeño de los modelos clásicos y determinar la configuración más adecuada de sus hiperparámetros, hemos implementado un proceso de búsqueda sistemática en grilla (*Grid Search*). Este procedimiento consiste en seleccionar un conjunto de valores relevantes para cada hiperparámetro e iterar sobre todas las combinaciones posibles, entrenando y validando el modelo en cada caso.
+
+En particular, establecimos un rango de parámetros numéricos que incluye de 3 a 20 valores, dependiendo de la sensibilidad del modelo a cada hiperparámetro y de los límites sugeridos en la literatura. Por ejemplo, en modelos lineales como Ridge o SGD, la regularización (*penalty*) y la tasa de aprendizaje (*learning rate*) se probaron en al menos tres niveles para capturar comportamientos distintos. En cambio, en algoritmos basados en árboles (como Random Forest o Gradient Boosting), ampliamos el rango hasta 20 valores en parámetros críticos (número de árboles, profundidad máxima, etc.) para reflejar la diversidad de configuraciones posibles.
+
+Para los parámetros no numéricos (como funciones de activación en MLP, criterios de partición en árboles, tipo de kernel en SVM, entre otros) se utilizaron configuraciones estándar y reconocidas por la comunidad, con el fin de reducir la complejidad combinatoria. Aun así, para cada modelo se revisó la documentación de `scikit-learn` y la literatura relacionada, asegurando una cobertura apropiada de las variantes más importantes.
+
+La métrica de evaluación que hemos seleccionado es **AUC** para los dataset de clasificación binaria (Madelon, Gisette y Leukemia), y **F1 score** para los dataset de clasificación multiclase (GCM). 
+
+La métrica AUC mide el área bajo la curva ROC, donde la curva ROC traza la Tasa de Verdaderos Positivos (TPR o Sensibilidad) frente a la Tasa de Falsos Positivos (FPR) a distintos umbrales de decisión.  Matemáticamente, la AUC puede interpretarse (bajo ciertas condiciones) como la probabilidad de que el clasificador asigne una puntuación más alta a una muestra positiva que a una negativa. Un valor de AUC igual a 1 indica un modelo perfecto, mientras que un valor cercano a 0.5 sugiere un desempeño cercano al de un clasificador aleatorio.  
+
+En *clasificación binaria*, la AUC ofrece un panorama amplio del desempeño del modelo al no depender de un umbral específico y tiene en cuenta la relación entre verdaderos positivos y falsos positivos. Esto es especialmente relevante en datasets como Madelon, Gisette o Leukemia, donde el desbalance y la alta dimensionalidad pueden sesgar otras métricas.  
+
+La métrica F1 se define como la media armónica entre la Precisión (exactitud) y el Recall (sensibilidad):  
+F1 = 2 × (Precisión × Recall) / (Precisión + Recall).  La Precisión indica qué proporción de las predicciones positivas son realmente positivas, mientras que el Recall mide la proporción de positivos correctamente identificados respecto de todos los positivos reales. La F1 combina ambas, penalizando los modelos que desequilibran excesivamente la Precisión y el Recall. En problemas multiclase (por ejemplo, en GCM con 14 clases), la F1 puede calcularse por clase y luego promediarse (macro-F1) para evaluar la capacidad de cada modelo de reconocer de forma equilibrada todas las clases, incluso cuando existe desbalance.
+
+En *clasificación multiclase*, la F1 proporciona una forma de resumir la Precisión y el Recall cuando hay varias clases involucradas y potencialmente desbalanceadas. La F1 balancea correctamente los falsos positivos y los falsos negativos para cada clase antes de promediar, lo que resulta más informativo para problemas con muchas clases desiguales (como GCM).
 
 Las particiones originales de los datasets fueron concatenadas en un solo conjunto de datos, y luego se dividió en conjuntos de entrenamiento y testeo en proporción 80/20. 
 
 ## Resultados Obtenidos
 
-En la siguiente tabla resumimos los resultados en el dataset de testeo para cada modelo y dataset.  
+En la siguiente tabla resumimos los resultados en el dataset de testeo para cada modelo y dataset, con las métricas AUC y F1 score.  
 
 
 | Modelo           | Leukemia Test    | Madelon Test   | Gisette Test      | GCM Test       |
@@ -84,40 +99,38 @@ En la siguiente tabla resumimos los resultados en el dataset de testeo para cada
 
 El gráfico completo de resultados en las particiones de entrenamiento y testeo puede verse en la siguiente figura:  
 
-
 ![algoritmosclasicos](model_performance_heatmap_grouped.png)
 
+Las métricas presentadas evidencian que los resultados de los modelos clásicos varían ampliamente según las características de cada dataset. En particular, los conjuntos de datos **Leukemia** y **Gisette** muestran, en términos generales, un desempeño sólido para la mayoría de los algoritmos analizados. La **AUC** alcanzada por varios modelos en *Leukemia* (en algunos casos 1.00) ilustra la capacidad de separar correctamente los casos, a pesar de tratarse de un problema con alta dimensionalidad y desbalance. Asimismo, *Gisette* se beneficia del hecho de contar con más observaciones que *features*, lo que facilita la labor de los clasificadores (algunos, como Gradient Boosting, alcanzan AUC = 1.00).
 
-[DESARROLLAR]Podría resaltarse en estos resultados que hay problemas en los datasets desbalanceados (que es un poco la hipótesis de trabajo de la tesis: los VAEs pueden ayudar a balancear de forma efectiva los conjuntos de datos para que las tareas posteriores se realizan de forma correcta)
+En contraste, **Madelon** y, muy especialmente, **GCM**, exhiben una dificultad sustancialmente mayor para casi todas las familias de modelos clásicos. En *Madelon*, la presencia de ruido y características irrelevantes afecta la capacidad de generalización, quedando reflejado en valores de AUC relativamente bajos (en general por debajo de 0.70). Esta situación concuerda con la naturaleza artificial de *Madelon*, donde únicamente un subconjunto pequeño de atributos tiene poder predictivo y los modelos se enfrentan a espacios de búsqueda con muchos distractores. Este resultado subraya la relevancia de algoritmos que incorporen estrategias que mitiguen el impacto del ruido en el aprendizaje o mecanismos de selección de características que permitan descartar las irrelevantes.
 
+El caso de **GCM** es aún más crítico. Se trata de un problema multiclase severamente desbalanceado y con una dimensionalidad desproporcionadamente alta en comparación con el número de muestras disponibles. Dichas condiciones propician que todos los modelos clásicos evidencien dificultades para capturar las fronteras de decisión y generalizar correctamente. El hecho de que el **MLP** sea, en este caso, el método de mayor desempeño (si bien con un F1 todavía moderado) puede atribuirse a la flexibilidad de las redes neuronales y su capacidad de aproximar funciones complejas, a pesar del reducido número de muestras de entrenamiento. No obstante, la mayoría de clasificadores enfrenta limitaciones para generalizar en este escenario de desequilibrio tan marcado, reforzando la hipótesis central de la tesis sobre la importancia de enfoques generativos para rebalancear la asimetría entre clases y mejorar la clasificación.
 
+Los resultados que el MLP obtiene por clase se muestran en la siguiente tabla:
 
+| **Class**        | **Precision** | **Recall** | **F1-Score** | **Support** |
+|------------------|--------------:|-----------:|------------:|------------:|
+| Bladder          |         0.75  |       1.00 |       0.857 |           3 |
+| Breast           |         0.00  |       0.00 |       0.000 |           3 |
+| CNS              |         0.80  |       1.00 |       0.889 |           4 |
+| Colorectal       |         0.75  |       1.00 |       0.857 |           3 |
+| Leukemia         |         1.00  |       0.83 |       0.909 |           6 |
+| Lung             |         1.00  |       0.33 |       0.500 |           3 |
+| Lymphoma         |         0.83  |       0.83 |       0.833 |           6 |
+| Melanoma         |         1.00  |       0.50 |       0.667 |           2 |
+| Mesothelioma     |         1.00  |       1.00 |       1.000 |           3 |
+| Ovary            |         0.50  |       0.67 |       0.571 |           3 |
+| Pancreas         |         0.50  |       0.67 |       0.571 |           3 |
+| Prostate         |         0.00  |       0.00 |       0.000 |           2 |
+| Renal            |         1.00  |       0.33 |       0.500 |           3 |
+| Uterus__Adeno    |         0.40  |       1.00 |       0.571 |           2 |
+| **macro avg**    |         0.68  |       0.65 |       0.62  |          46 |
+| **weighted avg** |         0.73  |       0.70 |       0.68  |          46 |
+| **accuracy**     |              |            |       0.70  |          46 |
 
+Obsérvese que ciertas clases con muy pocas muestras (por ejemplo, *Breast* o *Prostate*) presentan métricas nulas, mientras que otras con más muestras, como *Leukemia* o *Lymphoma*, muestran resultados más consistentes. La presencia de clases con tan baja representatividad hace que el modelo no cuente con suficiente evidencia estadística para aprender patrones característicos, conduciendo a predicciones erróneas (o directamente inexistentes) para dichas clases. Como anticipamos en el capítulo anterior, en un escenario multiclase desbalanceado, puede ser común que las clases minoritarias obtengan poco o ningún peso en la función de pérdida, lo que lleva al modelo a ignorarlas o predecir muy pocas (o ninguna) instancias de dichas clases. 
 
+En consecuencia, en problemas donde la alta dimensionalidad y bajo número de muestras se combina con múltiples clases desequilibradas, aun los modelos con capacidad de generalización elevada (por ejemplo, redes neuronales) se ven limitados. La disparidad de resultados por clase que hemos reportado (desde métricas perfectas hasta valores nulos) ilustra la necesidad de una estrategia que aborde el desbalance de manera explícita, ya sea mediante incremento sintético de datos, la implementación de funciones de pérdida adaptativas (que penalicen más los errores en las clases minoritarias), o ambos. 
 
-
-
-
-
-
-
-
-## El uso de Autocodificadores Variacionales como técnica de aumentación
-
-
-La aplicación de AVs como técnica de aumentación de datos en el contexto de distintos problemas de aprendizaje automático es extendida fuera del campo de la selección de características. Se aplica al tratamiento de imágenes [@fajardoOversamplingImbalancedData2021; @aiGenerativeOversamplingImbalanced2023; @khmaissiaConfidenceGuidedDataAugmentation2023; @kwarciakDeepGenerativeNetworks2023], texto [@zhangImproveDiverseText2019] , habla [@blaauwModelingTransformingSpeech2016; @latifVariationalAutoencodersLearning2020] y música [@robertsHierarchicalLatentVector2019], y distintos formatos de datos: tabulares [@leelarathnaEnhancingRepresentationLearning2023], longitudinales [@ramchandranLearningConditionalVariational2022] y grafos [@liuConstrainedGraphVariational2018]. En lo que sigue repasaremos las experiencias más afines a nuestro enfoque sobre el impacto de la aumentación en el aprendizaje y la selección de características.
-
-
-En @fajardoOversamplingImbalancedData2021 se investiga si los AVs y las redes generativas antagónicas (GAN) pueden aumentar datos desbalanceados vía sobremuestreo de las clases minoritarias, y mejorar así el rendimiento de un clasificador. Para ello se crean versiones desbalanceadas de reconocidos datos multiclases tales como MNIST [@lecunGradientBasedLearningApplied1998] y Fashion MNIST [@xiaoFashionMNISTNovelImage2017], a los cuales, posteriormente, se los re-balancea agregándoles muestras sintéticas generadas por un AV condicionado por clase (AV Condicional). Para la tarea de clasificación se emplea un Perceptrón Multicapa (MLP), y se evalúa su desempeño promediando métricas de precisión, exhaustividad [controlar-concepto] y F1 score sobre distintos experimentos. La evaluación incluye la comparación de resultados del clasificador con datos aumentados por sobre-muestreo aleatorio, mediante SMOTE [@blagusSMOTEHighdimensionalClassimbalanced2013], GAN y AVs. El resultado muestra a los AVs -en su versión condicional- como el mejor modelo generativo para resolver el problema de datos desbalanceados mediante sobre-muestreo de las clases minoritarias.
-
-
-@aiGenerativeOversamplingImbalanced2023 vuelve sobre los problemas planteados en @fajardoOversamplingImbalancedData2021, proponiendo una nueva metodología que superaría sus resultados. La propuesta en esta oportunidad plantea la aumentación de datos de la clase minoritaria condicionada a las características de la distribución que tienen los datos de la clase mayoritaria. El método se llama AV-Guiado-por-la-Mayoría (*Majority-Guided VAE* o MGVAE) y procura incorporar en la generación no solo información intra-clase sino también inter-clase, con el fin de propagar la diversidad y riqueza de la mayoría en la minoría, y mitigar así riesgos de sobre-ajuste en los modelos. Este modelo se pre-entrena utilizando muestras de la clase mayoritaria, y luego se ajusta con datos de la clase minoritaria para retener el aprendizaje de la etapa previa [@kirkpatrickOvercomingCatastrophicForgetting2017]. Para evaluar la eficacia de MGVAE, se realizaron experimentos en varios conjuntos de datos de imágenes y tabulares, utilizando diversas métricas de evaluación como Precisión Balanceada (B-ACC), Precisión Específica Promedio por Clase (ACSA) y Media Geométrica (GM). Los resultados muestran que MGVAE supera a otros métodos de sobre-muestreo en tareas de clasificación.
-
-
-Un problema diferente es tratado en @khmaissiaConfidenceGuidedDataAugmentation2023 donde se emplean AVs para aumentar datos en una tarea de clasificación con enfoque semi-supervisado. Aquí el desafío no pasa por el desbalance entre clases, sino en la búsqueda de mejorar el clasificador en regiones del espacio de características con bajo desempeño (ratios de error altos). Para eso, se mapea el espacio de características entrenando un modelo de WideResNet [@zagoruykoWideResidualNetworks2017] y luego se seleccionan las muestras mal clasificadas o con bajo nivel de confianza en la clasificación. Estas muestras se utilizan para entrenar un AV y generar datos sintéticos. Finalmente, las imágenes sintéticas se usan junto con las imágenes originales etiquetadas para entrenar un nuevo modelo de manera semi-supervisada. Se evalúan los resultados sobre STL10 y CIFAR-100 obteniendo mejoras en la clasificación de imágenes en comparación con los enfoques supervisados.
-
-
-Finalmente, antecedente interesante es el presentado por @martinsVariationalAutoencodersEvolutionary2022b, pues pese a no estar directamente vinculado a la aumentación de datos, incluye la generación sintética de muestras mediante AV y la selección de características por AG. En efecto, el artículo propone la generación de individuos y optimización de características orientados al diseño de proteínas (específicamente variantes de Luciferasa bacteriana *luxA*). Partiendo de muestras de ADN de proteínas obtenidas de un subconjunto de datos de la base InterPro (identificados bajo el código "IPR011251") se generan conjuntos de individuos combinando datos originales, datos muestreados de la capa latente -*encoder*- del AV (configurado como MSA-AV para procesar sequencias alineadas de ADN) y datos optimizados por aplicación del AG. En el caso del algoritmo genético se emplean dos enfoques de optimización: de objetivo único y multiobjetivos, con funciones asociadas a la búsqueda de propiedades deseables en las muestras de ADN (solubilidad, síntesis, estabilidad y agregación de proteínas). El resultado de los experimentos realizados muestra que el diseño de proteínas guiado por la optimización mediante AG resultó en mejores soluciones que las obtenidas mediante muestreo directo, y que por su parte la optimización multiobjetivos permitió la selección de proteínas con el mejor conjunto de propiedades.
-
-
-Los casos mencionados en el apartado nos ofrecen un conjunto de experiencias significativas a considerar al momento de resolver el problema planteado en este trabajo. Otras experiencias, como por ejemplo la configuración evolutiva de un AV [@wuEVAEEvolutionaryVariational2023], el ensamble de AVs [@leelarathnaEnhancingRepresentationLearning2023], por mencionar algunas novedosas, escapan al recorte que hemos fijado.
+En síntesis, la combinación de alta dimensionalidad, número de muestras limitado y desbalance de clases constituye el mayor obstáculo al entrenamiento estable y robusto de modelos clásicos, tal como se constata en *GCM* (y en menor medida en *Leukemia*). Por otro lado, incluso en problemas más sencillos como *Madelon*, el ruido y la alta proporción de atributos irrelevantes pueden perjudicar significativamente la performance de estos algoritmos. Estos hallazgos motivan la necesidad de explorar técnicas más avanzadas de reducción de dimensionalidad, de incremento de datos mediante métodos generativos y de manejo de clases desbalanceadas, con el fin de mejorar la calidad de la clasificación en contextos tan desafiantes. 
