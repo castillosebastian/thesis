@@ -4,9 +4,9 @@ En este capítulo revisaremos el desempeño de *algoritmos clásicos* en la solu
 
 ## Datos elegidos en nuestro estudio
 
-El conjunto de datos elegidos en este trabajo incluye cinco datasets: *Madelon, Gisette, Leukemia, Leukemia-all* y *GCM*.  Como veremos a continuación, cada uno plantea desafíos distintos en términos de aprendizaje, y posee distintos niveles de complejidad en su composición.
+El conjunto de datos elegidos en este trabajo incluye cinco datasets: *Madelon*, *Gisette*, *Leukemia*, *GCM* y *All Leukemia*. El último de ellos, *All Leukemia*, es un dataset introducido en este trabajo iniciada la etapa de experimentación de integración entre *algoritmos genéticos y autocodificadores variacionales*. Por esa razón, no está incluido en la revisión de desempeño de los algoritmos clásicos que presentaremos en este capítulo. No obstante ello, se incluye en el detalle de los datasets para que el lector tenga una idea de la variedad de problemas que se tuvieron en cuenta para validar los resultados de nuestra propuesta.
 
-El dataset *Madelon* es un conjunto artificial de datos con 2000 observaciones y 500 características (2000x500), donde el objetivo es resolver un problema XOR multidimensional con 5 características relevantes y 15 características corresponden a combinaciones lineales de aquellas (i.e. 15 características redundantes). Las otras 480 características fueron generadas aleatoriamente (no tienen poder predictivo). Madelon es un problema de clasificación de dos clases con variables de entrada binarias dispersas. Las dos clases están equilibradas, y los datos se dividen en conjuntos de entrenamiento y prueba. Fue creado para el desafío de Selección de Características [NIPS_2003](http://clopinet.com/isabelle/Projects/NIPS2003/), y está disponible en el Repositorio [UCI](https://archive.ics.uci.edu/dataset/171/madelon). Los datos están divididos en un conjunto de entrenamiento y un conjunto de testeo. 
+Como veremos a continuación, cada dataset plantea desafíos distintos en términos de aprendizaje, y posee distintos niveles de complejidad en su composición. El dataset *Madelon* es un conjunto artificial de datos con 2000 observaciones y 500 características (2000x500), donde el objetivo es resolver un problema XOR multidimensional con 5 características relevantes y 15 características corresponden a combinaciones lineales de aquellas (i.e. 15 características redundantes). Las otras 480 características fueron generadas aleatoriamente (no tienen poder predictivo). Madelon es un problema de clasificación de dos clases con variables de entrada binarias dispersas. Las dos clases están equilibradas, y los datos se dividen en conjuntos de entrenamiento y prueba. Fue creado para el desafío de Selección de Características [NIPS_2003](http://clopinet.com/isabelle/Projects/NIPS2003/), y está disponible en el Repositorio [UCI](https://archive.ics.uci.edu/dataset/171/madelon). Los datos están divididos en un conjunto de entrenamiento y un conjunto de testeo. 
 
 Como es fácil de advertir, este es un problema donde la información relevante está presente junto a información redundante y otra sin valor predictivo. Es decir, existe un alto nivel de ruido en los datos, planteando importantes desafíos para los algoritmos de aprendizaje, y uno particularmente interesante para el problema de selección de características. Respecto de las dimensiones del problema, no se estaría en una situación crítica de alta dimensionalidad y escasez muestral, ya que el número de observaciones es mayor que el de características. Sin perjuicio de ello, aún queda por determinar si la cantidad de patrones disponibles es suficiente para que los algoritmos de aprendizaje puedan encontrar una solución en un contexto tan ruidoso.
 
@@ -14,148 +14,92 @@ El dataset *Gisette* es un dataset creado para trabajar el problema de reconocim
 
 En este caso, nos encontramos en un escenario similar al de *Madelon*, con un dataset ruidoso e información redundante. La particularidad de *Gisette* es que, pese a mantener una relación positiva entre obervaciones y características (las primeras son más que las segundas), posee un espacio de búsqueda sensiblemente más grande y, eventualmente, más complejo que el de *Madelon*. Por esa razón, esperamos que este dataset sea computacionalmente más exigente que el anterior.
 
-El dataset *Leukemia* es un análisis de datos de expresión genética obtenidos de microarreglos de ADN, se estudia en Golub [-@golubMolecularClassificationCancer1999] para la clasificación de tipos de cáncer. Se construyó un conjunto de datos con 72 observaciones y 7129 mediciones de las clases ALL (leucemia linfocítica aguda) y AML (leucemia mielogénica aguda). El problema es distinguir entre estas dos variantes de leucemia (ALL y AML). Los datos se dividen originalmente en dos subconjuntos: un conjunto de entrenamiento de 38 observaciones y un conjunto de testeo de 34 observaciones.
+El dataset *Leukemia* es un análisis de datos de expresión genética obtenidos de microarreglos de ADN, se estudia en Golub [-@golubMolecularClassificationCancer1999] para la clasificación de tipos de cáncer. Se construyó un conjunto de datos con 72 observaciones y 7129 mediciones (72x7129) de las clases ALL (leucemia linfocítica aguda) y AML (leucemia mielogénica aguda). El problema es distinguir entre estas dos variantes de leucemia (ALL y AML). Los datos se dividen originalmente en dos subconjuntos: un conjunto de entrenamiento de 38 observaciones y un conjunto de testeo de 34 observaciones.
 
 Con este dataset nos encontramos, precisamente, en el escenario de alta dimensionalidad y escasez muestral. El número de observaciones es menor que el de características, y las dimensiones del problema son significativamente más altas que en los casos anteriores. Además, el dataset está desbalanceado, con 27 observaciones de la clase ALL y 11 de la clase AML en la partición de entrenamiento, lo que plantea un desafío adicional para los algoritmos de aprendizaje.
 
-El dataset *All Leukemia* es un estudio de pacientes pediátricos con leucemia linfoblástica aguda (LLA). Incluye 327 muestras con información de 12600 variables (genes). Está compuesto por 14 clases desequilibradas. Fue compilado por Yeoh et al., y descripto en *Classification, subtype discovery, and prediction of outcome in pediatric acute lymphoblastic leukemia by gene expression profiling*, Cancer Cell, Volume 1, Issue 2, 133 - 143. [link](https://www.cell.com/cancer-cell/fulltext/S1535-6108(02)00032-6?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS1535610802000326%3Fshowall%3Dtrue). 
+El dataset *All Leukemia* es un estudio de pacientes pediátricos con leucemia linfoblástica aguda (LLA). Incluye 327 muestras con información de 12600 genes (327x12600). Está compuesto por 14 clases desequilibradas. Fue compilado por Yeoh et al., en [link](https://www.cell.com/cancer-cell/fulltext/S1535-6108(02)00032-6?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS1535610802000326%3Fshowall%3Dtrue). 
 
-Este caso es, sin duda, el más complejo de todos, y plantea un desafío computacional significativo. El número de observaciones es significativamente menor que el de características, y las dimensiones del problema son significativamente más altas que en los casos anteriores. Además, el dataset está desbalanceado, con multiples clases desequilibradas, planteando no solo el desafío de las diversas fronteras de decisión que se deben encontrar, sino también el problema de posibles ambigüedades entre clases.
+Este caso es, sin duda, uno de los más complejos de todos, y plantea un desafío computacional significativo. El número de observaciones es significativamente menor que el de características, y las dimensiones del problema son significativamente más altas que en los casos anteriores. Además, el dataset está desbalanceado, con multiples clases desequilibradas, planteando no solo el desafío de las diversas fronteras de decisión que se deben encontrar, sino también el problema de posibles ambigüedades entre clases. Como vimos en el capítulo anterior, el desafío de procesar información genética es significativo considerando la alta correlación entre genes, y la gran cantidad de información redundante.
 
-Finalmente, el dataset *GCM* fue compilado en Ramaswamy [-@ramaswamyMulticlassCancerDiagnosis2001] y contiene los perfiles de expresión de 198 muestras de tumores que representan 14 clases comunes de cáncer humano. Aquí el enfoque estuvo en 190 muestras de tumores después de excluir 8 muestras de metástasis. Finalmente, cada matriz se estandarizó a una media de 0 y una varianza de 1. El conjunto de datos consta de un total de 190 instancias, con 16063 atributos (biomarcadores) cada una, y distribuidos en 14 clases desequilibradas. Los datos están divididos en un conjunto de entrenamiento y un conjunto de testeo.
+Finalmente, el dataset *GCM* fue compilado en Ramaswamy [-@ramaswamyMulticlassCancerDiagnosis2001] y contiene los perfiles de expresión de muestras de tumores que representan 14 clases comunes de cáncer humano. El dataset está compuesto por 190 muestras y 16063 atributos (biomarcadores), distribuidos en clases desequilibradas. Los datos están divididos en un conjunto de entrenamiento y un conjunto de testeo.
 
+En GCM, como en el caso de *All Leukemia*, nos encontramos en un escenario de alta dimensionalidad y escasez muestral. El número de observaciones es significativamente menor que el de características, y las dimensiones del problema son significativamente más altas que en todos los casos anteriores. Además, el dataset está desbalanceado, eventualmente contiene abundante información ruidosa y redundante.
 
-Para la etapa de experimentos hemos incluido un quinto dataset para validar resultados. Este quinto dataset posee las siguientes características:
-
-
-
+Entendemos que esta variedad de datasets cubre un amplio espectro de problemas de aprendizaje, y que los resultados obtenidos en cada uno de ellos nos permitirán evaluar el desempeño de nuestros algoritmos en contextos distintos.
 
 ## El desempeño de algoritmos clásicos
 
+Pasando a la evaluación de los modelos clásicos, hemos seleccionado una serie de modelos ampliamente usados en el campo del aprendizaje automático para tomar su desempeño como indicador. Entre ellos, encontramos modelos lineales, basados en árboles, de Naive Bayes, de vecinos más cercanos, de redes neuronales y de Máquinas de Soporte Vectorial. A fin de estandarizar la implementación de estos algoritmos, hemos empleado la librería `scikit-learn` que provee abstracciones convenientes para nuestro entorno de experimentación.
 
-Para disponer de métricas de base para la comparación de nuestra solución y, al mismo tiempo, evaluar el grado de dificultad que conlleva la resolución de las tareas asociadas a los datos incluidos en nuestro estudio, hemos seleccionado una serie de modelos ampliamente usados en el campo del aprendizaje automático para tomar su desempeño como indicador. A fin de estandarizar la implementación de estos algoritmos, hemos empleado la librería `scikit-learn` que provee abstracciones convenientes para nuestro entorno de experimentación.
-Los modelos elegidos son:   
+Los modelos lineales se basan en la premisa de que la variable objetivo puede expresarse como una función lineal de los predictores o características. Normalmente asumen que, para cada observación, la suma ponderada de las características (potencialmente con un término independiente o “bias”) determina la respuesta. Entre los modelos lineales que incluimos en nuestro estudio se encuentran: el Análisis Discriminante Lineal (LDA), el Análisis Discriminante Cuadrático (QDA), la Regresión de Cresta (Ridge), y el Descenso de Gradiente Estocástico (SGD) [@hastieElementStatisticalLearning2009]. El Análisis Discriminante Lineal (LDA) asume que cada clase proviene de una distribución normal multivariada con igual matriz de covarianzas y distinta media, y busca el hiperplano que maximiza la separabilidad entre clases proyectando los datos a un subespacio. El Análisis Discriminante Cuadrático (QDA) relaja el supuesto de matriz de covarianzas compartida, permitiendo que cada clase tenga su propia matriz y mejorando así la capacidad de modelar fronteras de decisión más complejas, aunque con un mayor riesgo de sobreajuste cuando se cuenta con poca muestra. La Regresión de Cresta (Ridge) introduce una penalización L2 sobre los coeficientes para controlar la varianza de la solución y mitigar la multicolinealidad, lo cual es especialmente útil si existe una gran correlación entre características. El Descenso de Gradiente Estocástico (SGD), por su parte, consiste en un procedimiento incremental de optimización que actualiza los parámetros de un modelo lineal luego de cada observación (o mini-batch), resultando muy eficiente en problemas de alta dimensión o grandes volúmenes de datos.
 
+En el caso de los modelos basados en árboles, todos comparten la idea de ir dividiendo recursivamente el espacio de características en regiones homogéneas. Este proceso se materializa en un árbol de decisión que, en cada nodo, escoge un umbral o criterio de partición para una característica. Los modelos incluidos en nuestro estudio son: Arbol de decisión clásico (DTC), AdaBoost, Bagging, Extra Trees Ensemble, Gradient Boosting, Random Forest, ETC, y Arboles Extremadamente Aleatorizados (ETC) [@hastieElementStatisticalLearning2009]. El Árbol de Decisión Clásico (Decision Tree Classifier, DTC) utiliza criterios como la ganancia de información o la reducción de la impureza para decidir la partición óptima en cada nivel, siendo fácilmente interpretable aunque con tendencia al sobreajuste si no se regula su profundidad. Algunas variantes se basan en la combinación de múltiples árboles. Bagging, por ejemplo, entrena árboles independientes a partir de muestras “bootstrap” y agrega las predicciones para reducir la varianza del modelo. Random Forest amplía esta idea, incorporando además la selección aleatoria de características en cada división, con lo cual reduce la correlación entre árboles y mejora la capacidad generalizadora. Extra Trees Ensemble adopta una estrategia aún más aleatoria, ya que define umbrales de corte aleatorios, lo que tiende a una mayor diversidad entre árboles y puede favorecer la reducción de la varianza. AdaBoost, en contraposición, entrena secuencialmente modelos débiles (a menudo árboles de baja profundidad) poniendo más peso en las observaciones mal clasificadas en iteraciones previas, de modo que cada nuevo modelo aprenda de los errores acumulados. Gradient Boosting también combina modelos débiles, pero en su caso cada etapa del entrenamiento se orienta a predecir el error residual del ensamble previo, optimizando una función de costo de forma aditiva y generalmente logrando modelos muy potentes. Cuando se habla de ETC (Extremely Randomized Trees Classifier), se hace referencia a un enfoque similar a Random Forest, pero que enfatiza la aleatorización tanto en la selección de subconjuntos de características como en los umbrales de partición, mejorando la diversidad de los árboles y mitigando así la varianza global.
 
-**Modelos lineales**   
+Los modelos de Naive Bayes se basan en el teorema de Bayes para predecir la probabilidad de pertenencia a cada clase, asumiendo independencia condicional de las características [@hastieElementStatisticalLearning2009]. Aun cuando esta suposición rara vez se cumple por completo en problemas reales, la simplicidad computacional y la eficacia empírica suelen convertirlos en una elección sólida, especialmente en problemas de alta dimensión. En su versión Bernoulli (BNB), se asume que las variables predictoras son binarias, lo que se ajusta bien a datos dispersos donde cada característica indica la presencia o ausencia de cierta propiedad. En la versión Gaussiana (GNB), se asume que cada característica sigue una distribución normal, estimando media y varianza por clase para luego combinar esas estimaciones en la regla de decisión bayesiana.
 
+En cuanto a los métodos basados en vecinos más cercanos, el clasificador K-Vecinos Más Cercanos (KNN) ejemplifica la estrategia de aprendizaje por vecindad, ya que no construye un modelo explícito durante la etapa de entrenamiento. En su lugar, para clasificar una nueva observación, identifica los K vecinos más cercanos en el espacio de características y asigna la clase mayoritaria de ese entorno local [@hastieElementStatisticalLearning2009]. Este enfoque es intuitivo y puede capturar relaciones complejas en los datos, aunque su desempeño se degrada en alta dimensión y requiere un costo computacional alto en predicción, pues debe calcular distancias a todos los puntos de entrenamiento.
 
-Los modelos lineales son un conjunto de algoritmos que predicen la salida en función de una combinación lineal de características de entrada (ver EEL). Son particularmente útiles cuando se espera que haya una relación lineal entre variables.   
+Entre los modelos de redes neuronales, el Perceptrón Multicapa (MLP) es una arquitectura de red con múltiples capas densamente conectadas y funciones de activación no lineales [@hastieElementStatisticalLearning2009]. Su capacidad de aproximar funciones complejas lo convierte en un modelo flexible, pero también más exigente en términos de datos y calibración de hiperparámetros. Aunque en su versión más simple puede considerarse un “clásico”, el MLP con técnicas de regularización y optimización robustas forma parte fundamental de las estrategias de aprendizaje profundo.
 
+Por último, las Máquinas de Soporte Vectorial (SVM) parten del principio de encontrar un hiperplano (en el caso lineal) u “frontera” (en el caso con núcleos no lineales) que maximice el margen de separación entre clases [@hastieElementStatisticalLearning2009]. En contextos de alta dimensión y con un número moderado de muestras, las SVM suelen mostrar un desempeño notable por su capacidad para controlar el sobreajuste mediante el parámetro de regularización y el uso de núcleos apropiados. Su versión lineal (LSVC) se centra en resolver una optimización con un límite que separa las clases en un espacio original de altas dimensiones sin necesidad de mapeos adicionales, resultando eficiente en muchos casos de datos dispersos. La variante NuSVC introduce un parámetro $nu$ que controla tanto el número de vectores de soporte como la proporción máxima de errores permitidos, proporcionando una forma alternativa de regularización y definición de la frontera de decisión. Estas particularidades hacen que las SVM sean especialmente populares en problemas donde la dimensionalidad de las características es grande con respecto al número de muestras disponibles.
 
- - `LDA`: Análisis Discriminante Lineal, empleado para dimensiones reducidas y asumiendo distribuciones gaussianas.
- - `QDA`: Análisis Discriminante Cuadrático, similar a LDA pero con covarianzas distintas por clase.
- - `Ridge`: Regresión de Cresta, empleado para tratar con multicolinealidad mediante regularización L2.
- - `SGD`: Descenso de Gradiente Estocástico, estrategia central del aprendizaje automático, empleado para optimizar modelos lineales.
+### Configuración de los Modelos
 
+Para evaluar los modelos clásicos hemos decidido su configuración a partir de la búsqueda de la mejor combinación de parámetros. A tal fin, hemos seleccionado aquellos parámetros más importantes en cada modelo y establecimos una búsqueda en grilla de sus respectivos valores. Hemos seleccionado para parámetros numéricos un mínimo de 3 valores y máximo de 20, y para no numéricos hemos decidido la configuración estándar según cada modelo. 
 
- **Modelos basados en árboles**
-    
- Los modelos basados en árboles implican la segmentación del espacio de características en regiones simples dentro de las cuales las predicciones son más o menos uniformes (Ver CITA). Son potentes y flexibles, capaces de capturar relaciones complejas en los datos.     
-
-
-
-
- - `DTC`: Árbol de Decisión Clásico, modelo intuitivo que divide el espacio de características.
- - `AdaBoost`: Estrategia que entrena modelos débiles secuencialmente, enfocándose en que cada nuevo modelo procese las instancias u observaciones previamente difíciles de clasificar.
- - `Bagging`: Estrategia que combina predicciones de múltiples modelos para reducir la varianza.
- - `Extra Trees Ensemble`: Estrategia que construye múltiples árboles con particiones aleatorias de características y umbrales.
- - `Gradient Boosting`: Estrategia que mejora modelos de forma secuencial minimizando el error residual.
- - `Random Forest`: Estrategia basada en conjunto de árboles de decisión, cada uno entrenado con subconjuntos aleatorios de datos.
- - `ETC`: Árboles Extremadamente Aleatorizados, variante de Random Forest con más aleatoriedad.
-
-
-**Modelos de Naive Bayes**   
- Los modelos de Naive Bayes son clasificadores probabilísticos basados en el teorema de Bayes que presupone independencia entre las características (ver CITA). Son modelos eficientes y de rápida ejecución.   
-
-
- - `BNB`: Naive Bayes Bernoulli, se emplea para características de variables binarias.
- - `GNB`: Naive Bayes Gaussiano, es adecuado cuando los datos poseen  distribución normal.
-
-
-**Modelos de vecinos más cercanos**   
- El modelo de k vecinos más cercanos (KNN) es un método de clasificación no paramétrico que permite clasificar una muestra basándose en la proporción de  clases de las muestras más cercanas en el espacio de características. Es simple y efectivo, particularmente para datos donde las relaciones entre características son complejas o desconocidas.    
-
-
- - `KNN`: K-Vecinos más Cercanos, clasifica asignando la clases mayoritaria en la vecindad considerada.
-
-
-**Modelos de redes neuronales**   
-
-
-El Perceptrón Multicapa (MLP, por sus siglas en inglés) es un tipo de red neuronal que consiste en múltiples capas de neuronas con funciones de activación no lineales. Puede modelar relaciones complejas y no lineales entre entradas y salidas, y es altamente adaptable a la estructura de los datos.      
-
-
-**Modelos de Máquinas de Soporte Vectorial**   
- Las Máquinas de Soporte Vectorial (SVM) son un conjunto de algoritmos supervisados que buscan la mejor frontera de decisión lineal que puede separar diferentes clases en el espacio de características. Ofrecen alta precisión y son muy efectivos en espacios de alta dimensión y en casos donde el número de dimensiones supera al número de muestras.    
-
-
- - `LSVC`: Máquinas de Soporte vectorial  Lineal, se emplea en espacios de alta dimensión.
- - `NuSVC`: SVC con parámetro Nu, que controla el número de vectores de soporte.
-
-
-Finalmente, es preciso destacar que para GCM, que contiene 14 clases en la variable objetivo, hemos excluido modelos no compatibles o ineficientes para problemas de clasificación multiclases.
-
-
-## Configuración de los Modelos
-
-
-Para evaluar los modelos clásicos hemos decidido su configuración a partir de la búsqueda de la mejor combinación de parámetros. A tal fin, hemos seleccionado aquellos parámetros más importantes en cada modelo y establecimos una búsqueda en grilla de sus respectivos valores. Hemos seleccionado para parámetros numéricos un mínimo de 3 valores y máximo de 20, y para no numéricos hemos decidido la configuración estándar según cada modelo. El espacio de búsqueda resultante para cada modelo puede verse en el siguiente link.   
-
-
-[Incluir Tabla]
-
+Las particiones originales de los datasets fueron concatenadas en un solo conjunto de datos, y luego se dividió en conjuntos de entrenamiento y testeo en proporción 80/20. 
 
 ## Resultados Obtenidos
 
-
-En la siguiente tabla resumimos los resultados obtenidos del entrenamiento de los modelos en los dataset estudiados.  
-
-
-[
--Tal vez se podrían trazar líneas horizontales para separar los "tipos" de modelos? Por ejemplo, lineales de árboles, de svm, etc.
-Además, tal vez dejaría sólo los resultados de test, que son los que uno busca analizar generalmente. Otra opción podría ser poner el resultado de test y, entre paréntesis el de train, pero me parece muy rebuscado.
--Sugiero resaltar en negrita el mejor resultado por columna, en lugar de fila, ya que queremos analizar cuán complejo es resolver la tarea para cada dataset.
--Qué métrica se está analizando?
--Los resultados son para test? Qué esquema de particionado se empleó? El propuesto previamente?
-]
+En la siguiente tabla resumimos los resultados en el dataset de testeo para cada modelo y dataset.  
 
 
+| Modelo           | Leukemia Test    | Madelon Test   | Gisette Test      | GCM Test       |
+|------------------|------------------|----------------|-------------------|----------------|
+| LDA              | 0.85            | 0.60           | 0.96              | -              |
+| QDA              | 0.50            | 0.66           | 0.70              | -              |
+| Ridge            | 0.99            | 0.60           | 0.97              | -              |
+| SGD              | 0.98            | 0.64           | 0.99              | 0.71           |
+|------------------|------------------|----------------|-------------------|----------------|
+| AdaBoost         | 0.91            | 0.84           | 0.99              | -              |
+| Bagging          | **1.00**        | **0.91**       | -                 | -              |
+| DTC              | 0.72            | 0.64           | 0.92              | 0.53           |
+| ETC              | 0.54            | 0.57           | 0.94              | 0.48           |
+| Ext.Trees.Ens.   | **1.00**        | 0.71           | 0.99              | 0.57           |
+| Gradient Boost.  | 0.99            | 0.82           | **1.00**          | 0.58           |
+| Random Forest    | **1.00**        | 0.78           | 0.99              | 0.62           |
+|------------------|------------------|----------------|-------------------|----------------|
+| LSVC             | 0.99            | 0.62           | 0.99              | 0.62           |
+| NuSVC            | **1.00**        | 0.61           | 0.99              | 0.58           |
+| SVC              | **1.00**        | 0.61           | 0.99              | 0.58           |
+|------------------|------------------|----------------|-------------------|----------------|
+| BNB              | 0.89            | 0.63           | 0.94              | -              |
+| GNB              | 0.91            | 0.65           | 0.85              | -              |
+|------------------|------------------|----------------|-------------------|----------------|
+| KNN              | 0.86            | 0.65           | 0.99              | -              |
+|------------------|------------------|----------------|-------------------|----------------|
+| MLP              | 0.96            | 0.58           | 0.99              | **0.68**       |
 
 
-
-
-
-
-| Models            | Leukemia Train | Leukemia Test | Madelon Train | Madelon Test | Gisette Train | Gisette Test | GCM Train | GCM Test |
-|-------------------|----------------|---------------|---------------|--------------|---------------|--------------|-----------|----------|
-| LDA               | 0.93           | 0.85          | 0.82          | 0.6          | 1.0           | 0.96         | -         | -        |
-| QDA               | 1.0            | 0.5           | 1.0           | 0.66         | 1.0           | 0.7          | -         | -        |
-| Ridge             | 1.0            | 0.99          | 0.82          | 0.6          | 1.0           | 0.97         | -         | -        |
-| SGD               | 1.0            | 0.98          | 0.63          | 0.64         | 1.0           | 0.99         | 1.0       | 0.71     |
-| AdaBoost          | 1.0            | 0.91          | 0.89          | 0.84         | 1.0           | 0.99         | -         | -        |
-| Bagging           | 1.0            | 1.0           | 0.97          | 0.91         | -             | -            | -         | -        |
-| DTC               | 1.0            | 0.72          | 0.77          | 0.64         | 0.95          | 0.92         | 0.95      | 0.53     |
-| ETC               | 1.0            | 0.54          | 0.62          | 0.57         | 0.95          | 0.94         | 0.98      | 0.48     |
-| Ext.Trees.Ens.    | 1.0            | 1.0           | 1.0           | 0.71         | 0.99          | 0.99         | 1.0       | 0.57     |
-| Gradient Boost.   | 1.0            | 0.99          | 1.0           | 0.82         | 1.0           | 1.0          | 1.0       | 0.58     |
-| Random Forest     | 1.0            | 1.0           | 1.0           | 0.78         | 0.99          | 0.99         | 1.0       | 0.62     |
-| BNB               | 1.0            | 0.89          | 0.73          | 0.63         | 0.95          | 0.94         | -         | -        |
-| GNB               | 1.0            | 0.91          | 0.81          | 0.65         | 0.91          | 0.85         | -         | -        |
-| KNN               | 0.86           | 0.86          | 0.74          | 0.65         | 0.99          | 0.99         | -         | -        |
-| LSVC              | 1.0            | 0.99          | 0.78          | 0.62         | 1.0           | 0.99         | 1.0       | 0.62     |
-| NuSVC             | 1.0            | 1.0           | 1.0           | 0.61         | 1.0           | 0.99         | 0.99      | 0.58     |
-| SVC               | 1.0            | 1.0           | 1.0           | 0.61         | 1.0           | 0.99         | 1.0       | 0.58     |
-| MLP               | 1.0            | 0.96          | 1.0           | 0.58         | 1.0           | 0.99         | 1.0       | 0.68     |
-
-
-Estos valores dan forma a la siguiente representación:  
+El gráfico completo de resultados en las particiones de entrenamiento y testeo puede verse en la siguiente figura:  
 
 
 ![algoritmosclasicos](model_performance_heatmap_grouped.png)
 
 
 [DESARROLLAR]Podría resaltarse en estos resultados que hay problemas en los datasets desbalanceados (que es un poco la hipótesis de trabajo de la tesis: los VAEs pueden ayudar a balancear de forma efectiva los conjuntos de datos para que las tareas posteriores se realizan de forma correcta)
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## El uso de Autocodificadores Variacionales como técnica de aumentación
