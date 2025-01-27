@@ -71,6 +71,16 @@ Análisis preliminar. Describir la motivación del capítulo (línea de base), l
     -IMPORTANTE: Métricas para evaluar los distintos modelos y las que se usarán en la tesis
     -Observación de correlaciones en las features
 
+Recomendación de Matías:
+Comentario general del capítulo. El documento está escrito correctamente y no he encontrado problemas en lo experimental. Sin embargo, creo que la estructura del capítulo hace difícil seguir el desarrollo. Si bien se observa una evolución de los conceptos a lo largo de la escritura, mi opinión es que deberían enfatizarse aún más las diferencia entre la introducción/elementos teóricos y los experimentos. Al leer el documento esperaba encontrar una estructura similar a la de los papers en cada capítulo contando cuál es el problema abordado, qué se necesita saber de la teoría para entenderlo, y luego pequeñas subsecciones encadenadas que planteen experimentos, muestren los resultados y los analicen, dando pie a nuevos experimentos. Por último, una sección que sea un cierre del capítulo (conclusión) y explique cómo seguir (preámbulo del capítulo siguiente).
+Personalmente creo que debería haber 3/4 secciones bien diferenciadas:
+- Introducción/Marco Teórico: Puede ser una sola sección o 2 secciones, depende de cómo lo plantees. Pero debería entenderse el por qué del capítulo (qué se desea hacer). Por ejemplo, a grandes rasgos, explicar que la falta de datos o el desbalance es un problema, que hay muchas técnicas, pero los VAE son una familia prometedora y el marco teórico que escribiste explicando cómo funcionan y las diferencias.
+- Resultados y Discusión. Para cada método que presentás hiciste experimentos, pero no los mostrás de forma individual. Creo que cada subsección debería tener los resultados de cada método con el análisis correspondiente. Luego, podés presentar una subsección que resuma todos los experimentos, con los resultados más importantes comparados. Eso facilitaría el análisis. Además, se mezcla el estudio de problemas binarios y multiclase. Una mayor separación y análisis individual podría enriquecer el documento. No es necesario escribir 5 páginas en cada caso. Tal vez una breve descripción del experimento, los resultados (tablas, gráficos o lo q
+
+
+
+
+
 Capítulo 3: 
 
 Experimentos VAEs. Describir la motivación del capítulo (evaluación de métodos para aumentación de datos) y la teoría de los modelos neuronales usados. La descripción de los modelos debe ser a nivel teórico, general, de manera que se entiendan los algoritmos. Las implementaciones se pueden mencionar luego en los capítulos correspondientes (y el detalle de las mismas puede ir a un apéndice). Se puede reutilizar lo escrito en el Capítulo 2. Faltaría completar con más tablas, gráficos y resultados obtenidos.
