@@ -147,7 +147,7 @@ El desarrollo del modelo de Autoencodificador Variacional (AV) empleado en esta 
 
 En la primera etapa, se centró el esfuerzo en el diseño de la arquitectura del AV. Este proceso comenzó con la creación de una versión exploratoria del modelo, cuya finalidad era establecer una base sobre la cual iterar en mejoras sucesivas. Se optó por una red con 2 capas ocultas en el codificador y en el decodificador, siguiendo la estructura básica descripta precedentemente. 
 
-El codificador incluyó dos capas lineales, cada una seguida de una activación ReLU, un diseño que sigue la lógica de la transformación no lineal en un espacio de menor dimensión para luego reconstruir la observación original a partir del espacio latente. Como se discutió en la primera parte, el codificador genera dos vectores, uno para la media y otro para la varianza logarítmica de la distribución latente, componentes críticos para el proceso de reparametrización que permite al modelo generar nuevas muestras en el espacio latente. El decodificador, encargado de reconstruir los datos originales a partir del espacio latente, fue diseñado con una estructura simétrica a la del codificador, utilizando nuevamente activaciones ReLU y finalizando con una función Sigmoidea en la capa de salida. La función Sigmoidea condiciona la salida a un rango entre 0 y 1, lo que es particularmente útil para la normalización de los datos de entrada y salida.
+El codificador incluyó dos capas lineales, cada una seguida de una activación ReLU, un diseño que sigue la lógica de la transformación no lineal en un espacio de menor dimensión para luego reconstruir la observación original a partir del espacio latente. Como se discutió en la primera parte, el codificador genera dos vectores, uno para la media y otro para la varianza logarítmica de la distribución latente, componentes críticos para el proceso de reparametrización que permite al modelo generar nuevas muestras en el espacio latente. El decodificador, encargado de reconstruir los datos originales a partir del espacio latente, fue diseñado con una estructura simétrica a la del codificador, utilizando nuevamente activaciones ReLU.
 
 La función de pérdida del modelo combinó la divergencia Kullback-Leibler (KLD) y error cuadrático medio (MSE). La KLD se utilizó para medir la diferencia entre la distribución aprendida por el modelo y una distribución normal estándar, mientras que el error cuadrático medio se empleó para evaluar el error de reconstrucción, es decir, qué tan bien el modelo era capaz de replicar los datos de entrada a partir del espacio latente. 
 
@@ -155,15 +155,15 @@ Este modelo se probó en la generación de datos sintéticos en un dataset de cl
 
 ### Segundo Modelo AV para clases binarias
 
-En respuesta a los problemas identificados previamente, se diseñó un nuevo modelo con una arquitectura de tres capas lineales en el codificador y el decodificador, cada una con activaciones ReLU seguidas de normalización por lotes. Esta técnica de normalización fue seleccionada debido a su capacidad para estabilizar y acelerar el proceso de entrenamiento, promoviendo la rápida convergencia y mejorando la precisión de la reconstrucción. Al mitigar el problemas de desplazamiento de covariables (*covariate shift*) durante el entrenamiento, la normalización por lotes estabiliza  las activaciones intermedias de la red y permite que la información relevante sea conservada a lo largo de las capas. Dado que el modelo fue ajustado para capturar la estructura de los datos a través de capas lineales y normalización por lotes, mantuvimos la elección de ReLU como función de activación dada su eficiencia computacional.
+En respuesta a los problemas identificados previamente, se diseñó un nuevo modelo con una arquitectura de tres capas lineales en el codificador y el decodificador, cada una con activaciones ReLU seguidas de normalización por lotes. Esta técnica de normalización fue seleccionada debido a su capacidad para estabilizar y acelerar el proceso de entrenamiento, promoviendo la rápida convergencia y mejorando la precisión de la reconstrucción. Al mitigar el problema de desplazamiento de covariables (*covariate shift*) durante el entrenamiento, la normalización por lotes estabiliza  las activaciones intermedias de la red y permite que la información relevante sea conservada a lo largo de las capas. Dado que el modelo fue ajustado para capturar la estructura de los datos a través de capas lineales y normalización por lotes, mantuvimos la elección de ReLU como función de activación dada su eficiencia computacional.
 
-El modelo resultante fue entrenado con un optimizador Adam y una tasa de aprendizaje en el rango de [1e-5, 1e-3]. Se experimentó con diferentes tamaños del espacio latente, evaluando el equilibrio entre la calidad de reconstrucción y la capacidad de generalización del modelo. Se empleó un termino de paciencia para detener el entrenamiento si no se observaba mejora en los datos de test durante 10 épocas consecutivas. Este mecanismo de corte temprano mejoró la eficiencia del entrenamiento y la capacidad de generalización del modelo.
+El modelo resultante fue entrenado con un optimizador Adam y una tasa de aprendizaje en el rango de [1e-5, 1e-3]. Se experimentó con diferentes tamaños del espacio latente, evaluando el equilibrio entre la calidad de reconstrucción y la capacidad de generalización del modelo. Se empleó un término de paciencia para detener el entrenamiento si no se observaba mejora en los datos de test durante 10 épocas consecutivas. Este mecanismo de corte temprano mejoró la eficiencia del entrenamiento y la capacidad de generalización del modelo.
 
 Estos experimentos fueron clave para ajustar el AV a las necesidades específicas de los conjuntos de datos utilizados en la investigación, permitiendo una generación de datos sintéticos que no solo replicara los patrones de los datos originales, sino que también capturara la variabilidad inherente a estos.
 
 **Arquitectura del Autocodificador Variacional**
 
-La arquitectura del Autocodificador Variacional está compuesta por tres capas lineales (una capa de entrada y dos capas ocultas), cada una seguida de una normalización por lotes (Batch Normalization) y una activación ReLU. El proceso de codificación se realiza de la siguiente manera:
+La arquitectura del AV está compuesta por tres capas lineales (una capa de entrada y dos capas ocultas), cada una seguida de una normalización por lotes (Batch Normalization) y una activación ReLU. El proceso de codificación se realiza de la siguiente manera:
 
 $h_1 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_1}x + b_1))$    
 $h_2 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_2}h_1 + b_2))$     
@@ -171,10 +171,10 @@ $h_3 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_3}h_2 + b_3))$
 
 Donde:
 
-- $\mathbf{W_1}$es una matriz de pesos que transforma el vector de entrada $x$ al espacio de características de dimensión $H$.   
-- $\mathbf{W_2}$transforma $h_1$ a un espacio de características de dimensión $H2$.   
-- $\mathbf{W_3}$ mantiene la dimensión $H2$ mientras transforma$h_2$.    
-- $b_1$,$b_2$, y$b_3$son los sesgos correspondientes a cada capa.
+- $\mathbf{W_1}$ es una matriz de pesos que transforma el vector de entrada $x$ al espacio de características de dimensión $|h_1|$.   
+- $\mathbf{W_2}$ transforma $h_1$ a un espacio de características de dimensión $|h_2|$.   
+- $\mathbf{W_3}$ mantiene la dimensión $|h_2|$ mientras transforma $h_3$.    
+- $b_1$, $b_2$, y $b_3$ son los sesgos correspondientes a cada capa.
 
 Después de las tres capas, se generan los vectores latentes $\mu$ y $\log(\sigma^2)$ mediante dos capas lineales independientes que también aplican normalización por lotes.
 
@@ -182,62 +182,62 @@ Después de las tres capas, se generan los vectores latentes $\mu$ y $\log(\sigm
 
 El vector latente $z$ se obtiene mediante la técnica de reparametrización, donde se introduce ruido gaussiano para permitir la retropropagación del gradiente:
 
-$z = \mu + \sigma \times \epsilon$
+$z = \mu + \sigma \times \epsilon$,
 
-Donde $\epsilon$ es una variable aleatoria con distribución normal estándar, y $\sigma$ se calcula a partir de $\log(\sigma^2)$.
+donde $\epsilon$ es una variable aleatoria con distribución normal estándar, y $\sigma$ se calcula a partir de $\log(\sigma^2)$.
 
 **Decodificador**
 
-El decodificador reconstruye el vector de entrada a partir del vector latente$z$utilizando una arquitectura de tres capas lineales, cada una seguida por una normalización por lotes y una activación ReLU:
+El decodificador reconstruye el vector de entrada a partir del vector latente $z$ utilizando una arquitectura de tres capas lineales, cada una seguida por una normalización por lotes y una activación ReLU:
 
-$h_4 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_4}z + b_4))$    
-$h_5 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_5}h_4 + b_5))$    
-$\hat{x} = \text{BatchNorm}(\mathbf{W_6}h_5 + b_6)$     
+$h_4 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_4}z + b_4)),$    
+$h_5 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_5}h_4 + b_5)),$    
+$\hat{x} = \text{BatchNorm}(\mathbf{W_6}h_5 + b_6),$     
 
-Donde:
+donde:
 
-- $\mathbf{W_4}$ transforma el vector latente $z$ al espacio de características de dimensión $H2$.     
-- $\mathbf{W_5}$ transforma $h_4$ al espacio de características de dimensión $H$.   
-- $\mathbf{W_6}$ transforma $h_5$ de regreso al espacio de la dimensión original de la entrada $D_{in}$.   
-- $b_4$,$b_5$, y$b_6$son los sesgos correspondientes a cada capa.
+- $\mathbf{W_4}$ transforma el vector latente $z$ al espacio de características de dimensión $|h_4|$.     
+- $\mathbf{W_5}$ transforma $h_4$ al espacio de características de dimensión $|h_5|$.   
+- $\mathbf{W_6}$ transforma $h_5$ de regreso al espacio de la dimensión original de la entrada $|D_{in}|$.   
+- $b_4$, $b_5$, y $b_6$ son los sesgos correspondientes a cada capa. 
 
 Finalmente, la salida $\hat{x}$ es una aproximación reconstruida de la entrada original $x$.
 
 ### Modelo AVC para datos multiclase
 
-Para abordar el dataset GCM, que contiene 14 clases con distribuciones desiguales, se creo un Autocodificador Variacional Condicional (AVC) que combina la capacidad de generación de un AV tradicional con el condicionamiento explícito en las etiquetas de clase. El AVC propuesto permitió una modelización más precisa de los datos, al incorporar información de clase en el proceso de codificación y decodificación.
+Para abordar el dataset GCM, que contiene 14 clases con distribuciones desiguales, se creó un AV Condicional (AVC) que combina la capacidad de generación de un AV tradicional con el condicionamiento explícito en las etiquetas de clase. El AVC propuesto permitió una modelización más precisa de los datos, al incorporar información de clase en el proceso de codificación y decodificación.
 
-En escenarios donde los datasets están desbalanceados, los modelos generativos pueden tender a favorecer las clases mayoritarias, ignorando las minoritarias. Para abordar el desbalance de clases que presenta GCM, se implementó una estrategia de ponderación de clases dentro de la función de pérdida, penalizando de manera diferenciada los errores de reconstrucción en función de la clase, mejorando así la capacidad del modelo para representar adecuadamente las clases minoritarias.
+En escenarios donde los datasets están desbalanceados, los modelos generativos pueden tender a favorecer las clases mayoritarias, ignorando las minoritarias. Para abordar el desbalance de clases que presenta GCM, se implementó una estrategia de ponderación de clases dentro de la función de pérdida, penalizando de manera diferenciada los errores de reconstrucción en función de la clase, buscando mejorar así la capacidad del modelo para representar adecuadamente las clases minoritarias.
 
-**Arquitectura del Autocodificador Variacional Condicional (AVC)**
+**Arquitectura del Autocodificador Variacional Condicional**
 
-La arquitectura del Autocodificador Variacional Condicional (AVC) se basa en una modificación del Autocodificador Variacional tradicional para incorporar información adicional en forma de etiquetas. Esta información se concatena tanto en la fase de codificación como en la de decodificación, permitiendo que el modelo aprenda distribuciones condicionales.
+La arquitectura del AVC se basa en una modificación del AV tradicional para incorporar información adicional en forma de etiquetas. Esta información se concatena tanto en la fase de codificación como en la de decodificación, permitiendo que el modelo aprenda distribuciones condicionales.
 
 **Codificador**
 
-El codificador del AVC combina la entrada original con las etiquetas antes de ser procesada por una secuencia de capas lineales (una capa de entrada y dos capas ocultas), cada una seguida por una normalización por lotes (Batch Normalization) y una activación ReLU. El proceso de codificación se realiza de la siguiente manera:
+El codificador del AVC combina la entrada original con las etiquetas antes de ser procesadas por una secuencia de capas lineales (3 capas), cada una seguida por una normalización por lotes (Batch Normalization) y una activación ReLU. El proceso de codificación se realiza de la siguiente manera:
 
-$h_1 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_1}[x, y] + b_1))$   
-$h_2 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_2}h_1 + b_2))$   
-$h_3 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_3}h_2 + b_3))$    
+$h_1 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_1}[x, y] + b_1)),$   
+$h_2 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_2}h_1 + b_2)),$   
+$h_3 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_3}h_2 + b_3)),$    
 
-Donde:
+donde:
 
 - $[x, y]$ es la concatenación del vector de entrada $x$ con las etiquetas $y$.
-- $\mathbf{W_1}$ es una matriz de pesos que transforma el vector combinado $[x, y]$ al espacio de características de dimensión $H$.
-- $\mathbf{W_2}$ transforma $h_1$ a un espacio de características de dimensión $H2$.
-- $\mathbf{W_3}$ mantiene la dimensión $H2$ mientras transforma $h_2$.  
+- $\mathbf{W_1}$ es una matriz de pesos que transforma el vector combinado $[x, y]$ al espacio de características de dimensión $|h_1|$.
+- $\mathbf{W_2}$ transforma $h_1$ a un espacio de características de dimensión $|h_2|$.
+- $\mathbf{W_3}$ mantiene la dimensión $|h_2|$ mientras transforma $h_3$.  
 - $b_1$, $b_2$, y $b_3$ son los sesgos correspondientes a cada capa.
 
-Al igual que en el Autocodificador Variacional tradicional, se generan los vectores latentes $\mu$ y $\log(\sigma^2)$ mediante dos capas lineales independientes.
+Al igual que en el AVC, se generan los vectores latentes $\mu$ y $\log(\sigma^2)$ mediante dos capas lineales independientes.
 
 **Reparametrización**
 
-El vector latente $z$ se obtiene mediante la técnica de reparametrización, similar al Autocodificador Variacional tradicional:
+El vector latente $z$ se obtiene mediante la técnica de reparametrización, similar al AV tradicional:
 
 $z = \mu + \sigma \times \epsilon$
 
-Donde $\epsilon$ es una variable aleatoria con distribución normal estándar, y $\sigma$ se calcula a partir de $\log(\sigma^2)$.
+donde $\epsilon$ es una variable aleatoria con distribución normal estándar, y $\sigma$ se calcula a partir de $\log(\sigma^2)$.
 
 **Decodificador**
 
@@ -245,14 +245,14 @@ El decodificador del AVC reconstruye el vector de entrada a partir del vector la
 
 $h_4 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_4}[z, y] + b_4))$       
 $h_5 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_5}h_4 + b_5))$     
-$\hat{x} = \text{sigmoid}(\mathbf{W_6}h_5 + b_6)$       
+$\hat{x} = \text{BatchNorm}(\mathbf{W_6}h_5 + b_6)$         
 
 Donde:
 
 - $[z, y]$ es la concatenación del vector latente $z$ con las etiquetas $y$.
-- $\mathbf{W_4}$ transforma el vector combinado $[z, y]$ al espacio de características de dimensión $ H2 + \text{labels\_length}$.
-- $\mathbf{W_5}$ transforma $h_4$ al espacio de características de dimensión $H$.
-- $\mathbf{W_6}$ transforma $h_5$ de regreso al espacio de la dimensión original de la entrada $ D_{in}$.  
+- $\mathbf{W_4}$ transforma el vector combinado $[z, y]$ al espacio de características de dimensión $|h_4| + \text{labels\_length}$.
+- $\mathbf{W_5}$ transforma $h_4$ al espacio de características de dimensión $|h_5|$.
+- $\mathbf{W_6}$ transforma $h_5$ de regreso al espacio de la dimensión original de la entrada $|D_{in}|$.  
 - $b_4$, $b_5$, y $b_6$ son los sesgos correspondientes a cada capa.
 
 Finalmente, la salida $\hat{x}$ es una aproximación reconstruida de la entrada original $x$, condicionada por las etiquetas $y$.
@@ -265,19 +265,19 @@ Finalmente, la salida $\hat{x}$ es una aproximación reconstruida de la entrada 
 
 **Configuraciones específicas para datasets desbalanceados**
 
-Para abordar el problema del desbalance de clases en el dataset GCM, se implementaron ajustes específicos en la configuración del modelo y en las estrategias de entrenamiento. El primero consistió en la asignación de pesos diferenciados a las clases dentro de la función de pérdida, con el objetivo de aumentar la penalización por errores de clasificación en las clases minoritarias. Estos pesos se calcularon de manera inversamente proporcional a la frecuencia de las clases en el conjunto de datos, lo que significa que las clases con menos instancias recibieron pesos más altos. Al incorporar estos pesos de clase en la función de pérdida, nos aseguramos que los errores en las clases con menor representación tuvieran un impacto mayor durante el proceso de optimización, logrando un aprendizaje equilibrado.
+Para abordar el problema del desbalance de clases en el dataset GCM, se implementaron ajustes específicos en la configuración del modelo y en las estrategias de entrenamiento. El primero consistió en la asignación de pesos diferenciados a las clases dentro de la función de pérdida, con el objetivo de aumentar la penalización por errores de clasificación en las clases minoritarias. Estos pesos se calcularon de manera inversamente proporcional a la frecuencia de las clases en el conjunto de datos, lo que significa que las clases con menos instancias recibieron pesos más altos. Al incorporar estos pesos de clase en la función de pérdida, nos aseguramos que los errores en las clases con menor representación tuvieran un impacto mayor durante el proceso de optimización, logrando un aprendizaje más equilibrado.
 
 Además de ajustar la función de pérdida, se implementó una estrategia de muestreo ponderado en el proceso de entrenamiento. A través de un muestreador aleatorio ponderado, nos aseguramos que cada mini-lote de datos durante el entrenamiento tuviera una representación equilibrada de cada clase, asignando mayor probabilidad de ser seleccionadas a las instancias de clases minoritarias. Esta técnica también tuvo un papel importante en el funcionamiento del modelo, mitigando el sesgo hacia las clases más frecuentes.
 
-Para garantizar que la combinación de ambas estrategias no tuviera un efecto indeseado en el rendimiento del modelo, se llevaron a cabo experimentos con el fin de validar la aplicación simultánea de ambas técnicas. Un efecto ha evitar era, precísamente, que el modelo se volviera excesivamente sensible a las clases minoritarias, en detrimento de su capacidad para generalizar correctamente en clases mayoritarias. Los resultados de estos experimentos mostraron que, implementadas en conjunto, ambas estrategias lograban los mejores resultados.
+Para garantizar que la combinación de ambas estrategias no tuviera un efecto indeseado en el desempeño del modelo, se llevaron a cabo experimentos con el fin de validar la aplicación simultánea de ambas técnicas. Un efecto a evitar era, precísamente, que el modelo se volviera excesivamente sensible a las clases minoritarias, en detrimento de su capacidad para generalizar correctamente en clases mayoritarias. Los resultados de estos experimentos mostraron que, implementadas en conjunto, ambas estrategias lograban los mejores resultados.
 
 Esta arquitectura permite que el AVC capture relaciones condicionales más complejas entre las entradas y sus correspondientes etiquetas.
 
 ### Optimización de Hiperparámetros
 
-La búsqueda y ajuste de hiperparámetros para los modelos de AV y AVC ha sido un proceso crucial para optimizar la generación de datos sintéticos y, en última instancia, mejorar el rendimiento de nuestro Algoritmo Genético. A lo largo de esta etapa de investigación, se implementaron diversas estrategias para identificar las configuraciones óptimas de los modelos, así como para evitar el sobreajuste y garantizar la robustez de los resultados.
+La búsqueda y ajuste de hiperparámetros para los modelos de AV y AVC ha sido un proceso crucial para optimizar la generación de datos sintéticos y, en última instancia, mejorar el rendimiento de nuestro Algoritmo Genético. A lo largo de esta etapa de investigación, se implementaron diversas estrategias para identificar las configuraciones óptimas de los modelos, así como para evitar el sobre ajuste y favorecer la robustez de los mismos.
 
-Uno de los primeros pasos fue ampliar la búsqueda de hiperparámetros, ajustando variables clave como las dimensiones latentes, las tasas de aprendizaje, y el número de neuronas en las capas ocultas. Un cambio significativo fue la implementación de un mecanismo de paciencia, configurado para detener el entrenamiento si no se observaba mejora en los datos de test durante 10 épocas consecutivas. Esta modificación tuvo un impacto directo en la calidad del modelo, ya que en experimentos iniciales, los modelos seguían entrenándose durante todas las épocas establecidas, lo que en muchos casos resultaba en un sobreajuste. La implementación de este corte temprano no solo mejoró la eficiencia del entrenamiento, sino que también contribuyó a reducir el error y mejorar la capacidad de generalización del modelo.
+Uno de los primeros pasos fue ampliar la búsqueda de hiperparámetros, ajustando aspectos clave como el tamaño de las dimensiones latentes, la tasa de aprendizaje, y el número de neuronas en las diferentes capas. Un cambio significativo fue la implementación de un mecanismo de paciencia, configurado para detener el entrenamiento si no se observaba mejora durante 50 épocas consecutivas en datos de validación. Esta modificación tuvo un impacto directo en la calidad del modelo, ya que en experimentos iniciales, los modelos seguían entrenando durante todas las épocas establecidas, lo que en muchos casos resultaba en un sobre ajuste. La implementación de este corte temprano no solo mejoró la eficiencia del entrenamiento, sino que también contribuyó a reducir el error y mejorar la capacidad de generalización del modelo.
 
 El análisis de los resultados obtenidos mediante estas configuraciones reveló que un MLP entrenado con datos sintéticos generados por un AV puede igualar o incluso superar en ciertos casos el rendimiento de un MLP entrenado con datos reales. Este hallazgo es particularmente relevante, ya que sugiere que, bajo ciertas configuraciones, los datos sintéticos pueden ser tan útiles como los datos reales para el entrenamiento de modelos predictivos. Este fenómeno se observó de manera consistente en varios conjuntos de datos, como Leukemia, Madelon, y GCM, donde la precisión y la exactitud del modelo entrenado con datos sintéticos alcanzaron o superaron las métricas obtenidas con los datos originales.
 
