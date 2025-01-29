@@ -273,7 +273,7 @@ Elementos distintivos respecto a la arquitectura anterior:
 
 ## Configuración de modelos
 
-La búsqueda y ajuste de hiperparámetros para los modelos de AV y AVC ha sido un proceso crucial para optimizar la generación de datos sintéticos. Asumíamos que este proceso era determinante para favorecer la estrategia de selección de características mediante el Algoritmo Genético, por esa razón analizamos distintas opciones para la configuración de los modelos.
+La búsqueda y ajuste de hiperparámetros para los modelos de AV y AVC ha sido un proceso crucial para optimizar la generación de datos sintéticos. Asumíamos que este proceso era determinante para favorecer la estrategia de selección de características mediante el *algoritmo genético*, por esa razón analizamos distintas opciones para la configuración de los modelos.
 
 Iniciamos esta tarea realizando una búsqueda de hiperparámetros, ajustando aspectos clave como el tamaño de las dimensiones latentes, la tasa de aprendizaje, y el número de neuronas en las diferentes capas. Se utilizaron tanto Grid Search como Optimización Bayesiana (BO). Cada una de estas técnicas tiene sus fortalezas, y la elección entre ellas depende en gran medida del objetivo de la búsqueda. Grid Search, por ejemplo, permite un control total sobre el espacio de búsqueda, lo que es útil para responder preguntas específicas, como la configuración óptima de la dimensión latente. Sin embargo, la BO demostró ser particularmente eficiente en la exploración de un espacio de hiperparámetros más amplio y menos definido, logrando un equilibrio entre la exploración y la explotación que resultó especialmente útil en nuestra investigación dado el tamaño del espacio de búsqueda.
 
@@ -285,7 +285,7 @@ Para abordar el problema del desbalance en conjuntos de datos multiclases, se im
 
 Además de ajustar la función de pérdida para mitigar el desbalance, se implementó una estrategia de muestreo ponderado en el proceso de entrenamiento. A través de un muestreador aleatorio ponderado, nos aseguramos que cada mini-lote de datos durante el entrenamiento tuviera una representación equilibrada de cada clase, asignando mayor probabilidad de ser seleccionadas a las instancias de clases minoritarias. 
 
-Para garantizar que la combinación de ambas estrategias no tuviera un efecto indeseado en el desempeño del modelo, se llevaron a cabo experimentos con el fin de validar la aplicación simultánea de ambas técnicas. Un efecto a evitar era, precísamente, que el modelo se volviera excesivamente sensible a las clases minoritarias, en detrimento de su capacidad para generalizar correctamente en clases mayoritarias. Los resultados de estos experimentos mostraron que, implementadas en conjunto, ambas estrategias lograban los mejores resultados.
+Para garantizar que la combinación de ambas estrategias no tuviera un efecto indeseado en el desempeño del modelo, se llevaron a cabo experimentos con el fin de validar la aplicación simultánea de ambas técnicas. Un efecto a evitar era, precisamente, que el modelo se volviera excesivamente sensible a las clases minoritarias, en detrimento de su capacidad para generalizar correctamente en clases mayoritarias. Los resultados de estos experimentos mostraron que, implementadas en conjunto, ambas estrategias lograban los mejores resultados.
 
 ## Resultados obtenidos en los experimentos
 
@@ -295,7 +295,7 @@ Para dicha evaluacion, siguiendo a @fajardoOversamplingImbalancedData2021, *comp
 
 Además, se emplearon otras métricas para completar nuestro análisis, a saber: la *precisión*, el *recall* y el *F1 Score*. Las métricas empleadas para dicha comparación fueron las siguientes: la *precisión* mide la proporción de predicciones positivas correctas sobre el total de predicciones positivas realizadas, es decir, qué tan preciso es el modelo al identificar casos positivos. El *recall* (o sensibilidad) indica la proporción de verdaderos positivos detectados sobre el total de positivos reales, reflejando la capacidad del modelo para capturar todos los casos positivos. El *F1 Score* es la media armónica de la precisión y el recall, proporcionando un equilibrio entre ambos y siendo especialmente útil cuando existe un desbalance en las clases. Otras métricas que utilizamos fueron el *Promedio Macro* y el *Promedio Ponderado*. Los indicadores de *Promedio Macro* calculan la media aritmética de las métricas individuales de cada clase sin considerar el número de muestras por clase, otorgando igual peso a todas las clases. Esto es útil para evaluar el rendimiento general en presencia de clases desbalanceadas. Por otro lado, el *Promedio Ponderado* tiene en cuenta el soporte (número de muestras) de cada clase al calcular la media, lo que significa que las clases con más muestras influyen más en el promedio general. Esto proporciona una visión más realista del rendimiento cuando hay clases dominantes.
 
-Entonces, en la siguiente figura se muestran los resultados obtenidos en los experimentos realizados para los cuatro conjuntos de datos estudiados, donde comparamos datos sintéticos con datos reales:  
+Entonces en la siguiente figura se muestran los resultados obtenidos en los experimentos realizados para los cuatro conjuntos de datos estudiados, donde comparamos datos sintéticos con datos reales:  
 
 ![MLP con datos sintéticos vs MLP con datos reales](grafico_MLP-reales-vs-sintenticos.png)
 
@@ -412,16 +412,14 @@ Un aspecto valioso se refiere a las dimensiones latentes de los modelos generati
 
 Un resultado interesante fue que el incremento en el número de muestras sintéticas no estuvo siempre acompañado por un incremento en el desempeño de los clasificadores. Es decir, encontramos que los resultados de clasificación no necesariamente tienen una relación positiva y directa con el número de muestras sintéticas empleadas en el entrenamiento. 
 
-Este comportamiento se constató en todos los conjuntos de datos estudiados, pero se evidenció con mayor claridad en el dataset GCM. En este problema, se lograron buenos rendimientos incrementando las observaciones del conjunto de datos de entrenamiento de 190 a 3000 muestras balanceadas, con 214 observaciones por clase. Esta estrategia de aumentación, donde se igualan las cantidades de observaciones de todas las clases, es usada en @fajardoOversamplingImbalancedData2021 con buenos resultados. En nuestros experiementos el aumento resultó en una mejora significativa en la performance del modelo, logrando igualar los resultados obtenidos con el clasificador MLP entrenado con datos reales. Sin embargo, al continuar incrementando la cantidad de datos sintéticos a 6000 muestras, se observó una degradación en el rendimiento. 
-
+Este comportamiento se constató en todos los conjuntos de datos estudiados, pero se evidenció con mayor claridad en el dataset GCM. En este problema, se lograron buenos rendimientos incrementando las observaciones del conjunto de datos de entrenamiento de 190 a 3000 muestras balanceadas, con 214 observaciones por clase. Esta estrategia de aumentación, donde se igualan las cantidades de observaciones de todas las clases, es usada en @fajardoOversamplingImbalancedData2021 con buenos resultados. En nuestros experimentos el aumento resultó en una mejora significativa en la performance del modelo, logrando igualar los resultados obtenidos con el clasificador MLP entrenado con datos reales. Sin embargo, al continuar incrementando la cantidad de datos sintéticos a 6000 muestras, se observó una degradación en el rendimiento. 
 
 ![Exactitud según cantidad de muestras sintéticas](n_samples_accuracy_comparison.png)
 
 Esto sugiere la existencia de un umbral en la cantidad de datos sintéticos que, una vez superado, introduce ruido en el modelo en lugar de aportar valor. Este ruido puede estar relacionado con el solapamiento de las fronteras de decisión en las muestras generadas, lo que aumenta el error y disminuye la precisión del modelo.
 
-Finalment, otros emergentes que podemos destar son los siguientes:
-
-- La implementación de un término de paciencia tuvo un impacto positivo en la calidad de los modelos, particularmente en el caso del AVC, 
+Finalmente, otros emergentes que podemos destacar son los siguientes:
+- La implementación de un término de paciencia tuvo un impacto positivo en la calidad de los modelos, particularmente en el caso del AVC,
 - Para el caso del AVC, el uso de L1_loss no proporciona un beneficio claro sobre el MSE para la tarea de generación de datos sintéticos, y
 - El dropout no aporta beneficios en configuraciones ya optimizadas del AVC para este tipo de tareas. 
 
