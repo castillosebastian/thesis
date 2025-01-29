@@ -1,4 +1,62 @@
-# Algoritmo Genético con la librería DEAP {#sec-appA}
+# Implementación de un Algoritmo Genético {#sec-appA}
+
+En el siguiente fragmento de código presentamos las operaciones elementales de un AG, que como dice Goldberg son *extraordinariamente sencillas*. La secuencia de operaciones se inicializa con un conjunto de soluciones, denominado población. El ciclo iterativo principal del Algoritmo Genético genera nuevas soluciones candidatas descendientes mediante cruce y mutación hasta que la población esté completa. En cada iteración, los individuos son evaluados mediante una función de aptitud que mide su calidad en relación al problema a resolver (aquí, la función de aptitud es simplemente la suma de los valores de los genes, en contextos reales, esta función se ajusta a las necesidades del problema pudiendo ser una función de costo, una métrica de desempeño, entre otras). Los individuos más aptos son seleccionados para reproducirse, lo que implica la aplicación de operadores genéticos para generar nuevos individuos. Este proceso se repite a lo largo de múltiples generaciones, permitiendo que la población evolucione y se adapte a las condiciones del problema. 
+    
+
+```python 
+import random
+
+# Parámetros del Algoritmo Genético
+num_individuals = 5
+chromosome_length = 10
+num_generations = 10
+mutation_rate = 0.1
+
+# Inicializar la población con individuos aleatorios
+individuals = [random.randint(0, 1) for _ in range(chromosome_length)]
+population = [individuals for _ in range(num_individuals)]
+
+# Ejecutar el Algoritmo Genético
+for generation in range(num_generations):
+    # Calcular aptitud
+    fitness_values = [sum(ind) for ind in population]
+
+    # Crear nueva población
+    new_population = []
+    while len(new_population) < num_individuals:
+        # Selección de dos padres
+        parent1 = random.choices(population, weights=fitness_values)[0]
+        parent2 = random.choices(population, weights=fitness_values)[0]
+
+        # Cruce de un punto
+        point = random.randint(1, chromosome_length - 1)
+        child1 = parent1[:point] + parent2[point:]
+        child2 = parent2[:point] + parent1[point:]
+
+        # Mutación
+        for i in range(chromosome_length):
+            if random.random() < mutation_rate:
+                child1[i] = 1 - child1[i]
+            if random.random() < mutation_rate:
+                child2[i] = 1 - child2[i]
+
+        new_population.append(child1)
+        if len(new_population) < num_individuals:
+            new_population.append(child2)
+
+    # Reemplazar la población antigua con la nueva
+    population = new_population
+
+    # Mostrar la población actual y sus aptitudes
+    print(f"Generación {generation + 1}:")
+    for ind in population:
+        print(f"Individuo: {ind}, Aptitud: {sum(ind)}")
+    print()
+```
+
+En el caso de nuestro trabajo, se implementó un AG con la librería `DEAP` de Python, que puede ser adaptado para la selección de características en diferentes contextos. 
+
+## Algoritmo Genético con la librería DEAP {#sec-appA}
 
 ```python
 import random

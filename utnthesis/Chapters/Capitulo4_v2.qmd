@@ -1,69 +1,17 @@
 
-# Algoritmos Genéticos {#sec-Capitulo3}
+# Algoritmos Genéticos {#sec-Capitulo4}
 
-En este capítulo presentamos una descripción general de los AGs, exponemos brevemente sus características y describimos la implementación realizada en nuestro trabajo. Específicamente, comentaremos su componentes y operadores básicos, y presentaremos un script genérico de un AG implementado con la librería `DEAP` de Python, que puede ser adaptado para la selección de características en problemas de alta dimensionalidad. En el capítulo siguiente nos enfocaremos finalmente en los resultados obtenidos combinando ambas tecnologías para resolver problemas de selección de características.
+En este capítulo presentamos una descripción general de los *algoritmos genéticos* (AGs) como estrategia de selección de características, exponemos sus componentes y describimos la implementación realizada en nuestro trabajo. Seguidamente plantearemos la integración del AG con la generación sintética de datos mediante AV como etapa de preprocesamiento. Según el planteo hecho desde el inicio, la integración de ambas tecnologías permitirá resolver problemas de escasez muestral, ruido y alta dimensionalidad. Para terminar, entonces, expondremos los experimentos realizados con esta integración de AV-AG, y presentaremos los resultados obtenidos a fin de determinar hasta qué punto hemos podido resolver los problemas motivantes de este trabajo.
 
 ## Elementos básicos de los Algoritmos Genéticos
 
-Los Algoritmos Genéticos (AGs) son una clase de algoritmos de optimización inspirados en la evolución biológica y en la teoría de la selección natural. Los AGs se basan en el concepto de evolución de una población de soluciones potenciales a lo largo de múltiples generaciones, utilizando operadores genéticos como la selección, el cruce y la mutación para generar nuevas soluciones y mejorar la calidad de las mismas. 
+Los Algoritmos Genéticos (AGs) son una clase de algoritmos de optimización inspirados en la evolución biológica y en la teoría de la selección natural. Los AGs se basan en el concepto de evolución de una población de soluciones potenciales a lo largo de múltiples generaciones, utilizando operadores genéticos como la selección, el cruce y la mutación para generar nuevas soluciones a partir de las disponibles, y mejorar la calidad de las mismas. Para clarificar el algoritmo, remitimos al lector a la implementación básica en `python` y otra más compleja implementada con la librería `DEAP` del **Anexo A**.
 
-En el siguiente fragmento de código presentamos las operaciones elementales de un AG, que como dice Goldberg son *extraordinariamente sencillas*. La secuencia de operaciones se inicializa con un conjunto de soluciones, denominado población. El ciclo iterativo principal del Algoritmo Genético genera nuevas soluciones candidatas descendientes mediante cruce y mutación hasta que la población esté completa. En cada iteración, los individuos son evaluados mediante una función de aptitud que mide su calidad en relación al problema a resolver (aquí, la función de aptitud es simplemente la suma de los valores de los genes, en contextos reales, esta función se ajusta a las necesidades del problema pudiendo ser una función de costo, una métrica de desempeño, entre otras). Los individuos más aptos son seleccionados para reproducirse, lo que implica la aplicación de operadores genéticos para generar nuevos individuos. Este proceso se repite a lo largo de múltiples generaciones, permitiendo que la población evolucione y se adapte a las condiciones del problema. 
-    
-
-```python 
-import random
-
-# Parámetros del Algoritmo Genético
-num_individuals = 5
-chromosome_length = 10
-num_generations = 10
-mutation_rate = 0.1
-
-# Inicializar la población con individuos aleatorios
-individuals = [random.randint(0, 1) for _ in range(chromosome_length)]
-population = [individuals for _ in range(num_individuals)]
-
-# Ejecutar el Algoritmo Genético
-for generation in range(num_generations):
-    # Calcular aptitud
-    fitness_values = [sum(ind) for ind in population]
-
-    # Crear nueva población
-    new_population = []
-    while len(new_population) < num_individuals:
-        # Selección de dos padres
-        parent1 = random.choices(population, weights=fitness_values)[0]
-        parent2 = random.choices(population, weights=fitness_values)[0]
-
-        # Cruce de un punto
-        point = random.randint(1, chromosome_length - 1)
-        child1 = parent1[:point] + parent2[point:]
-        child2 = parent2[:point] + parent1[point:]
-
-        # Mutación
-        for i in range(chromosome_length):
-            if random.random() < mutation_rate:
-                child1[i] = 1 - child1[i]
-            if random.random() < mutation_rate:
-                child2[i] = 1 - child2[i]
-
-        new_population.append(child1)
-        if len(new_population) < num_individuals:
-            new_population.append(child2)
-
-    # Reemplazar la población antigua con la nueva
-    population = new_population
-
-    # Mostrar la población actual y sus aptitudes
-    print(f"Generación {generation + 1}:")
-    for ind in population:
-        print(f"Individuo: {ind}, Aptitud: {sum(ind)}")
-    print()
-```
+![Diagrama de un Algoritmo Genético](diagrama_ag.png)
 
 A pesar de su extraordinaria simpleza -o quizas gracias a ella-, los AG constituyen algoritmos robustos, capaces de encontrar soluciones efectivas en una amplia variedad de problemas de optimización. Dicha robustez está determinada, como bien sostiene Goldberg [-@goldbergdavide.GeneticAlgorithmsSearch1989], por una serie de características distintivas, que fortalecen su configuración de búsqueda, a saber: a) operan sobre un espacio *codificado* del problema y no sobre el espacio en su representación original; b) realizan la exploración evaluando una *población de soluciones* y no soluciones individuales; c) tienen como guía una *función objetivo* (también llamada *función de aptitud*) que no requiere derivación u otras funciones de cálculo; y d) suponen *métodos probabilísticos de transición* (operadores estocásticos) y no reglas determinísticas. Estas características permiten a los AG superar restricciones que tienen otros métodos de optimización, condicionados -por ejemplo- a espacios de búsqueda continuos, diferenciables o unimodales. Por ello, su aplicación se ha difundido notablemente, trascendiendo los problemas clásicos de optimización, aplicándose en distintas tareas [@vieQualitiesChallengesFuture2021] y a lo largo de diversas industrias [@jiaoSurveyEvolutionaryMultiobjective2023].
 
-En lo que sigue expondremos brevemente cada una de estas características, destacando su relevancia en el contexto de los AGs y su aplicación en nuestra investigación.
+Para indagar en su eficacia como método de búsqueda y selección de características, desarrollaremos los puntos mencionados anteriormente
 
 ## a) Codificación del espacio de búsqueda
 
@@ -230,7 +178,29 @@ Aplicando estos valores a la Ecuación del Esquema:
 
 Este cálculo muestra cómo el esquema $H$, que tiene una aptitud superior a la media y ciertas características de proximidad posicional (es decir, una longitud de definición baja), es favorecido en la reproducción y es probable que se mantenga en la población. 
 
-Con los elementos vistos hasta aquí podemos pasar, en la parte final del presente capítulo, a la implementación de un Algoritmo Genético. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Dicho lo anterior, no es menos cierto que la capacidad de selección de los AGs depende de la evaluación de aptitud que orienta la búsqueda de las mejores soluciones, y tal evaluación descansa -finalmente- en la disponibilidad de datos. En efecto, la existencia y número de individuos condiciona la función objetivo y por esa vía también al proceso de selección de características de los AGs. La disponibilidad de datos resulta así un factor clave para la selección. Este requerimiento, vinculado particularmente a la función objetivo, se presenta no solo cuando se utiliza como evaluador a modelos complejo de aprendizaje automático (que demandan una cantidad creciente de muestras de entrenamiento)[^6], sino también cuando se trabaja sobre datos cuyas clases se encuentran desbalanceadas [@fajardoOversamplingImbalancedData2021; @blagusSMOTEHighdimensionalClassimbalanced2013]. En ambos escenarios, la falta de información suficiente degrada la capacidad informativa de la función objetivo [@hastieElementStatisticalLearning2009], afectando gravemente el proceso de selección de características.
+
+[^6]: @alzubaidiSurveyDeepLearning2023.
+
+En esa línea, el problema de la disponibilidad de datos en los proyecto de selección de características -sea dentro o fuera del campo de los AGs-, ha encontrado en las estrategias de aumentación una posible solución [@gmComprehensiveSurveyAnalysis2020]. Entre esas estrategias, los Autoencoders Variacionales (en adelante AV) han adquirido popularidad, superando a métodos tradicionales (ej. sobremuestreo [@blagusSMOTEHighdimensionalClassimbalanced2013]) y -en ciertos casos- también a otro modelos generativos basados de redes neuronales profundas [@fajardoOversamplingImbalancedData2021].
+
+
+
 
 ## Implementación de un Algoritmo Genético para la selección de características
 

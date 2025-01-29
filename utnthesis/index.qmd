@@ -1,6 +1,5 @@
 {{< include Chapters/Capitulo1_v2.qmd >}}
 {{< include Chapters/Capitulo2_v2.qmd >}}
 {{< include Chapters/Capitulo3_v2.qmd >}}
-{{< include Chapters/Capitulo3.qmd >}}
-{{< include Chapters/Capitulo4.qmd >}}
+{{< include Chapters/Capitulo4_v2.qmd >}}
 {{< include Chapters/Capitulo5.qmd >}}
