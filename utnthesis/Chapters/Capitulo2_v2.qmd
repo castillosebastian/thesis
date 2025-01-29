@@ -1,4 +1,4 @@
-# Los modelos clásicos y su aplicación al espacio completo de características {#sec-Capitulo2}
+# Modelos clásicos aplicados al espacio completo de características {#sec-Capitulo2}
 
 En este capítulo revisaremos el desempeño de *algoritmos clásicos* en la solución de los problemas elegidos para nuestra investigación, tomando como campo de búsqueda el espacio completo de características de los datasets. El objetivo de esta exploración es doble: por un lado contar con métricas de base para comparar el desempeño de nuestras soluciones, y por otro, identificar los modelos más apropiados para emplear como función de aptitud en nuestro algoritmo genético. Al mismo tiempo, revisaremos las características de los datasets elegidos para nuestro estudio, procurando identificar aquellos rasgos que puedan influir en el desempeño de los modelos. Particularmente, nos centraremos en la alta dimensionalidad y la escasez muestral, el desbalance de clases y el ruido.
 
