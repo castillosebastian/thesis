@@ -166,7 +166,7 @@ El enfoque experimental adoptado fue comparativo, contrastando el desempeño de 
 
 La metodología seguida para cada experimento se describe a continuación. Se presentan los resultados obtenidos, incluyendo métricas como precisión en la clasificación, número de características seleccionadas y estabilidad de la selección de características a lo largo de las generaciones. Se discuten las implicaciones de los resultados y se proponen posibles ajustes y mejoras para futuros experimentos.
 
-## Metodología
+## Metodología seguida en los experimentos
 
 Los experimentos se diseñaron para comparar el rendimiento de los AGs aplicados a los datos originales y a un conjunto de datos ampliado con muestras sintéticas. El objetivo de esta comparación era evaluar el impacto de la aumentación de datos en el proceso de selección de características. Para ello, se utilizaron los siguientes criterios de evaluación: precisión en la clasificación, número de características seleccionadas y estabilidad de la selección de características. Con el fin de asegurar la comparabilidad de los resultados, siempre se empleó la partición original de testeo para medir la precisión del algoritmo.
 
@@ -176,7 +176,7 @@ El aspecto innovador de este enfoque está en el uso de un AV para enriquecer el
 
 ![Comparación de experimentos](diseño_experimentos.png)
 
-## Leukemia
+## -Leukemia
 
 Según lo visto en el Capítulo 1, el conjunto de datos *Leukemia* de expresión génica obtenidos de micro-datos de ADN es reconocido por su alta dimensionalidad (7129 mediciones) relativa al número de muestras (38 para entrenamiento y 34 para testeo). Esto lo convierte en un candidato apropiado para evaluar la capacidad de los AVs para generar datos sintéticos, a partir de los cuales aumentar el número de muestras disponibles y mejorar el desempeño de los AGs en la selección de características. 
 
@@ -201,7 +201,7 @@ Sin perjuicio de lo señalado, entendemos posible que, en conjuntos de datos don
 
 Un punto a resaltar sobre este dataset es la alta correlación entre las características, lo que se refleja en la cantidad significativa de características seleccionadas al menos una vez durante todas las pruebas realizadas. Tanto en los experimentos con datos aumentados como en los originales, el AG seleccionó al menos una vez un número muy similar de características: 6779 y 6772. Este comportamiento sugiere que la mayoría de las características están fuertemente vinculadas, lo que permite que el AG identifique soluciones efectivas utilizando diferentes subconjuntos de características. Asimismo, se observó que un pequeño porcentaje de características (aproximadamente el 10%) es suficiente para resolver el problema de clasificación, independientemente de cuáles sean esas características, debido a la redundancia en la información aportada por las correlaciones. El análisis cuantitativo de las correlaciones muestra que, aunque solo el 0.32% de los pares de características posibles tienen una correlación absoluta mayor a 0.7, estos representan un número considerable (80742) de correlaciones significativas. Es decir: aunque el número de características altamente correlacionadas es una fracción pequeña del total, su impacto en la selección de características es notable, dado que el AG tiende a seleccionar conjuntos de características que son efectivamente intercambiables debido a su alta redundancia.
 
-## Gisette
+## -Gisette
 
 El conjunto de datos *Gisette* es un problema de clasificación binaria con alta dimensionalidad y un número equilibrado de muestras en ambas clases. Es un set de datos creado para trabajar el problema de reconocimiento de dígitos escritos a mano [@isabelleguyonGisette2004], y tiene 13500 observaciones y 5000 atributos. Este conjunto de datos fue seleccionado para evaluar cómo la aumentación de datos afecta la selección de características en un contexto donde el espacio de características es grande, pero la relación señal-ruido es moderada.
 
@@ -225,7 +225,7 @@ Este hallazgo parece sugerir que la aumentación de datos no produce diferencias
 
 En efecto, en *Gisette* se observa una diferencia más importante en la eficiencia de la selección de características. En los experimentos con datos aumentados, el número promedio de características seleccionadas fue menor (424) en comparación con los datos originales (436), señalando que el AG fue más efectivo en el reconocimiento de un subconjunto relevantes. 
 
-## Madelon
+## -Madelon
 
 El conjunto de datos *Madelon* es un caso especial donde solo cinco características son relevantes, mientras que otras quince son combinaciones lineales de estas, y el resto son datos aleatorios. Así, este conjunto representa un desafío interesante para evaluar la capacidad de los AGs para identificar características útiles en un entorno donde la señal está oculta entre una gran cantidad de ruido.
 
@@ -245,7 +245,7 @@ Por otro lado, el análisis de selección de características reveló que, en pr
 
 Finalmente, podemos destacar también que de los algoritmos clásicos evaluados (cuyo reporte hicimos en el Capítulo 1) solo 2 de los 18 logran superan los valores de precisión obtenidos con el AG en los datos aumentados. Ambos modelos, AdaBoost y Bagging, lograron esos resultados luego de un proceso de optimización de hiperparámetros. El resto de los modelos clásicos oscila entre 0.5 y 0.7 de precisión, lo que refuerza la idea de que la aumentación de datos puede ser una estrategia efectiva para mejorar el desempeño de los AGs en conjuntos de datos complejos.
 
-## GCM
+## -GCM
 
 El conjunto de datos *GCM* consiste en 16063 atributos (biomarcadores), sobre 190 muestras de tumores que refieren a 14 clases de cáncer humano. Este problema representa un desafío aún mayor que los anteriores no solo debido a la alta dimensionalidad y bajo número de muestras, sino también por las múltiples clases y el desbalance entre ellas.  
 
@@ -342,7 +342,7 @@ Finalmente, se realizó un experimento con 6000 muestras sintéticas, donde se o
 
 Todo lo anterior sugiere que, si bien la aumentación de datos mediante AVs puede enfrentar desafíos significativos en conjuntos de datos complejos como gcm, es posible mejorar la calidad de los datos sintéticos mediante ajustes en la arquitectura del AV y en la metodología de selección de características. La combinación de AVs y AGs en un flujo de trabajo encadenado demostró ser una estrategia prometedora para mejorar la precisión y la eficiencia en la selección de características.
 
-## All-Leukemia
+## -All Leukemia
 
 Con el fin de validar el tratamiento dado a GCM, particularmente la estrategia de encadenamiento de procesos de *selección-generación-selección*, se decidió aplicar la misma metodología a un nuevo dataset *All-Leukemia*. Este dataset, que contiene 12600 variables (i.e. genes) y 327 muestras, es un caso de estudio clásico en la literatura de clasificación de tumores.
 

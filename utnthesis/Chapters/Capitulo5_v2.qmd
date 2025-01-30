@@ -1,10 +1,8 @@
 # Conclusiones y trabajos futuros {#sec-Capitulo5}
 
-## Próximos Pasos: optimización del modelo y exploración de nuevas arquitecturas 
+A partir de los resultados obtenidos en los experimentos, se torna evidente que la aumentación de datos mediante Autocodificadores Variacionales y su combinación con Algoritmos Genéticos es una estrategia prometedora en la selección de características. Para maximizar el potencial de este enfoque, es posible avanzar en varias direcciones, tanto en términos de optimización de los modelos AV y AVC, como en la integración y encadenamiento de modelos más complejos. En este capítulo, abordaremos los próximos pasos propuestos para continuar mejorando la eficiencia y precisión de los modelos aplicados en escenarios de alta dimensionalidad, escazes muestral y ruido, explorando nuevas arquitecturas y estrategias de integración.
 
-A partir de los resultados obtenidos en los experimentos, se torna evidente que la aumentación de datos mediante Autocodificadores Variacionales y su combinación con Algoritmos Genéticos es una estrategia prometedora en la selección de características. Para maximizar el potencial de este enfoque, es posible avanzar en varias direcciones, tanto en términos de optimización de los modelos AV y AVC, como en la integración y encadenamiento de modelos más complejos. En este capítulo, abordaremos los próximos pasos propuestos para continuar mejorando la eficiencia y precisión de los modelos aplicados en escenarios de alta dimensionalidad y ruido, explorando nuevas arquitecturas y estrategias de integración.
-
-## Optimización del modelo AV
+## Optimización de modelos AV y AVC
 
 Entendemos que uno de los primeros pasos para mejorar la calidad de los datos sintéticos generados pasa por optimizar los modelos AV y AVC. Aunque las versiones creadas en el marco de la presente investigación han mostrado ser efectivas en los contextos de experimentación planteados, como en *Madelon* y en *GCM*, es necesario optimizar su capacidad para capturar mejor las estructuras subyacentes de los datos reales. Para lograr esto, se proponen dos líneas de trabajo:
 
