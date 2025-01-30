@@ -1,0 +1,56 @@
+# Ecuación del Esquema en el contexto de los AGs {#sec-appB}
+
+La Ecuación del Esquema [@goldbergdavide.GeneticAlgorithmsSearch1989] predice el número esperado de copias de un esquema $H$ en la próxima generación $t+1$, dado su número de copias en la generación actual $t$. Se expresa de la siguiente manera:
+
+$m(H, t+1) \geq m(H, t) \cdot \frac{f(H)}{\bar{f}} \cdot \left[ 1 - p_c \frac{\delta(H)}{l-1} \right] \cdot \left(1 - p_m\right)^{o(H)}$
+
+Donde:
+- $m(H, t)$ es el número de copias del esquema $H$ en la generación $t$.
+- $f(H)$ es la aptitud promedio de los individuos que pertenecen al esquema $H$.
+- $\bar{f}$ es la aptitud promedio de la población total.
+- $p_c$ es la probabilidad de cruce.
+- $\delta(H)$ es la longitud de definición del esquema $H$, que es la distancia entre el primer y el último gen fijo en el esquema.
+- $l$ es la longitud del cromosoma.
+- $p_m$ es la tasa de mutación.
+- $o(H)$ es el orden del esquema, es decir, el número de posiciones fijas en el esquema.
+
+Consideremos un ejemplo con los siguientes parámetros:
+
+- Longitud del cromosoma: $l = 6$
+- Esquema $H = 1\ast0\ast1\ast$ (donde $\ast$ puede ser 0 o 1)
+- Población actual tiene 100 individuos.
+- $m(H, t) = 20$ (es decir, 20 individuos coinciden con el esquema $H$).
+- Aptitud promedio de la población $\bar{f} = 15$.
+- Aptitud promedio de los individuos que coinciden con el esquema $H$, $f(H) = 18$.
+- Probabilidad de cruce $p_c = 0.7$.
+- Tasa de mutación $p_m = 0.01$.
+- Longitud de definición del esquema $\delta(H) = 4$ (dado que las posiciones fijas son 1, 3 y 5, la distancia entre las posiciones es 4).
+- Orden del esquema $o(H) = 3$ (el número de posiciones fijas es 3).
+
+Aplicando estos valores a la Ecuación del Esquema:
+
+1. **Factor de Selección**: 
+   
+   $\frac{f(H)}{\bar{f}} = \frac{18}{15} = 1.2$
+
+   Esto indica que los individuos que coinciden con el esquema $H$ tienen una aptitud superior a la media y, por lo tanto, es más probable que sean seleccionados.
+
+2. **Probabilidad de Conservación ante el Cruce**:
+   
+   $1 - p_c \frac{\delta(H)}{l-1} = 1 - 0.7 \cdot \frac{4}{6-1} = 1 - 0.7 \cdot 0.8 = 1 - 0.56 = 0.44$
+
+   Hay un 44% de probabilidad de que el esquema $H$ se conserve tras el cruce.
+
+3. **Probabilidad de Conservación ante la Mutación**:
+   
+   $(1 - p_m)^{o(H)} = (1 - 0.01)^{3} = 0.99^3 \approx 0.9703$
+
+   El esquema $H$ tiene aproximadamente un 97% de probabilidad de no ser destruido por la mutación.
+
+4. **Cálculo Final**:
+   
+   $m(H, t+1) \geq 20 \cdot 1.2 \cdot 0.44 \cdot 0.9703 \approx 20 \cdot 0.5127 = 10.254$
+
+   Por lo tanto, en la próxima generación, se espera que haya al menos 10 copias del esquema $H$ en la población.
+
+Este cálculo muestra cómo el esquema $H$, que tiene una aptitud superior a la media y ciertas características de proximidad posicional (es decir, una longitud de definición baja), es favorecido en la reproducción y es probable que se mantenga en la población. 
