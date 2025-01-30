@@ -2,4 +2,4 @@
 {{< include Chapters/Capitulo2_v2.qmd >}}
 {{< include Chapters/Capitulo3_v2.qmd >}}
 {{< include Chapters/Capitulo4_v2.qmd >}}
-{{< include Chapters/Capitulo5.qmd >}}
+{{< include Chapters/Capitulo5_v2.qmd >}}

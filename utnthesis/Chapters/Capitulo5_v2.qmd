@@ -2,7 +2,7 @@
 
 A partir de los resultados obtenidos en los experimentos, se torna evidente que la aumentación de datos mediante Autocodificadores Variacionales y su combinación con Algoritmos Genéticos es una estrategia prometedora en la selección de características. Para maximizar el potencial de este enfoque, es posible avanzar en varias direcciones, tanto en términos de complejización de los modelos AV y AVC, como en la integración y encadenamiento de modelos más complejos. En este capítulo, abordaremos los próximos pasos necesarios para continuar mejorando la eficiencia y precisión de los modelos aplicados en escenarios de alta dimensionalidad y ruido, explorando nuevas arquitecturas y estrategias de integración.
 
-## 1. Complejización del modelo AV
+## Complejización del modelo AV
 
 Entendemos que uno de los primeros pasos para mejorar la calidad de los datos sintéticos generados es la complejización de los modelos AV y AVC. Aunque las versiones creadas en el marco de la presente investigación han mostrado ser efectivas en los contextos de experimenatión planteados, como en *Madelon* y en *GCM*, es necesario optimizar su capacidad para capturar mejor las estructuras subyacentes de los datos reales. Para lograr esto, se proponen dos líneas de trabajo:
 
@@ -14,7 +14,7 @@ La función de pérdida del AV/AVC desempeña un papel fundamental en la calidad
 
 Otra línea de trabajo posible es la utilización de Autocodificadores Variacionales Jerárquicos (@vahdatNVAEDeepHierarchical2020). Estos modelos permiten la representación de características en múltiples niveles de abstracción, lo que podría ser particularmente útil para capturar relaciones complejas en conjuntos de datos como *GCM*. Al incorporar un nivel adicional de complejidad, los HVAEs podrían generar datos sintéticos que no solo preserven mejor la estructura de los datos originales, sino que también mejoren la capacidad del AG para identificar características relevantes en escenarios de alta dimensionalidad.
 
-## 2. Integración AV-AG optimizada
+## Integración AV-AG optimizada
 
 Aunque los resultados iniciales con la integración AV-AG son alentadores, es posible explorar maneras más eficientes de combinar ambos modelos. El flujo de trabajo encadenado que involucra *selección-generación-selección* mostró ser efectivo en los experimentos con *GCM*, pero podría beneficiarse sustancialmente con ciertos ajustes adicionales en su implementación.
 
@@ -32,7 +32,7 @@ Pero advertimos también que, en el diseño donde el AV genera muestras sintéti
 
 Aunque esta propuesta entaña desafíos inocultables (diseño de una función de pérdida, coordinación entre los procesos de optimización, capacidad computacional, por mencionar algunas), también ofrecería beneficios de gran valor. En particular, podríamos disponer de una mayor sinergia entre generación y selección. Esto se produciría a través de una retroalimentación directa entre los modelos, haciendo que el AV se adapte mejor a las necesidades del AG, generando datos que aborden mejor los desafíos específicos de selección de características en cada problema. Al entrenar el AV para generar datos que optimicen el desempeño del AG, el proceso de búsqueda de características relevantes podría volverse más eficiente. El AG podría explorar de manera más efectiva el espacio de características, identificando subconjuntos más precisos y reduciendo la dimensionalidad sin perder información relevante.
 
-## 3. Exploración de encadenamientos y stacks de modelos
+## Exploración de encadenamientos y stacks de modelos
 
 Los resultados obtenidos sugieren que una única iteración del proceso AV-AG puede no ser suficiente para capturar completamente las relaciones entre características en problemas altamente complejos. En este contexto, la construcción de arquitecturas más complejas mediante el encadenamiento de varios modelos (stacks) o la integración de ensambles, similar a los Bosques Aleatorios, se presenta como una vía interesante de investigación.
 
@@ -40,7 +40,7 @@ Una posibilidad es el diseño de un *stack* de AVs y AGs, donde varias instancia
 
 Al igual que los Bosques Aleatorios combinan múltiples árboles de decisión para mejorar la precisión y la robustez del modelo, se puede explorar la creación de un ensamble de AVs y AGs. Este enfoque involucraría el entrenamiento de múltiples AVs y AGs con diferentes configuraciones y subconjuntos de datos, cuyas salidas se combinarían para producir una solución más robusta. Los ensambles suelen ser efectivos para reducir la varianza de los modelos individuales, lo que podría resultar en una selección de características más estable y en un rendimiento más consistente.
 
-## 4. Exploración de arquitecturas híbridas y meta-aprendizaje
+## Exploración de arquitecturas híbridas y meta-aprendizaje
 
 Por último, se abre la posibilidad de explorar arquitecturas híbridas que combinen AVs y AGs con otros enfoques de aprendizaje automático, como los algoritmos de meta-aprendizaje. Estos modelos podrían ser entrenados para aprender a seleccionar automáticamente los mejores hiperparámetros y configuraciones para cada conjunto de datos, adaptándose dinámicamente a las características específicas del problema.
 
