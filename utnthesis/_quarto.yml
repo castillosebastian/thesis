@@ -3,7 +3,7 @@ project:
   output-dir: output
 book:
   title: Generación de datos sintéticos para selección de características con algoritmos genéticos
-  date: Septiembre, 2024
+  date: Febrero, 2025
   lang: es
   author:
     name: Claudio Sebastian Castillo
