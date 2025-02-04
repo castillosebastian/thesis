@@ -1,12 +1,12 @@
 # Autocodificadores Variacionales y datos sintéticos {#sec-Capitulo3}
 
-En este capítulo presentamos la arquitectura del Autocodificador Variacional (AV) que emplearemos para la generación de datos sintéticos: exponemos brevemente sus fundamentos teóricos, los pasos que hemos seguidos en su implementación y las variaciones introducidas para su apropiada aplicación a los problemas abordados. También presentaremos las métricas que empleamos para evaluar los modelos y configuraciones más relevantes para la generación de datos sintéticos.Finalmente, terminaremos el capítulo comentando los hallazgos más destacados de todo este desarrollo.
+En este capítulo presentamos la arquitectura del Autocodificador Variacional (AV) que emplearemos para la generación de datos sintéticos: exponemos brevemente sus fundamentos teóricos, los pasos que hemos seguido en su implementación y las variaciones introducidas para su apropiada aplicación a los problemas abordados. También presentamos las métricas empleadas para evaluar los modelos y las configuraciones más relevantes para la generación de datos sintéticos. Finalmente, concluimos el capítulo comentando los hallazgos más destacados de todo este desarrollo.
 
 ## Modelos generativos
 
 Los modelos generativos (MG) son un amplio conjunto de algoritmos de aprendizaje automático que buscan modelar la distribución de probabilidad de datos observados $p_\theta(x)$. A diferencia de los modelos discriminantes (MD), cuyo objetivo es aprender un predictor a partir de los datos, en los modelos generativos el objetivo es *resolver un problema más general vinculado con el aprendizaje de la distribución de probabilidad conjunta de todas las variables*. Así, siguiendo a Kingma, podemos decir que *un modelo generativo simula la forma en que los datos son generados en el mundo real* [@kingmaIntroductionVariationalAutoencoders2019]. Dada estas propiedades, estos modelos permiten crear nuevos datos que se asemejan a los originales, y se aplican en tareas de generación de datos sintéticos, imputación de datos faltantes, reducción de dimensionalidad y selección de características, entre otros.
 
-Los modelos generativos pueden tener como *inputs* diferentes tipos de dato, como imágenes, texto, audio, entre otros. Por ejemplo, las imágenes son un tipo de dato para los cuales los MG han demostrado gran efectividad. En este caso, cada dato de entrada $x$ es una imagen que puede estar representada por un vector miles de elementos  que corresponden a los valores de píxeles. El objetivo de un modelo generativo es aprender las dependencias [@doerschTutorialVariationalAutoencoders2021]  entre los píxeles (e.g. pixeles vecinos tienden a tener valores similares) y poder generar nuevas imágenes que se asemejen a las imágenes originales.
+Los modelos generativos pueden tener como *inputs* diferentes tipos de dato, como imágenes, texto, audio, información tabular, etc. Por ejemplo, las imágenes son un tipo de dato para los cuales los MG han demostrado gran efectividad. En este caso, cada dato de entrada $x$ es una imagen que puede estar representada por un vector de miles de elementos  que corresponden a los valores de píxeles. El objetivo de un modelo generativo es aprender las dependencias [@doerschTutorialVariationalAutoencoders2021]  entre los píxeles (e.g. pixeles vecinos tienden a tener valores similares) y poder generar nuevas imágenes que se asemejen a las imágenes originales.
 
 Podemos formalizar esta idea asumiendo que tenemos ejemplos de datos $x$, distribuidos según una distribución de probabilidad conjunta no conocida que queremos modelo $p_\theta(x)$ para que sea capaz de generar datos similares a los originales. 
 
@@ -14,7 +14,7 @@ Podemos formalizar esta idea asumiendo que tenemos ejemplos de datos $x$, distri
 
 Los autocodificadores son un tipo de MG especializado en la representación de un espacio de características dado en un espacio de menor dimensión [@delatorreAutocodificadoresVariacionalesVAE2023].  El objetivo de esta transformación es obtener una representación de baja dimensionalidad y la mayor fidelidad posible del espacio original. Para ello el modelo aprende a preservar la mayor cantidad de información relevante en un vector denso de menos dimensiones que las originales, y descarta -al mismo tiempo- lo irrelevante. Luego, a partir de esa información codificada, se busca reconstruir los datos observados según el espacio original.
 
-Los autocodificadores se componen de dos partes: un *codificador* y un *decodificador*. El *codificador* es una función no lineal que opera sobre una observación o patrón $x_i$ y la transforma en un vector de menor dimensión $z$, mientras que el *decodificador* opera a partir del vector $z$ y lo transforma en una observación $x_i'$ (o patrón reconstruido), buscando que se asemeja a la observación original. Este vector de menor dimensión $z$ es conocido como *espacio latente*.
+Los autocodificadores se componen de dos partes: un *codificador* y un *decodificador*. El *codificador* es una función no lineal que opera sobre una observación o patrón $x_i$ y la transforma en un vector de menor dimensión $z$, mientras que el *decodificador* opera a partir del vector $z$ y lo transforma en una observación $x_i'$ (o patrón reconstruido), buscando que se asemeje a la observación original. Este vector de menor dimensión $z$ es conocido como *espacio latente*.
 
 ![Ejemplo esquemático de un autocodificador](autocodificadores.png)
 
@@ -59,7 +59,7 @@ La red codificadora, también llamada *red de reconocimiento*, mapea los datos d
 
 Una forma de entender esta arquitectura sería relacionar los vectores que componen $z$ como 'referecias', donde el vector de medias controla el *centro* en torno al cual se distribuirán los valores codificados de los datos de entrada, mientras que el vector de los desvíos traza el *área* que pueden asumir dichos valores en torno al *centro*. 
 
-Para indagar en estas intuiciones, veamos la solución que proponen los AV detenidamente, utilizando un enfoque formal. Así, dado un conjunto de datos de entrada $x = \{x_1, x_2, ..., x_N\}$, donde $x_i \in \mathbb{R}^m$, se asume que cada muestra es generada por un mismo proceso o sistema subyacente cuya distribución de probabilidad se desconoce. El modelo buscado procura aprender $p_\theta(x)$, donde $\theta$ son los parámetros de la función. Por las ventajas que ofrece el logaritmo[^ventajaslogaritmo] para el cálculo de la misma tendremos la siguiente expresión: $\log p_\theta(x) = \sum_{x_i \in x} \log p_\theta(x)$[^flogverosimilitud].
+Para indagar en estas intuiciones, veamos la solución que proponen los AV detenidamente, utilizando un enfoque formal. Así, dado un conjunto de datos de entrada $x = \{x_1, x_2, ..., x_N\}$, donde $x_i \in \mathbb{R}^m$, se asume que cada muestra es generada por un mismo proceso o sistema subyacente cuya distribución de probabilidad se desconoce. El modelo buscado procura aprender $p_\theta(x)$, donde $\theta$ son los parámetros de la función. Por las ventajas que ofrece el logaritmo[^ventajaslogaritmo] para el cálculo de las distribuciones de probabilidad tendremos la siguiente expresión: $\log p_\theta(x) = \sum_{x_i \in x} \log p_\theta(x)$[^flogverosimilitud].
 
 [^ventajaslogaritmo]: El logaritmo convierte la probabilidad conjunta (que se calcula como el producto de las probabilidades condicionales) en una suma de logaritmos, facilitando el cálculo y evitando problemas de precisión numérica: $\log(ab) = \log(a)+\log(b)$. 
 
@@ -75,7 +75,7 @@ En el contexto de los AV, el objetivo es modelar la distribución de probabilida
 
 [^apriori]: La expresión *a priori* alude a que no está condicionada por ningun dato observado.
 
-Para determinar la distribución marginal respecto de los datos observados, es preciso integrar sobre todos los elementos de $z$, dando como resultado la siguiente función: > $p_\theta(x) = \int p_\theta(x,z)dz$ [^zdiferenciacion]. 
+Para determinar la distribución marginal respecto de los datos observados, es preciso integrar sobre todos los elementos de $z$, dando como resultado la siguiente función: $p_\theta(x) = \int p_\theta(x,z)dz$ [^zdiferenciacion]. 
 
 [^zdiferenciacion]: Aquí $dz$ es el diferencial de $z$, por lo que la expresión indica la integración sobre todas las posibles configuraciones de la variable latente.
 
@@ -141,33 +141,27 @@ Girin, Dynamical Variational Autocodificadors: A Comprehensive Review
 
 ## Presentación de nuestros modelos de AV y AVC
 
-El desarrollo del modelo de AV empleado en esta investigación se organizó en dos pasos. El primero giró en torno al diseño y validación de la arquitectura del modelo, mientras que el segundo estuvo enfocado en la optimización de dicha arquitectura para la generación de datos sintéticos en cada uno de los conjuntos de datos utilizados. A continuación describiremos brevemente este proceso y la configuración final de los modelos elegidos para los experimentos de aumentación. 
+Luego del análisis precedente exponemos a continuación los modelos de AV y AVC que desarrollamos para la generación de datos sintéticos. El desarrollo de dichos modelos se cumplió en dos etapas: en la primera se centró el esfuerzo en el diseño y validación de las arquitecturas más apropiadas para los problemas abordados, mientras que en la segunda se enfocó en su optimización para la generación. A continuación describiremos brevemente este proceso y la configuración final de los modelos elegidos para los experimentos de aumentación. 
 
-### Primera versión de modelos
-
-En la primera etapa, se centró el esfuerzo en el diseño de la arquitectura del AV. Este proceso comenzó con la creación de una versión exploratoria del modelo, cuya finalidad era establecer una base sobre la cual iterar en mejoras sucesivas. Se optó por una red con 2 capas en el codificador y en el decodificador, siguiendo la estructura básica descripta precedentemente. 
+La primera etapa comenzó con la creación de una versión exploratoria de los modelos AV y AVC, con la finalidad de establecer una base sobre la cual iterar en mejoras sucesivas. Se optó por redes de 2 capas en el codificador y en el decodificador en ambos casos, siguiendo la estructura descripta precedentemente. 
 
 El codificador incluyó dos capas lineales, cada una seguida de una activación ReLU, un diseño que sigue la lógica de la transformación no lineal en un espacio de menor dimensión para luego reconstruir la observación original a partir del espacio latente. Como se discutió en la primera parte, el codificador genera dos vectores, uno para la media y otro para la varianza logarítmica de la distribución latente, componentes críticos para el proceso de reparametrización que permite al modelo generar nuevas muestras en el espacio latente. El decodificador, encargado de reconstruir los datos originales a partir del espacio latente, fue diseñado con una estructura simétrica a la del codificador, utilizando nuevamente activaciones ReLU.
 
-La función de pérdida del modelo combinó la divergencia Kullback-Leibler (KLD) y error cuadrático medio (MSE). La KLD se utilizó para medir la diferencia entre la distribución aprendida por el modelo y una distribución normal estándar, mientras que el error cuadrático medio se empleó para evaluar el error de reconstrucción, es decir, qué tan bien el modelo era capaz de replicar los datos de entrada a partir del espacio latente. 
+La función de pérdida de ambos modelos combinó la *divergencia Kullback-Leibler* (KLD) y el *error cuadrático medio* (MSE). La KLD se utilizó para medir la diferencia entre la distribución aprendida por el modelo y una distribución normal estándar. El MSE y MSE balanceado para los problemas multiclases se emplearon para evaluar el error de reconstrucción, es decir, qué tan bien el modelo era capaz de replicar los datos de entrada a partir del espacio latente. 
 
-Este modelo se probó en la generación de datos sintéticos en un dataset de clases binarias: Madelon, y un dataset multiclases: GCM. Para evaluar los datos generados se realizaron experimentos de clasificación utilizando un Perceptron Multicapa (MLP), comparando los resultados obtenidos en el dataset original y en el dataset con muestras sintéticas. Esta evaluación se realizó sobre los datos de testeo.  
+Cabe acalarar que, en escenarios orientados a la generación, consideramos particularmente apropiado emplear MSE para la función de reconstrucción, ya que permite aproximar cada dimensión de la muestra de manera continua. Métricas orientadas a la clasificación, como por ejemplo la entropía cruzada, penalizan con fuerza cuando la clase verdadera difiere de la predicha, mientras que la MSE interpreta la diferencia entre la muestra real y la reconstruida como una distancia. Entendemos que esta característica beneficia el proceso de entrenamiento porque se ajusta a la naturaleza continua de los datos generados y mantiene una penalización homogénea en cada dimensión.
 
-Inicialmente, la arquitectura empleada resultó insuficiente para capturar la complejidad de los datos, fundamentalmente en los datasets multiclases, lo que llevó a un modelo incapaz de representar con precisión las características latentes, produciendo datos sintéticos de baja calidad.  
+Los modelos resultantes se probaron en la generación de datos sintéticos en un dataset de clases binarias: Madelon, y un dataset multiclases: GCM. Para evaluar los datos generados se realizaron experimentos de clasificación utilizando un Perceptron Multicapa (MLP), comparando los resultados obtenidos en el dataset original y en el dataset con muestras sintéticas. Los resultados de esta evaluación fueron satisfactorios, logrando una versión inicial de los modelos AV y AVC que permitían generar datos sintéticos. Sin perjuicio de ello, considerando el bajo desempeño del MLP sobre los datos sintéticos en comparación con el MLP sobre los datos originales, quedó en evidencia la baja calidad de reconstrucción que tenían ambos modelos. Circunstancia que nos llevó a buscar una arquitectura más adecuada.
 
-[grafico de resultados iniciales]
+Así, en respuesta a los problemas identificados previamente, se exploraron diferentes configuraciones de arquitectura para el AV y el AVC, determinándose que una configuración con tres capas lineales en el codificador y el decodificador, cada una con activaciones ReLU seguidas de normalización por lotes, brindaba los mejores resultados. 
 
-### Segunda versión de modelos
+La técnica de normalización por lotes fue seleccionada debido a su capacidad para estabilizar y acelerar el proceso de entrenamiento, promoviendo la rápida convergencia y mejorando la precisión de la reconstrucción. Al mitigar el problema de desplazamiento de covariables (*covariate shift*) durante el entrenamiento, la normalización por lotes estabiliza  las activaciones intermedias de la red y permite que la información relevante sea conservada a lo largo de las capas. 
 
-En respuesta a los problemas identificados previamente, se exploraron diferentes configuraciones de arquitectura para el AV y el AVC (nos referimos a esto en la sección de experimentos).  Se encontró que una arquitectura de tres capas lineales en el codificador y el decodificador, cada una con activaciones ReLU seguidas de normalización por lotes, brindó los mejores resultados. 
+Dado que los modelos fueron ajustados para capturar la estructura de los datos a través de capas lineales y normalización por lotes, mantuvimos la elección de ReLU como función de activación dada su eficiencia computacional.
 
-Esta técnica de normalización fue seleccionada debido a su capacidad para estabilizar y acelerar el proceso de entrenamiento, promoviendo la rápida convergencia y mejorando la precisión de la reconstrucción. Al mitigar el problema de desplazamiento de covariables (*covariate shift*) durante el entrenamiento, la normalización por lotes estabiliza  las activaciones intermedias de la red y permite que la información relevante sea conservada a lo largo de las capas. 
+Los modelos resultantes fueron entrenados con un optimizador Adam y una tasa de aprendizaje en el rango de [1e-5, 1e-3]. Se experimentó con diferentes tamaños del espacio latente, evaluando el equilibrio entre la calidad de reconstrucción y la capacidad de generalización del modelo. Se empleó un término de paciencia para detener el entrenamiento si no se observaba mejora en los datos de validación durante 10 épocas consecutivas. 
 
-Dado que el modelo fue ajustado para capturar la estructura de los datos a través de capas lineales y normalización por lotes, mantuvimos la elección de ReLU como función de activación dada su eficiencia computacional.
-
-El modelo resultante fue entrenado con un optimizador Adam y una tasa de aprendizaje en el rango de [1e-5, 1e-3]. Se experimentó con diferentes tamaños del espacio latente, evaluando el equilibrio entre la calidad de reconstrucción y la capacidad de generalización del modelo. Se empleó un término de paciencia para detener el entrenamiento si no se observaba mejora en los datos de test durante 10 épocas consecutivas. 
-
-Estos experimentos fueron clave para ajustar el AV a las necesidades específicas de los conjuntos de datos utilizados en la investigación, permitiendo una generación de datos sintéticos que no solo replicara los patrones de los datos originales, sino que también capturara la variabilidad inherente a estos.
+Estos experimentos fueron clave para ajustar los modelos generativos a las necesidades específicas de los conjuntos de datos utilizados en la investigación, permitiendo una generación de datos sintéticos que no solo replicara los patrones de los datos originales, sino que también capturara la variabilidad inherente a estos. Las arquitecturas finales de los modelos se detallan a continuación.
 
 **Arquitectura del Autocodificador Variacional**
 
@@ -213,7 +207,7 @@ Finalmente, la salida $\hat{x}$ es una aproximación reconstruida de la entrada 
 
 ### Modelo AVC para datos multiclase
 
-Para abordar el dataset GCM, que contiene 14 clases con distribuciones desiguales, se creó un AV Condicional (AVC) que combina la capacidad de generación de un AV tradicional con el condicionamiento explícito en las etiquetas de clase. El AVC propuesto permitió una modelización más precisa de los datos, al incorporar información de clase en el proceso de codificación y decodificación.
+Para abordar los dataset GCM y All Leukemia, que contiene multiples clases con distribuciones desiguales, se creó un AV Condicional (AVC) que combina la capacidad de generación de un AV tradicional con el condicionamiento explícito en las etiquetas de clase. El AVC propuesto permitió una modelización más precisa de los datos, al incorporar información de clase en el proceso de codificación y decodificación.
 
 En escenarios donde los datasets están desbalanceados, los modelos generativos pueden tender a favorecer las clases mayoritarias, ignorando las minoritarias. Para abordar el desbalance de clases que presenta GCM, se implementó una estrategia de ponderación de clases dentro de la función de pérdida, penalizando de manera diferenciada los errores de reconstrucción en función de la clase, buscando mejorar así la capacidad del modelo para representar adecuadamente las clases minoritarias.
 
@@ -243,7 +237,7 @@ Al igual que en el AVC, se generan los vectores latentes $\mu$ y $\log(\sigma^2)
 
 El vector latente $z$ se obtiene mediante la técnica de reparametrización, similar al AV tradicional:
 
-$z = \mu + \sigma \times \epsilon$
+$z = \mu + \sigma \times \epsilon$,
 
 donde $\epsilon$ es una variable aleatoria con distribución normal estándar, y $\sigma$ se calcula a partir de $\log(\sigma^2)$.
 
@@ -251,11 +245,11 @@ donde $\epsilon$ es una variable aleatoria con distribución normal estándar, y
 
 El decodificador del AVC reconstruye el vector de entrada a partir del vector latente $z$ y las etiquetas $y$, utilizando una arquitectura de tres capas lineales, cada una seguida por una normalización por lotes y una activación ReLU:
 
-$h_4 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_4}[z, y] + b_4))$       
-$h_5 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_5}h_4 + b_5))$     
-$\hat{x} = \text{BatchNorm}(\mathbf{W_6}h_5 + b_6)$         
+$h_4 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_4}[z, y] + b_4)),$       
+$h_5 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_5}h_4 + b_5)),$     
+$\hat{x} = \text{BatchNorm}(\mathbf{W_6}h_5 + b_6),$         
 
-Donde:
+donde:
 
 - $[z, y]$ es la concatenación del vector latente $z$ con las etiquetas $y$.
 - $\mathbf{W_4}$ transforma el vector combinado $[z, y]$ al espacio de características de dimensión $|h_4| + \text{labels\_length}$.

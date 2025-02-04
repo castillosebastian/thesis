@@ -1,6 +1,6 @@
 # El problema de la selección de características {#sec-Capitulo1}
 
-En el presente capítulo abordamos el problema de la selección de características, su importancia y desafíos. En ese marco, repasaremos ciertas dificultades asociadas a los datos, como por ejemplo la alta dimensionalidad y el desbalance de clases, y veremos cómo ellas impactan en la selección de características. Luego describiremos brevemente distintos enfoques para la selección de características, como así también ventajas y desventajas de cada uno. Finalmente, vincularemos la selección de características con el aporte fundamental de nuestro trabajo asociado a la generación sintética de datos. 
+En el presente capítulo abordamos el problema de la selección de características, su importancia y desafíos. En ese marco, repasamos ciertas dificultades asociadas a los datos, como por ejemplo la alta dimensionalidad y el desbalance de clases, y veremos cómo ellas impactan en la selección de características. Luego describimos brevemente distintos enfoques para la selección de características, como así también ventajas y desventajas de cada uno. Finalmente, vinculamos la selección de características con el aporte fundamental de nuestro trabajo asociado a la generación sintética de datos. 
 
 ## Estrés, ignorancia y selección de características
 
