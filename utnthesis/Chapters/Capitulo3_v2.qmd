@@ -167,15 +167,15 @@ Estos experimentos fueron clave para ajustar los modelos generativos a las neces
 
 La arquitectura del AV está compuesta por tres capas lineales, cada una seguida de una normalización por lotes (Batch Normalization) y una activación ReLU. El proceso de codificación se realiza de la siguiente manera:
 
-$h_1 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_1}x + b_1))$    
-$h_2 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_2}h_1 + b_2))$     
-$h_3 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_3}h_2 + b_3))$     
+$h_1 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_1}x + b_1)),$    
+$h_2 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_2}h_1 + b_2)),$     
+$h_3 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_3}h_2 + b_3)),$     
 
-Donde:
+donde:
 
 - $\mathbf{W_1}$ es una matriz de pesos que transforma el vector de entrada $x$ al espacio de características de dimensión $|h_1|$.   
 - $\mathbf{W_2}$ transforma $h_1$ a un espacio de características de dimensión $|h_2|$.   
-- $\mathbf{W_3}$ mantiene la dimensión $|h_2|$ mientras transforma $h_3$.    
+- $\mathbf{W_3}$ transforma $h_2$ a un espacio de características de dimensión $|h_3|$.    
 - $b_1$, $b_2$, y $b_3$ son los sesgos correspondientes a cada capa.
 
 Después de las tres capas, se generan los vectores latentes $\mu$ y $\log(\sigma^2)$ mediante dos capas lineales independientes que también aplican normalización por lotes.
@@ -228,7 +228,7 @@ donde:
 - $[x, y]$ es la concatenación del vector de entrada $x$ con las etiquetas $y$.
 - $\mathbf{W_1}$ es una matriz de pesos que transforma el vector combinado $[x, y]$ al espacio de características de dimensión $|h_1|$.
 - $\mathbf{W_2}$ transforma $h_1$ a un espacio de características de dimensión $|h_2|$.
-- $\mathbf{W_3}$ mantiene la dimensión $|h_2|$ mientras transforma $h_3$.  
+- $\mathbf{W_3}$ transforma $h_2$ a un espacio de características de dimensión $|h_3|$.  
 - $b_1$, $b_2$, y $b_3$ son los sesgos correspondientes a cada capa.
 
 Al igual que en el AVC, se generan los vectores latentes $\mu$ y $\log(\sigma^2)$ mediante dos capas lineales independientes.
@@ -252,7 +252,7 @@ $\hat{x} = \text{BatchNorm}(\mathbf{W_6}h_5 + b_6),$
 donde:
 
 - $[z, y]$ es la concatenación del vector latente $z$ con las etiquetas $y$.
-- $\mathbf{W_4}$ transforma el vector combinado $[z, y]$ al espacio de características de dimensión $|h_4| + \text{labels\_length}$.
+- $\mathbf{W_4}$ transforma el vector combinado $[z, y]$ al espacio de características de dimensión $|h_4|$ + longitud de las categorías.
 - $\mathbf{W_5}$ transforma $h_4$ al espacio de características de dimensión $|h_5|$.
 - $\mathbf{W_6}$ transforma $h_5$ de regreso al espacio de la dimensión original de la entrada $|D_{in}|$.  
 - $b_4$, $b_5$, y $b_6$ son los sesgos correspondientes a cada capa.
