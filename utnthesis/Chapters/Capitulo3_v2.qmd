@@ -4,15 +4,15 @@ En este capítulo presentamos la arquitectura del Autocodificador Variacional (A
 
 ## Modelos generativos
 
-Los modelos generativos (MG) son un amplio conjunto de algoritmos de aprendizaje automático que buscan modelar la distribución de probabilidad de datos observados $p_\theta(x)$. A diferencia de los modelos discriminantes (MD), cuyo objetivo es aprender un predictor a partir de los datos, en los modelos generativos el objetivo es *resolver un problema más general vinculado con el aprendizaje de la distribución de probabilidad conjunta de todas las variables*. Así, siguiendo a Kingma, podemos decir que *un modelo generativo simula la forma en que los datos son generados en el mundo real* [@kingmaIntroductionVariationalAutoencoders2019]. Dada estas propiedades, estos modelos permiten crear nuevos datos que se asemejan a los originales, y se aplican en tareas de generación de datos sintéticos, imputación de datos faltantes, reducción de dimensionalidad y selección de características, entre otros.
+Los modelos generativos (MG) son un amplio conjunto de algoritmos de aprendizaje automático que buscan modelar la distribución de probabilidad de un conjunto de datos $p_\theta(x)$. A diferencia de los modelos discriminantes (MD), cuyo objetivo es aprender un predictor a partir de los datos, en los modelos generativos el objetivo es *resolver un problema más general vinculado con el aprendizaje de la distribución de probabilidad conjunta de todas las variables*. Así, siguiendo a Kingma, podemos decir que *un modelo generativo simula la forma en que los datos son generados en el mundo real* [@kingmaIntroductionVariationalAutoencoders2019]. Dada estas propiedades, estos modelos permiten crear nuevos datos que se asemejan a los originales, y se aplican en tareas de generación de datos sintéticos, imputación de datos faltantes, reducción de dimensionalidad y selección de características, entre otros.
 
-Los modelos generativos pueden tener como *inputs* diferentes tipos de dato, como imágenes, texto, audio, información tabular, etc. Por ejemplo, las imágenes son un tipo de dato para los cuales los MG han demostrado gran efectividad. En este caso, cada dato de entrada $x$ es una imagen que puede estar representada por un vector de miles de elementos  que corresponden a los valores de píxeles. El objetivo de un modelo generativo es aprender las dependencias [@doerschTutorialVariationalAutoencoders2021]  entre los píxeles (e.g. pixeles vecinos tienden a tener valores similares) y poder generar nuevas imágenes que se asemejen a las imágenes originales.
+Los modelos generativos pueden tener como *inputs* diferentes tipos de datos, como imágenes, textos, audios, información tabular, etc. Por ejemplo, las imágenes son un tipo de dato para los cuales los MG han demostrado gran efectividad. En este caso, cada dato de entrada $x$ es una imagen que puede estar representada por un vector de miles de elementos  que corresponden a los valores de píxeles. El objetivo de un modelo generativo es aprender las dependencias [@doerschTutorialVariationalAutoencoders2021]  entre los píxeles (e.g. pixeles vecinos tienden a tener valores similares) y poder generar nuevas imágenes que se asemejen a las imágenes originales.
 
-Podemos formalizar esta idea asumiendo que tenemos ejemplos de datos $x$, distribuidos según una distribución de probabilidad conjunta no conocida que queremos modelo $p_\theta(x)$ para que sea capaz de generar datos similares a los originales. 
+Podemos formalizar esta idea asumiendo que tenemos ejemplos de datos $x$, distribuidos según una distribución de probabilidad conjunta no conocida que queremos modelar con $p_\theta(x)$ para que sea capaz de generar datos similares a los originales. 
 
 ## Autocodificadores
 
-Los autocodificadores son un tipo de MG especializado en la representación de un espacio de características dado en un espacio de menor dimensión [@delatorreAutocodificadoresVariacionalesVAE2023].  El objetivo de esta transformación es obtener una representación de baja dimensionalidad y la mayor fidelidad posible del espacio original. Para ello el modelo aprende a preservar la mayor cantidad de información relevante en un vector denso de menos dimensiones que las originales, y descarta -al mismo tiempo- lo irrelevante. Luego, a partir de esa información codificada, se busca reconstruir los datos observados según el espacio original.
+Los autocodificadores son un tipo de MG especializado en representar un espacio de características dado en un espacio de menor dimensión [@delatorreAutocodificadoresVariacionalesVAE2023].  El objetivo de esta transformación es obtener una representación de baja dimensionalidad que preserve con la mayor fidelidad posible las propiedades del espacio original. Para ello el modelo aprende a preservar la mayor cantidad de información relevante en un vector denso de menos dimensiones que las originales, y descarta -al mismo tiempo- lo irrelevante. Luego, a partir de esa información codificada, se busca reconstruir los datos observados según el espacio original.
 
 Los autocodificadores se componen de dos partes: un *codificador* y un *decodificador*. El *codificador* es una función no lineal que opera sobre una observación o patrón $x_i$ y la transforma en un vector de menor dimensión $z$, mientras que el *decodificador* opera a partir del vector $z$ y lo transforma en una observación $x_i'$ (o patrón reconstruido), buscando que se asemeje a la observación original. Este vector de menor dimensión $z$ es conocido como *espacio latente*.
 
@@ -26,13 +26,15 @@ Formalmente, podemos establecer estas definiciones [@delatorreAutocodificadoresV
 
 - Sea $x$ el espacio de características de los datos de entrada y $z$ el espacio latente, ambos espacios son euclidianos, $x = \mathbb{R}^m$ y $z = \mathbb{R}^n$, donde $m > n$.
 - Sea las siguientes funciones paramétricas $C_\theta: x \rightarrow z$ y $D_\phi: z \rightarrow x'$ que representan el codificador y decodificador respectivamente.
-- Entonces para cada observación $x_i \in x$, el autocodificador busca minimizar la función de pérdida $L(x_i, D_\phi(E_\theta(x_i)))$. Ambas funciones $E_\theta$ y $D_\phi$ son redes neuronales profundas que se entrenan simultáneamente.
+- Entonces para cada observación $x_i \in x$, el autocodificador busca minimizar la función de pérdida $L(x_i, D_\phi(E_\theta(x_i)))$. Ambas funciones $E_\theta$ y $D_\phi$ son redes neuronales que se entrenan simultáneamente.
 
 Para optimizar un autocodificador se requiere una función que permita medir la diferencia entre la observación original y la reconstrucción. Esta diferencia usualmente se basa en la *distancia euclidia* entre $x_i$ y $x_i'$, es decir, $||x_i - x_i'||^2$. La función de pérdida se define como la suma de todas las distancias a lo largo del conjunto de datos de entrenamiento. Tenemos entonces que: 
 
-> $L(\theta, \phi)$ =  $argmin_{\theta, \phi} \sum_{i=1}^{N} ||x_i - D_\phi(C_\theta(x_i))||^2$
+\begin{equation}\label{eq:autocodificador_perdida}
+L(\theta, \phi) =  argmin_{\theta, \phi} \sum_{i=1}^{N} ||x_i - D_\phi(C_\theta(x_i))||^2, 
+\end{equation}
 
-Donde $L(\theta, \phi)$ representa la función de pérdida que queremos minimizar: $\theta$ son los parámetros del codificador $C$ y $\phi$ son los parámetros del decodificados $D$.
+donde $L(\theta, \phi)$ representa la función de pérdida que queremos minimizar: $\theta$ son los parámetros del codificador $C$ y $\phi$ son los parámetros del decodificados $D$.
 
 ## Autocodificadores y el problema de la generación de datos
 
@@ -40,7 +42,9 @@ En el proceso de aprendizaje antes descripto, la optimización no está sujeta a
 
 Esta discontinuidad en el espacio latente hace posible que ciertas regiones de este espacio no tengan  relación significativa con el espacio de características. Durante el entrenamiento el modelo simplemente no ha tenido que reconstruir datos cuyas distribuciones coincidan con estas regiones. Esto es un problema en la generación de datos, ya que la red podrá generar representaciones alejadas de los datos originales. Regularmente lo que se busca en los MG, no es simplemente una generación de datos completemante igual o totalmente distintos a los orginales, sino cierta situación intermedia donde los nuevos datos introducen variaciones en características específicas. 
 
-![Discontinuidad del espacio latente](espacio_latente_discontinuo.png)
+![Discontinuidad del espacio latente](espacio_latente_discontinuo.png){#fig-espacio-latente-discontinuo}
+
+Un MG está conformado por dos componentes principales, un codificador y un decodificador, tal como se ilustra en la figura [-@fig-espacio-latente-discontinuo]. El vector de entrada continuo se somete a una transformación no lineal en el codificador, obteniendo así la representación latente en un espacio de menor dimensión. Esta transformación comprime la información original para capturar sus características más relevantes, mientras que el decodificador se encarga de proyectar la representación resultante de nuevo al espacio de características, generando una salida que se aproxima a la muestra inicial. Sin embargo, ciertas regiones de dicho espacio pueden quedar sin representar, y al muestrear en esas zonas, el modelo puede producir instancias muy alejadas de las distribuciones originales, como figuras que no 'encajan' entre aquellas que aparecen en el espacio de características. Este fenómeno está directamente relacionado con la discontinuidad del espacio latente, y pone de manifiesto la necesidad de enfoques que incorporen regularizaciones o mecanismos adicionales para lograr una generación más coherente.
 
 ## Autocodificadores Variacionales
 
@@ -133,7 +137,7 @@ El objetivo de aprendizaje del AV se da entonces por:
 
 Como puede apreciearse en la ecuación anterior la función de pérdida del AV se compone de dos términos: el primero es la esperanza de la log-verosimilitud bajo la aproximación variacional y el segundo es la divergencia de Kullback-Leibler relacionada a la reconstrucción de los datos y la regularización del espacio latente. Existe entre ambos términos una relación de compromiso que permite al AV aprender una representación adecuada de los datos de entrada y, al mismo tiempo, un espacio latente continuo y regularizado. 
 
-En términos prácticos, la divergencia de Kullback-Leibler puede interpretarse como un factor que equilibra creatividad y precisión en el modelo. Por un lado, cuando esta divergencia es grande (KL >> 1), el espacio latente tiende a estar más regularizado y la distribución de probabilidad de los datos generados se vuelve más “suave”, pero el modelo puede terminar sobreajustándose a las muestras originales y perder capacidad de generalización. Por otro lado, si la divergencia es muy pequeña (KL << 1), el espacio latente queda menos regularizado y el modelo intenta reproducir con mayor fidelidad la distribución real de los datos de entrada, aunque a costa de generar muestras más ruidosas y posiblemente descuidar detalles esenciales. De esta manera, la elección del valor de KL refleja el compromiso entre capturar información detallada de los datos y mantener una representación latente estable y bien estructurada para la generación.
+En términos prácticos, la divergencia de Kullback-Leibler puede interpretarse como un factor que equilibra creatividad y precisión en el modelo. Por un lado, cuando esta divergencia es grande (KL >> 1), el espacio latente tiende a estar más regularizado y la distribución de probabilidad de los datos generados se vuelve más "suave", pero el modelo puede terminar sobreajustándose a las muestras originales y perder capacidad de generalización. Por otro lado, si la divergencia es muy pequeña (KL << 1), el espacio latente queda menos regularizado y el modelo intenta reproducir con mayor fidelidad la distribución real de los datos de entrada, aunque a costa de generar muestras más ruidosas y posiblemente descuidar detalles esenciales. De esta manera, la elección del valor de KL refleja el compromiso entre capturar información detallada de los datos y mantener una representación latente estable y bien estructurada para la generación.
 
 <!---
 Girin, Dynamical Variational Autocodificadors: A Comprehensive Review
@@ -352,7 +356,7 @@ El conjunto de datos   Madelon   presenta un caso donde el MLP entrenado con dat
 |   Promedio Macro             |       | 0.96      | 0.96   | 0.96     | 1800    |
 |   Promedio Ponderado         |       | 0.96      | 0.96   | 0.96     | 1800    |
 
-En el conjunto de datos   Gisette  , se observa que el modelo entrenado con datos reales supera al modelo entrenado con datos sintéticos. El MLP con datos reales alcanza una exactitud del **97%**, mientras que el modelo con datos sintéticos logra un **95%**. Sin perjuicio de ello, el modelo entrenado con datos sintéticos logró una buena performance en la mayoría de las métricas evaluadas. 
+En el conjunto de datos   Gisette  , se observa que el modelo entrenado con datos reales supera al modelo entrenado con datos sintéticos. El MLP con datos reales alcanza una exactitud del **97%**, mientras que el modelo con datos sintéticos logró una buena performance en la mayoría de las métricas evaluadas. 
 
 #### GCM
 
