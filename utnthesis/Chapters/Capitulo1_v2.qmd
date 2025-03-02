@@ -30,7 +30,7 @@ En efecto, en el contexto del aprendizaje automático es común enfrentar proble
 
 Dicho lo anterior, es preciso reconocer que la abundancia de información trae consigo una serie de desafíos que impactan en la selección de características. En el siguiente apartado describiremos aquellos más relevantes para nuestro estudio.
 
-## Las multiples cara de los datos problemáticos
+## Las múltiples caras de los datos problemáticos
 
 ### Alta dimensionalidad y escasez muestral
 
