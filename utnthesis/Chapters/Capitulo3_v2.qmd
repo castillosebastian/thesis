@@ -14,13 +14,13 @@ Podemos formalizar esta idea asumiendo que tenemos ejemplos de datos $x$, distri
 
 Los autocodificadores son un tipo de MG especializado en representar un espacio de características dado en un espacio de menor dimensión [@delatorreAutocodificadoresVariacionalesVAE2023].  El objetivo de esta transformación es obtener una representación de baja dimensionalidad que preserve con la mayor fidelidad posible las propiedades del espacio original. Para ello el modelo aprende a preservar la mayor cantidad de información relevante en un vector denso de menos dimensiones que las originales, y descarta -al mismo tiempo- lo irrelevante. Luego, a partir de esa información codificada, se busca reconstruir los datos observados según el espacio original.
 
-Los autocodificadores se componen de dos partes: un *codificador* y un *decodificador*. El *codificador* es una función no lineal que opera sobre una observación o patrón $x_i$ y la transforma en un vector de menor dimensión $z$, mientras que el *decodificador* opera a partir del vector $z$ y lo transforma en una observación $x_i'$ (o patrón reconstruido), buscando que se asemeje a la observación original. Este vector de menor dimensión $z$ es conocido como *espacio latente*.
+Los autocodificadores se componen de dos partes: un *codificador* y un *decodificador*. El *codificador* es una función no lineal que opera sobre una observación o patrón $x_i$ y la transforma en un vector de menor dimensión $z$, mientras que el *decodificador* opera a partir del vector $z$ y lo transforma en una observación $\hat{x_i}$ (o patrón reconstruido), buscando que se asemeje a la observación original. Este vector de menor dimensión $z$ es conocido como *espacio latente*.
 
 ![Ejemplo esquemático de un autocodificador](autocodificadores.png)
 
 El esquema anterior muestra un autocodificador que transforma un patrón $x$ en un vector denso $z$, con dimensiones menores a las originales. Este vector es usado luego por el decodificador para reconstruir el patrón original, dando lugar a un patrón reconstruido $x'$.
 
-En el proceso de aprendizaje de un autocodificador, la red modela la distribución de probabilidad de los datos de entrada $x$ y aprende a mapearlos a un espacio latente $z$. Para ello, se busca minimizar la diferencia entre la observación original $x_i$ y la reconstrucción $x_i'$, diferencia que se denomina *error de reconstrucción*. Esta optimización se realiza a través de una *función de pérdida* que se define como la diferencia entre $x_i$ y $x_i'$, que permite la optimización simultánea del codificador y decodificador.
+En el proceso de aprendizaje de un autocodificador, la red modela la distribución de probabilidad de los datos de entrada $x$ y aprende a mapearlos a un espacio latente $z$. Para ello, se busca minimizar la diferencia entre la observación original $x_i$ y la reconstrucción $\hat{x_i}$, diferencia que se denomina *error de reconstrucción*. Esta optimización se realiza a través de una *función de pérdida* que se define como la diferencia entre $x_i$ y $\hat{x_i}$, que permite la optimización simultánea del codificador y decodificador.
 
 Formalmente, podemos establecer estas definiciones [@delatorreAutocodificadoresVariacionalesVAE2023]: 
 
@@ -28,7 +28,7 @@ Formalmente, podemos establecer estas definiciones [@delatorreAutocodificadoresV
 - Sea las siguientes funciones paramétricas $C_\theta: x \rightarrow z$ y $D_\phi: z \rightarrow x'$ que representan el codificador y decodificador respectivamente.
 - Entonces para cada observación $x_i \in x$, el autocodificador busca minimizar la función de pérdida $L(x_i, D_\phi(E_\theta(x_i)))$. Ambas funciones $E_\theta$ y $D_\phi$ son redes neuronales que se entrenan simultáneamente.
 
-Para optimizar un autocodificador se requiere una función que permita medir la diferencia entre la observación original y la reconstrucción. Esta diferencia usualmente se basa en la *distancia euclidia* entre $x_i$ y $x_i'$, es decir, $||x_i - x_i'||^2$. La función de pérdida se define como la suma de todas las distancias a lo largo del conjunto de datos de entrenamiento. Tenemos entonces que: 
+Para optimizar un autocodificador se requiere una función que permita medir la diferencia entre la observación original y la reconstrucción. Esta diferencia usualmente se basa en la *distancia euclidia* entre $x_i$ y $\hat{x_i}$, es decir, $||x_i - x_i'||^2$. La función de pérdida se define como la suma de todas las distancias a lo largo del conjunto de datos de entrenamiento. Tenemos entonces que: 
 
 \begin{equation}\label{eq:autocodificador_perdida}
 L(\theta, \phi) =  argmin_{\theta, \phi} \sum_{i=1}^{N} ||x_i - D_\phi(C_\theta(x_i))||^2, 
@@ -63,7 +63,7 @@ La red codificadora, también llamada *red de reconocimiento*, mapea los datos d
 
 Una forma de entender esta arquitectura sería relacionar los vectores que componen $z$ como 'referecias', donde el vector de medias controla el *centro* en torno al cual se distribuirán los valores codificados de los datos de entrada, mientras que el vector de los desvíos traza el *área* que pueden asumir dichos valores en torno al *centro*. 
 
-Para indagar en estas intuiciones, veamos la solución que proponen los AV detenidamente, utilizando un enfoque formal. Así, dado un conjunto de datos de entrada $x = \{x_1, x_2, ..., x_N\}$, donde $x_i \in \mathbb{R}^m$, se asume que cada muestra es generada por un mismo proceso o sistema subyacente cuya distribución de probabilidad se desconoce. El modelo buscado procura aprender $p_\theta(x)$, donde $\theta$ son los parámetros de la función. Por las ventajas que ofrece el logaritmo[^ventajaslogaritmo] para el cálculo de las distribuciones de probabilidad tendremos la siguiente expresión: $\log p_\theta(x) = \sum_{x_i \in x} \log p_\theta(x)$[^flogverosimilitud].
+Para indagar en estas intuiciones, veamos la solución que proponen los AV detenidamente, utilizando un enfoque formal. Así, dado un conjunto de datos de entrada $\mathbf{X} = \{x_1, x_2, ..., x_N\}$, donde $x_i \in \mathbb{R}^m$, se asume que cada muestra es generada por un mismo proceso o sistema subyacente cuya distribución de probabilidad se desconoce. El modelo buscado procura aprender $p_\theta(x)$, donde $\theta$ son los parámetros de la función. Por las ventajas que ofrece el logaritmo[^ventajaslogaritmo] para el cálculo de las distribuciones de probabilidad tendremos la siguiente expresión: $\log p_\theta(x) = \sum_{x_i \in x} \log p_\theta(x_i)$.[^flogverosimilitud]
 
 [^ventajaslogaritmo]: El logaritmo convierte la probabilidad conjunta (que se calcula como el producto de las probabilidades condicionales) en una suma de logaritmos, facilitando el cálculo y evitando problemas de precisión numérica: $\log(ab) = \log(a)+\log(b)$. 
 
@@ -137,7 +137,7 @@ El objetivo de aprendizaje del AV se da entonces por:
 
 Como puede apreciearse en la ecuación anterior la función de pérdida del AV se compone de dos términos: el primero es la esperanza de la log-verosimilitud bajo la aproximación variacional y el segundo es la divergencia de Kullback-Leibler relacionada a la reconstrucción de los datos y la regularización del espacio latente. Existe entre ambos términos una relación de compromiso que permite al AV aprender una representación adecuada de los datos de entrada y, al mismo tiempo, un espacio latente continuo y regularizado. 
 
-En términos prácticos, la divergencia de Kullback-Leibler puede interpretarse como un factor que equilibra creatividad y precisión en el modelo. Por un lado, cuando esta divergencia es grande (KL >> 1), el espacio latente tiende a estar más regularizado y la distribución de probabilidad de los datos generados se vuelve más "suave", pero el modelo puede terminar sobreajustándose a las muestras originales y perder capacidad de generalización. Por otro lado, si la divergencia es muy pequeña (KL << 1), el espacio latente queda menos regularizado y el modelo intenta reproducir con mayor fidelidad la distribución real de los datos de entrada, aunque a costa de generar muestras más ruidosas y posiblemente descuidar detalles esenciales. De esta manera, la elección del valor de KL refleja el compromiso entre capturar información detallada de los datos y mantener una representación latente estable y bien estructurada para la generación.
+En términos prácticos, la divergencia de Kullback-Leibler puede interpretarse como un factor que equilibra creatividad y precisión en el modelo. Por un lado, cuando esta divergencia es grande (DKL >> 1), el espacio latente tiende a estar más regularizado y la distribución de probabilidad de los datos generados se vuelve más "suave", pero el modelo puede terminar sobreajustándose a las muestras originales y perder capacidad de generalización. Por otro lado, si la divergencia es muy pequeña (DKL << 1), el espacio latente queda menos regularizado y el modelo intenta reproducir con mayor fidelidad la distribución real de los datos de entrada, aunque a costa de generar muestras más ruidosas y posiblemente descuidar detalles esenciales. De esta manera, la elección del valor de DKL refleja el compromiso entre capturar información detallada de los datos y mantener una representación latente estable y bien estructurada para la generación.
 
 <!---
 Girin, Dynamical Variational Autocodificadors: A Comprehensive Review
@@ -151,7 +151,7 @@ La primera etapa comenzó con la creación de una versión exploratoria de los m
 
 El codificador incluyó dos capas lineales, cada una seguida de una activación ReLU, un diseño que sigue la lógica de la transformación no lineal en un espacio de menor dimensión para luego reconstruir la observación original a partir del espacio latente. Como se discutió en la primera parte, el codificador genera dos vectores, uno para la media y otro para la varianza logarítmica de la distribución latente, componentes críticos para el proceso de reparametrización que permite al modelo generar nuevas muestras en el espacio latente. El decodificador, encargado de reconstruir los datos originales a partir del espacio latente, fue diseñado con una estructura simétrica a la del codificador, utilizando nuevamente activaciones ReLU.
 
-La función de pérdida de ambos modelos combinó la *divergencia Kullback-Leibler* (KLD) y el *error cuadrático medio* (MSE). La KLD se utilizó para medir la diferencia entre la distribución aprendida por el modelo y una distribución normal estándar. El MSE y MSE balanceado para los problemas multiclases se emplearon para evaluar el error de reconstrucción, es decir, qué tan bien el modelo era capaz de replicar los datos de entrada a partir del espacio latente. 
+La función de pérdida de ambos modelos combinó la *divergencia Kullback-Leibler* (DKL) y el *error cuadrático medio* (MSE). La DKL se utilizó para medir la diferencia entre la distribución aprendida por el modelo y una distribución normal estándar. El MSE y MSE balanceado para los problemas multiclases se emplearon para evaluar el error de reconstrucción, es decir, qué tan bien el modelo era capaz de replicar los datos de entrada a partir del espacio latente. 
 
 Cabe acalarar que, en escenarios orientados a la generación, consideramos particularmente apropiado emplear MSE para la función de reconstrucción, ya que permite aproximar cada dimensión de la muestra de manera continua. Métricas orientadas a la clasificación, como por ejemplo la entropía cruzada, penalizan con fuerza cuando la clase verdadera difiere de la predicha, mientras que la MSE interpreta la diferencia entre la muestra real y la reconstruida como una distancia. Entendemos que esta característica beneficia el proceso de entrenamiento porque se ajusta a la naturaleza continua de los datos generados y mantiene una penalización homogénea en cada dimensión.
 
@@ -180,9 +180,11 @@ donde:
 - $\mathbf{W_1}$ es una matriz de pesos que transforma el vector de entrada $x$ al espacio de características de dimensión $|h_1|$.   
 - $\mathbf{W_2}$ transforma $h_1$ a un espacio de características de dimensión $|h_2|$.   
 - $\mathbf{W_3}$ transforma $h_2$ a un espacio de características de dimensión $|h_3|$.    
-- $b_1$, $b_2$, y $b_3$ son los sesgos correspondientes a cada capa.
+- $\mathbf{b_1}$, $\mathbf{b_2}$, y $\mathbf{b_3}$ son los sesgos correspondientes a cada capa.
 
-Después de las tres capas, se generan los vectores latentes $\mu$ y $\log(\sigma^2)$ mediante dos capas lineales independientes que también aplican normalización por lotes.
+Después de las tres capas, se generan los vectores latentes $\mu$ y $\log(\sigma^2)$ mediante dos capas lineales independientes que no aplican normalización por lotes.
+<!-- 
+En la práctica, la salida de la red para $\log(\sigma^2)$  no se obtiene mediante la operación de logaritmo de una varianza preexistente, sino que la red aprende directamente un valor que interpretamos como $\log(\sigma^2)$. -->
 
 **Reparametrización**
 
@@ -194,7 +196,7 @@ donde $\epsilon$ es una variable aleatoria con distribución normal estándar, y
 
 **Decodificador**
 
-El decodificador reconstruye el vector de entrada a partir del vector latente $z$ utilizando una arquitectura de tres capas lineales, cada una seguida por una normalización por lotes y una activación ReLU:
+El decodificador reconstruye el vector de entrada a partir del vector latente $z$ utilizando una arquitectura de tres capas lineales, cada una seguida por una normalización por lotes y los dos primeras por una activación ReLU:
 
 $h_4 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_4}z + b_4)),$    
 $h_5 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_5}h_4 + b_5)),$    
@@ -205,7 +207,7 @@ donde:
 - $\mathbf{W_4}$ transforma el vector latente $z$ al espacio de características de dimensión $|h_4|$.     
 - $\mathbf{W_5}$ transforma $h_4$ al espacio de características de dimensión $|h_5|$.   
 - $\mathbf{W_6}$ transforma $h_5$ de regreso al espacio de la dimensión original de la entrada $|D_{in}|$.   
-- $b_4$, $b_5$, y $b_6$ son los sesgos correspondientes a cada capa. 
+- $\mathbf{b_4}$, $\mathbf{b_5}$, y $\mathbf{b_6}$ son los sesgos correspondientes a cada capa.
 
 Finalmente, la salida $\hat{x}$ es una aproximación reconstruida de la entrada original $x$.
 
@@ -233,7 +235,7 @@ donde:
 - $\mathbf{W_1}$ es una matriz de pesos que transforma el vector combinado $[x, y]$ al espacio de características de dimensión $|h_1|$.
 - $\mathbf{W_2}$ transforma $h_1$ a un espacio de características de dimensión $|h_2|$.
 - $\mathbf{W_3}$ transforma $h_2$ a un espacio de características de dimensión $|h_3|$.  
-- $b_1$, $b_2$, y $b_3$ son los sesgos correspondientes a cada capa.
+- $\mathbf{b_1}$, $\mathbf{b_2}$, y $\mathbf{b_3}$ son los sesgos correspondientes a cada capa.
 
 Al igual que en el AVC, se generan los vectores latentes $\mu$ y $\log(\sigma^2)$ mediante dos capas lineales independientes.
 
@@ -259,7 +261,7 @@ donde:
 - $\mathbf{W_4}$ transforma el vector combinado $[z, y]$ al espacio de características de dimensión $|h_4|$ + longitud de las categorías.
 - $\mathbf{W_5}$ transforma $h_4$ al espacio de características de dimensión $|h_5|$.
 - $\mathbf{W_6}$ transforma $h_5$ de regreso al espacio de la dimensión original de la entrada $|D_{in}|$.  
-- $b_4$, $b_5$, y $b_6$ son los sesgos correspondientes a cada capa.
+- $\mathbf{b_4}$, $\mathbf{b_5}$, y $\mathbf{b_6}$ son los sesgos correspondientes a cada capa.
 
 Finalmente, la salida $\hat{x}$ es una aproximación reconstruida de la entrada original $x$, condicionada por las etiquetas $y$.
 
@@ -275,9 +277,7 @@ La búsqueda y ajuste de hiperparámetros para los modelos de AV y AVC ha sido u
 
 Iniciamos esta tarea realizando una búsqueda de hiperparámetros, ajustando aspectos clave como el tamaño de las dimensiones latentes, la tasa de aprendizaje, y el número de neuronas en las diferentes capas. Se utilizaron tanto Grid Search como Optimización Bayesiana (BO). Cada una de estas técnicas tiene sus fortalezas, y la elección entre ellas depende en gran medida del objetivo de la búsqueda. Grid Search, por ejemplo, permite un control total sobre el espacio de búsqueda, lo que es útil para responder preguntas específicas, como la configuración óptima de la dimensión latente. Sin embargo, la BO demostró ser particularmente eficiente en la exploración de un espacio de hiperparámetros más amplio y menos definido, logrando un equilibrio entre la exploración y la explotación que resultó especialmente útil en nuestra investigación dado el tamaño del espacio de búsqueda.
 
-También exploramos técnicas para evitar el sobreajuste, como un mecanismo de paciencia para detener el entrenamiento si no se observaba mejora durante 10 épocas consecutivas en datos de validación. Además, se experimentó con el uso de dropout como técnica de regularización; se probaron tasas de dropout en un rango de 0.05 a 0.5 en distintas configuraciones de AVC, tanto con arquitecturas pequeñas (100-500 neuronas por capa) como grandes (1000-7000 neuronas por capa). 
-
-Testeamos distintas métricas de pérdida, como L1 en lugar de MSE para evaluar si la L1_loss podría ofrecer mejoras.
+También exploramos técnicas para evitar el sobreajuste, como un mecanismo de paciencia para detener el entrenamiento si no se observaba mejora durante 10 épocas consecutivas en datos de validación. Además, se experimentó con el uso de dropout como técnica de regularización; se probaron tasas de dropout en un rango de 0.05 a 0.5 en distintas configuraciones de AVC, tanto con arquitecturas pequeñas (100-500 neuronas por capa) como grandes (1000-7000 neuronas por capa). Testeamos distintas métricas de pérdida, como L1 en lugar de MSE para evaluar si la L1_loss podría ofrecer mejoras.
 
 Para abordar el problema del desbalance en conjuntos de datos multiclases, se implementaron ajustes específicos en la configuración del modelo y en las estrategias de entrenamiento. El primero consistió en la asignación de pesos diferenciados a las clases dentro de la función de pérdida, con el objetivo de aumentar la penalización por errores de clasificación en las clases minoritarias. Como vimos en el primer capítulo, el uso de pesos de clase es una técnica comúnmente utilizada para abordar este problema. Estos pesos se calcularon de manera inversamente proporcional a la frecuencia de las clases en el conjunto de datos, lo que significa que las clases con menos instancias recibieron pesos más altos. Al incorporar estos pesos de clase en la función de pérdida, nos aseguramos que los errores en las clases con menor representación tuvieran un impacto mayor durante el proceso de optimización, logrando un aprendizaje más equilibrado.
 
@@ -285,15 +285,15 @@ Además de ajustar la función de pérdida para mitigar el desbalance, se implem
 
 Para garantizar que la combinación de ambas estrategias no tuviera un efecto indeseado en el desempeño del modelo, se llevaron a cabo experimentos con el fin de validar la aplicación simultánea de ambas técnicas. Un efecto a evitar era, precisamente, que el modelo se volviera excesivamente sensible a las clases minoritarias, en detrimento de su capacidad para generalizar correctamente en clases mayoritarias. Los resultados de estos experimentos mostraron que, implementadas en conjunto, ambas estrategias lograban los mejores resultados.
 
+## Métricas empleadas para evaluar resultados
+
+Para evaluar los resultados de nuestros modelos, siguiendo a @fajardoOversamplingImbalancedData2021, *comparamos las métricas alcanzadas por un MLP entrenado con datos sintéticos y evaluado con datos reales de testeo, con las métricas obtenidas por un MLP entrenado con datos reales y también evaluado en los mismos datos de testeo*. En todos los casos se emplearon las particiones originales de los datos, a fin de propiciar la comparación de nuestros resultados con los obtenidos en la literatura. El indicador particular empleado para la comparación fue el de **exactitud**, que mide la proporción de predicciones correctas sobre el total de predicciones realizadas. 
+
+Además, se emplearon otras métricas para completar nuestro análisis, a saber: la *precisión*, el *recall* y el *F1 Score*. La *precisión* mide la proporción de predicciones positivas correctas sobre el total de predicciones positivas realizadas, es decir, qué tan preciso es el modelo al identificar casos positivos. El *recall* (o sensibilidad) indica la proporción de verdaderos positivos detectados sobre el total de positivos reales, reflejando la capacidad del modelo para capturar todos los casos positivos. El *F1 Score* es la media armónica de la precisión y el recall, proporcionando un equilibrio entre ambos y siendo especialmente útil cuando existe un desbalance en las clases. Otras métricas que utilizamos fueron el *Promedio Macro* y el *Promedio Ponderado*. Los indicadores de *Promedio Macro* calculan la media aritmética de las métricas individuales de cada clase sin considerar el número de muestras por clase, otorgando igual peso a todas las clases. Esto es útil para evaluar el rendimiento general en presencia de clases desbalanceadas. Por otro lado, el *Promedio Ponderado* tiene en cuenta el soporte (número de muestras) de cada clase al calcular la media, lo que significa que las clases con más muestras influyen más en el promedio general. Esto proporciona una visión más realista del rendimiento cuando hay clases dominantes.
+
 ## Resultados obtenidos en los experimentos
 
-Los resultados obtenidos en nuestros experimentos revelaron que un Perceptron Multicapa (MLP) entrenado con datos sintéticos generados por un AV/AVC puede igualar o incluso superar en ciertos casos el rendimiento de un MLP entrenado con datos reales. 
-
-Para dicha evaluacion, siguiendo a @fajardoOversamplingImbalancedData2021, *comparamos las métricas alcanzadas por un MLP entrenado con datos sintéticos y evaluado con datos reales de testeo, con las métricas obtenidas por un MLP entrenado con datos reales y también evaluado en los mismos datos de testeo*. En todos los casos se emplearon las particiones originales de los datos, a fin de propiciar la comparación de nuestros resultados con los obtenidos en la literatura. El indicador particular empleado para la comparación fue el de **exactitud**, que mide la proporción de predicciones correctas sobre el total de predicciones realizadas. 
-
-Además, se emplearon otras métricas para completar nuestro análisis, a saber: la *precisión*, el *recall* y el *F1 Score*. Las métricas empleadas para dicha comparación fueron las siguientes: la *precisión* mide la proporción de predicciones positivas correctas sobre el total de predicciones positivas realizadas, es decir, qué tan preciso es el modelo al identificar casos positivos. El *recall* (o sensibilidad) indica la proporción de verdaderos positivos detectados sobre el total de positivos reales, reflejando la capacidad del modelo para capturar todos los casos positivos. El *F1 Score* es la media armónica de la precisión y el recall, proporcionando un equilibrio entre ambos y siendo especialmente útil cuando existe un desbalance en las clases. Otras métricas que utilizamos fueron el *Promedio Macro* y el *Promedio Ponderado*. Los indicadores de *Promedio Macro* calculan la media aritmética de las métricas individuales de cada clase sin considerar el número de muestras por clase, otorgando igual peso a todas las clases. Esto es útil para evaluar el rendimiento general en presencia de clases desbalanceadas. Por otro lado, el *Promedio Ponderado* tiene en cuenta el soporte (número de muestras) de cada clase al calcular la media, lo que significa que las clases con más muestras influyen más en el promedio general. Esto proporciona una visión más realista del rendimiento cuando hay clases dominantes.
-
-Entonces en la siguiente figura se muestran los resultados obtenidos en los experimentos realizados para los cuatro conjuntos de datos estudiados, donde comparamos datos sintéticos con datos reales:  
+Los resultados obtenidos en nuestros experimentos revelaron que un Perceptron Multicapa (MLP) entrenado con datos sintéticos generados por un AV/AVC puede igualar o incluso superar en ciertos casos el rendimiento de un MLP entrenado con datos reales. En la siguiente figura se muestran los resultados obtenidos en los experimentos realizados para los cuatro conjuntos de datos estudiados, donde comparamos datos sintéticos con datos reales: en azul se indican los resultados en los datos de testeo para el entrenamiento con datos reales, y en rojo los resultados de entrenar con datos sintéticos.  
 
 ![MLP con datos sintéticos vs MLP con datos reales](grafico_MLP-reales-vs-sintenticos.png)
 
@@ -301,7 +301,7 @@ Estos resultados son particularmente relevantes ya que sugieren que, bajo cierta
 
 Veamos a continuación los resultados particulares de cada conjunto de datos.
 
-#### Leukemia
+**Leukemia**
 
 | Modelo                         | Clase | Precisión | Recall | F1 Score | Soporte |
 |--------------------------------|-------|-----------|--------|----------|---------|
@@ -318,11 +318,11 @@ Veamos a continuación los resultados particulares de cada conjunto de datos.
 |   Promedio Ponderado           |       | 0.96      | 0.95   | 0.95     | 22      |
 
 
-El cuadro anterior muestra el rendimiento de un MLP entrenado con datos reales frente a uno entrenado con datos sintéticos en el conjunto de datos Leukemia. Se observa que el modelo entrenado con datos sintéticos logra una mayor exactitud (**95%**) en comparación con el modelo entrenado con datos reales (**81%**). Las métricas de *precisión*, *recall* y *F1 Score* son superiores en casi todas las clases y promedios cuando se utiliza el modelo sobre datos sintéticos. 
+La tabla anterior muestra el rendimiento de un MLP entrenado con datos reales frente a uno entrenado con datos sintéticos en el conjunto de datos Leukemia. Se observa que el modelo entrenado con datos sintéticos logra una mayor exactitud (**95%**) en comparación con el modelo entrenado con datos reales (**81%**). Las métricas de *precisión*, *recall* y *F1 Score* son superiores en casi todas las clases y promedios cuando se utiliza el modelo sobre datos sintéticos. 
 
 Estos resultados indican que el modelo entrenado con datos sintéticos no solo es más preciso, sino que también tiene un rendimiento más equilibrado entre las clases, mejorando la capacidad de generalización y discriminación entre las categorías. La mejora en las métricas sugiere que el modelo es más eficaz en la identificación correcta de ambas clases, reduciendo tanto los falsos positivos como los falsos negativos. 
 
-#### Madelon
+**Madelon**
 
 | Modelo                       | Clase | Precisión | Recall | F1 Score | Soporte |
 |------------------------------|-------|-----------|--------|----------|---------|
@@ -340,7 +340,7 @@ Estos resultados indican que el modelo entrenado con datos sintéticos no solo e
 
 El conjunto de datos   Madelon   presenta un caso donde el MLP entrenado con datos sintéticos logra una ligera mejora en la exactitud (**57%**) en comparación con el modelo entrenado con datos reales (**55%**). Los promedios macro y ponderado también muestran ligeras mejoras al utilizar datos sintéticos. 
 
-#### Gisette
+**Gisette**
 
 | Modelo                       | Clase | Precisión | Recall | F1 Score | Soporte |
 |------------------------------|-------|-----------|--------|----------|---------|
@@ -356,9 +356,9 @@ El conjunto de datos   Madelon   presenta un caso donde el MLP entrenado con dat
 |   Promedio Macro             |       | 0.96      | 0.96   | 0.96     | 1800    |
 |   Promedio Ponderado         |       | 0.96      | 0.96   | 0.96     | 1800    |
 
-En el conjunto de datos   Gisette  , se observa que el modelo entrenado con datos reales supera al modelo entrenado con datos sintéticos. El MLP con datos reales alcanza una exactitud del **97%**, mientras que el modelo con datos sintéticos logró una buena performance en la mayoría de las métricas evaluadas. 
+En el conjunto de datos   Gisette  , se observa que el modelo entrenado con datos reales supera al modelo entrenado con datos sintéticos. El MLP con datos reales alcanza una exactitud del **97%**, mientras que el modelo con datos sintéticos logra un **95%**. Sin perjuicio de ello, el modelo entrenado con datos sintéticos logró una buena performance en la mayoría de las métricas evaluadas. 
 
-#### GCM
+**GCM**
 
 | Modelo                       | Clase | Precisión | Recall | F1 Score | Soporte |
 |------------------------------|-------|-----------|--------|----------|---------|
