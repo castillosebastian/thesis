@@ -14,8 +14,8 @@ book:
     - index.qmd    
     - references.qmd
   appendices:
-    - Appendices/AppendixA.qmd  
-    - Appendices/AppendixB.qmd
+    - Apendices/AppendixA.qmd  
+    - Apendices/AppendixB.qmd
   repo-url: https://github.com/castillosebastian/ealab
   repo-actions: [edit, source, issue]
   search: true

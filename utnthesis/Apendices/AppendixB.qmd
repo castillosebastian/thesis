@@ -1,6 +1,6 @@
-# Ecuación del Esquema en el contexto de los AGs {#sec-appB}
+# Teorema de esquemas para AG {#sec-appB}
 
-La Ecuación del Esquema [@goldbergdavide.GeneticAlgorithmsSearch1989] predice el número esperado de copias de un esquema $H$ en la próxima generación $t+1$, dado su número de copias en la generación actual $t$. Se expresa de la siguiente manera:
+El teorema de esquemas [@goldbergdavide.GeneticAlgorithmsSearch1989] predice el número esperado de copias de un esquema $H$ en la próxima generación $t+1$, dado su número de copias en la generación actual $t$. Se expresa de la siguiente manera:
 
 $m(H, t+1) \geq m(H, t) \cdot \frac{f(H)}{\bar{f}} \cdot \left[ 1 - p_c \frac{\delta(H)}{l-1} \right] \cdot \left(1 - p_m\right)^{o(H)}$
 

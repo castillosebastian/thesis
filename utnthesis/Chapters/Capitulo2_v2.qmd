@@ -64,7 +64,7 @@ En *clasificación multiclase*, la F1 proporciona una forma de resumir la Precis
 
 Las particiones originales de los datasets fueron concatenadas en un solo conjunto de datos, y luego se dividió en conjuntos de entrenamiento y testeo en proporción 80/20. 
 
-## Resultados Obtenidos
+## Resultados obtenidos
 
 En la siguiente tabla resumimos los resultados en el dataset de testeo para cada modelo y dataset, con las métricas AUC y F1 score.  
 
