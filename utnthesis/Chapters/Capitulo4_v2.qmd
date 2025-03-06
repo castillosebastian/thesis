@@ -6,6 +6,7 @@ En este capítulo presentamos una descripción general de los *algoritmos genét
 
 Los AG son una clase de algoritmos de optimización inspirados en la evolución biológica y en la teoría de la selección natural. Los mismos se basan en el concepto de evolución de una población de soluciones potenciales a lo largo de múltiples generaciones. Utilizando operadores genéticos como la selección, el cruce y la mutación los AG generan nuevas soluciones a partir de las disponibles, mejorando su calidad y favoreciendo la preeminencia de ciertas características. Una breve descripción del algoritmo se presenta en el diagrama que se muestra a continuación. 
 
+En la **Figura 4.1** se ilustra la estructura general de un algoritmo genético. En términos generales, se parte de un conjunto de datos (por ejemplo, un vector $(x)$) y se crea una población inicial de soluciones candidatas (individuos), cada una codificada en un cromosoma (por ejemplo, una cadena binaria). A continuación, cada individuo se evalúa mediante una función de aptitud (*fitness*) que refleja la calidad de la solución propuesta. Si no se cumple la condición de terminación (que puede estar representada por un umbral de error o un número máximo de iteraciones), se aplican las fases de selección, cruce y mutación para generar una nueva generación de individuos potencialmente más aptos. Estos pasos se repiten de manera iterativa hasta que se cumpla el criterio de terminación. Para ilustrar lo anterior, consideremos la función $y = -x^2$ y el objetivo de maximizar su valor. En este caso, cada individuo del algoritmo genético representa un posible valor de $x$ codificado en un cromosoma binario. La aptitud de cada individuo se calcula como $y = -x^2$. Tras las etapas de selección, cruce y mutación, los valores de $x$ que producen valores más altos de $-x^2$ tienden a sobrevivir y propagarse. Al cabo de varias iteraciones, el algoritmo converge hacia el valor $x = 0$, que es la solución que maximiza $-x^2$. De este modo, el diagrama de la figura refleja cómo, a través de procesos inspirados en la evolución biológica, se van refinando las soluciones hasta cumplir cierto objetivo.
 
 ![](diagrama_ag.png)
 
@@ -15,13 +16,13 @@ A pesar de su extraordinaria simpleza -o quizás gracias a ella-, los AG constit
 
 Para comprender la eficacia que tienen los AG como método de búsqueda, veamos en detalle los puntos mencionados anteriormente.
 
-## a) Codificación del espacio de búsqueda
+## Codificación del espacio de soluciones
 
 Como señalamos, los AG se distinguen de otros algoritmos por su capacidad para operar en un espacio codificado del problema, en lugar de operar directamente sobre el espacio en su representación original. Esto sucede gracias a la transformación de las soluciones potenciales en cadenas binarias, comúnmente conocidas como **cromosomas**, que luego son objeto de transformación mediante operadores genéticos como la mutación y el cruce. La capacidad de los AG para operar con estas representaciones codificadas determina su adaptabilidad y eficacia en una amplia gama de problemas de optimización.
 
 La codificación adecuada del problema es un paso inicial clave para el correcto desempeño del algoritmo. La elección de la codificación depende de la naturaleza del problema y de las características de las soluciones que se buscan optimizar. Por ejemplo, en el tratamiento de información genética una opción frecuente es el uso de codificación binaria. En esta representación, cada cromosoma es una cadena de bits (0s y 1s) donde cada posición o bit representa la presencia (1) o ausencia (0) de una característica particular en la solución. Así, en un problema de selección de características con 100 variables, cada cromosoma sería una cadena de 100 bits donde un 1 indica que esa característica es seleccionada y un 0 que no lo es. Esta codificación binaria es particularmente eficiente para problemas de selección ya que permite representar de manera natural el espacio de búsqueda como un plano *n-dimensional*, donde cada dimensión representa una posible combinación de características. Además, los operadores genéticos como el cruce y la mutación pueden implementarse de manera directa y eficiente sobre estas cadenas binarias.
 
-Dada la importancia que tiene la codificación, es fácil advertir que así como una elección adecuada de la estrategia de codificación puede facilitar la convergencia del AG hacia soluciones óptimas, una elección inadecuada puede tener consecuencias negativas en su desempeño. En efecto, una codificación inapropiada puede llevar a una exploración ineficaz del espacio de soluciones, generando soluciones redundantes o incluso inviables. Una codificación que no preserve la viabilidad de las soluciones durante la evolución, puede resultar en la convergencia prematura del AG hacia soluciones subóptimas.
+Dada la importancia que tiene la codificación, es fácil advertir que así como una elección adecuada de la estrategia de codificación puede facilitar la convergencia del AG hacia buenas soluciones, una elección inadecuada puede tener consecuencias negativas en su desempeño. En efecto, una codificación inapropiada puede llevar a una exploración ineficaz del espacio de soluciones, generando soluciones redundantes o incluso inviables. Una codificación que no preserve la viabilidad de las soluciones durante la evolución, puede resultar en la convergencia prematura del AG hacia soluciones subóptimas.
 
 La traducción entre la representación interna codificada (genotipo) y la solución en el contexto del problema (fenotipo) es un componente importante del diseño de los AG [^genofenotipo]. Este mapeo no solo permite interpretar las soluciones generadas por el algoritmo, sino que también influye en la eficacia de los operadores genéticos. Ello así, debido a que los operadores genéticos actúan directamente sobre la representación codificada, lo que puede afectar la exploración del espacio de soluciones y la convergencia del AG.
 
@@ -31,10 +32,12 @@ Una de las principales ventajas de operar en un espacio codificado del problema 
 
 Un proceso típico de codificación y decodificación en un AG incluye los siguientes pasos:
 
-1.  **Espacio Original**: Representación directa del problema, por ejemplo, valores continuos o categóricos.
-2.  **Codificación**: Traducción del espacio original a una forma binaria o simbólica.
-3.  **Operadores Genéticos**: Aplicación de mutación, cruce y selección en la representación codificada.
-4.  **Decodificación**: Traducción inversa de la solución codificada al espacio original para evaluación.
+1.  **Codificación del problema**: Representación directa del problema, por ejemplo, valores continuos o categóricos [^codificacion].
+2.  **Operadores Genéticos**: Aplicación de mutación, cruce y selección en la representación codificada.
+3.  **Decodificación**: Traducción inversa de la solución codificada al espacio original para evaluación.
+
+[^codificacion]: Cabe aclarar que en el caso de espacios continuos, el AG debe establecer una resolución o granularidad específica para la representación discreta del problema. Esto se debe a que un cromosoma binario solo puede representar un número finito de valores dentro del rango establecido, no cualquier valor continuo arbitrario. La elección de esta granularidad afecta directamente la precisión con la que el AG puede aproximar soluciones en el espacio continuo.
+
 
 ![](codificacion-decodificacion.png)
 
@@ -42,7 +45,7 @@ Un proceso típico de codificación y decodificación en un AG incluye los sigui
 
 En el caso de nuestra investigación, dada la alta dimensionalidad de los datos y la complejidad de los modelos, la codificación adecuada de las soluciones fue un proceso fundamental para permitir que los AG pudieran encontrar soluciones óptimas o cercanas al óptimo en tiempo razonable.
 
-## b) Búsqueda por población de soluciones
+## Búsqueda por población de soluciones
 
 Otra característica distintiva de los AG es su enfoque en la evaluación de una **población** de soluciones en cada iteración, en lugar de centrarse en una única solución. Esta población de soluciones, también conocida como población de **individuos**, permite a los AG explorar simultáneamente múltiples regiones del espacio de búsqueda, aumentando así la probabilidad de encontrar soluciones óptimas o cercanas al óptimo.
 
@@ -70,7 +73,7 @@ Población B, con 5 individuos de longitud 5, de baja diversidad:
 
 Como podemos advertir en este ejemplo, cada individuo representa una solución potencial al problema, donde cada bit en la cadena codificada corresponde a una característica que puede ser seleccionada o excluida. En estas poblaciones los individuos de A son distintos entre sí, lo que permite al AG combinar cromosomas distintos y explorar nuevas zonas del espacio de búsqueda. Por el contrario, los individuos de B son idénticos, lo que limita la capacidad del AG para explorar nuevas regiones del espacio de búsqueda.
 
-## c) Función de aptitud y evaluación de soluciones
+## Función de aptitud y evaluación de soluciones
 
 La función de aptitud es el núcleo que dirige el proceso evolutivo en los AG, determinando qué soluciones sobreviven y se propagan a la siguiente generación. Su diseño y correcta implementación son esenciales para asegurar que el AG no solo converja hacia soluciones de alta calidad, sino que también lo haga de manera eficiente y efectiva, especialmente en problemas donde las evaluaciones de aptitud son costosas o complejas.
 
@@ -80,7 +83,7 @@ El diseño de la función de aptitud es un aspecto crítico del proceso de model
 
 En línea con lo anterior, la evaluación precisa de las soluciones mediante la función de aptitud puede constituir un proceso sujeto a múltiples restricciones. Aunque la asignación de valores de aptitud más bajos a soluciones subóptimas y más altos a soluciones superiores pueda parecer un criterio ineludible, en la práctica, este proceso requiere comúnmente consideraciones adicionales. Por ejemplo, en problemas con restricciones, una solución cercana al óptimo global, pero que infrinja requerimientos del problema, debe recibir una calificación de aptitud inferior a una solución menos cercana al óptimo pero libre de tales infracciones. De esa forma, el AG puede orientar la búsqueda hacia soluciones viables. Con esa lógica, en la optimización multiobjetivo es necesario establecer criterios para ponderar la proximidad al óptimo, especialmente cuando los distintos objetivos compiten entre sí.
 
-## d) Operadores estocásticos y *esquemas* genéticos
+## Operadores estocásticos y *esquemas* genéticos
 
 Como hemos señalado los AG emplean métodos probabilísticos de transición conformados por operadores estocásticos, que introducen aleatoriedad en el proceso evolutivo. Esto determina que las transformaciones dentro de un AG no siguen un camino determinista hacia la solución óptima; en su lugar, cada generación de soluciones es producto de un proceso estocástico controlado. 
 
