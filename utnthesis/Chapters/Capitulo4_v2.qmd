@@ -244,6 +244,7 @@ Este hallazgo parece sugerir que la aumentación de datos no produce diferencias
 |**Desviación Estándar**                  | 17.796              | 14.355              |
 |**Rango Intercuartil (IQR)**             | 8.000               | 21.500              |
 
+> **Tabla 4.2.**: *Comparación de experimentos en Gisette*
 
 En efecto, en *Gisette* se observa una diferencia más importante en la eficiencia de la selección de características. En los experimentos con datos aumentados, el número promedio de características seleccionadas fue menor (424) en comparación con los datos originales (436), señalando que el AG fue más efectivo en el reconocimiento de un subconjunto relevantes. 
 
@@ -289,6 +290,8 @@ La cantidad de muestras sintéticas generadas en los experimentos fue ajustada a
 | 254               | 2                     |
 | 6106              | 1                     |
 
+> **Tabla 4.3.**: *Cantidad de experimentos por cantidad de muestras sintéticas*
+
 ### Primera etapa de experimentación
 
 Al enfrentarnos a GCM asumíamos que la generación sintética de muestras y ulterior proceso de selección de características plantearía un desafío significativo al AG debido a la complejidad del dataset. La calidad de reconstrucción lograda en los datos sintéticos generados por el AVC presentado en el Capítulo 3, aunque capaz de preservar la estructura subyacente del conjuntos de datos de GCM, no permitía suponer una mejora significativa en la precisión de la clasificación con un AG. Por otro lado, el desbalance que tienen las clases en GCM, determinaba que la calidad de reconstrucción de las clases minoritarias fuera menor, lo que podría afectar la capacidad del AG para identificar un subconjunto relevante de características. Por todo ello, esperábamos que los experimentos con datos aumentados presentaran resultados mixtos, con posibles mejoras en la estabilidad de la selección de características, pero sin mejoras significativas en la precisión. 
@@ -331,6 +334,8 @@ Como resultado de esta primera etapa de experimentos se identificó una dificult
 | **Exactitud**  |           |        | 1.00     | 420     |
 | **Macro avg**  | 1.00      | 1.00   | 1.00     | 420     |
 | **Weighted avg** | 1.00      | 1.00   | 1.00     | 420     |
+
+> **Tabla 4.4.**: *Resultados del MLP en los datos sintéticos de GCM*
 
 Estos resultados sugieren que el MLP fue capaz de aprender correctamente la estructura de los datos sintéticos, lo que se tradujo en una precisión del 100% en la clasificación, sin embargo, el mismo modelo evaluado en los datos de test originales arrojó una precisión de 0.5. Esta discrepancia sugiere que la distribución de probabilidad de los datos sintéticos no es representativa de la que caracteriza a los datos reales, circunstancia que estaría limitando la capacidad del AG para identificar un subconjunto relevante de características. Esto explicaría las motivos por los cuales los experimentos con datos aumentados no lograron mejorar la precisión de la clasificación.
 
