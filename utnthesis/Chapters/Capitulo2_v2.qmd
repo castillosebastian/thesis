@@ -105,7 +105,9 @@ En la siguiente tabla resumimos los resultados en el dataset de testeo para cada
 
 El gráfico completo de resultados en las particiones de entrenamiento y testeo puede verse en la siguiente figura:  
 
-![Desempeño de algoritmos clásicos](model_performance_heatmap_grouped.png)
+![](model_performance_heatmap_grouped.png)
+
+> **Figura 2.1.**: *Desempeño de algoritmos clásicos*
 
 Las métricas presentadas evidencian que los resultados de los modelos clásicos varían ampliamente según las características de cada dataset. En particular, los conjuntos de datos **Leukemia** y **Gisette** muestran, en términos generales, un desempeño sólido para la mayoría de los algoritmos analizados. La **AUC** alcanzada por varios modelos en *Leukemia* (en algunos casos 1.00) ilustra la capacidad de separar correctamente los casos, a pesar de tratarse de un problema con alta dimensionalidad y desbalance. Asimismo, *Gisette* se beneficia del hecho de contar con más observaciones que *features*, lo que facilita la labor de los clasificadores (algunos, como Gradient Boosting, alcanzan AUC = 1.00).
 

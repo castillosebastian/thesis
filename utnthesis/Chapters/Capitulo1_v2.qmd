@@ -92,7 +92,7 @@ Vistos los problemas que enfrentamos con los datos, pasemos a describir, breveme
 
 ## Distintos enfoques para la selección de características
 
-Podemos agrupar los métodos de selección de características en tres grandes grupos, representados en el diagrama de la figura [-@fig-diagrama-seleccion-características]:
+Podemos agrupar los métodos de selección de características en tres grandes grupos, representados en el diagrama de la *Figura 1.1.*:
 
 - Filtros,
 - Wrappers o métodos envolventes, y
@@ -104,7 +104,9 @@ Los métodos **Wrappers o Envolventes** involucran un algoritmo de aprendizaje c
 
 Los métodos **Embedded o Embebidos** realizan la selección de características durante el proceso de entrenamiento de un modelo de aprendizaje, y suelen ser específicos para determinados algoritmos (e.g. árboles de decisión y métodos derivados de ellos, eliminación recursiva de características mediante SVM, entre otros). A diferencia de los métodos de filtro y wrappers, los métodos embebidos no separan la selección de características del proceso de entrenamiento, sino que la realizan de manera simultánea. En este caso, optimizan una función de pérdida regularizada con respecto a dos conjuntos de parámetros: los parámetros del algoritmo de aprendizaje y los parámetros que indican las características seleccionadas.[@bolon-canedoFeatureSelectionHighDimensional2015]. Este enfoque es capaz de capturar dependencias a un costo computacional menor que los wrappers. 
 
-![Diagrama de enfoques para la selección de características](diagrama_seleccion_características.png){#fig-diagrama-seleccion-características}
+![](diagrama_seleccion_características.png)
+
+> **Figura 1.1.**: *Diagrama de enfoques para la selección de características*   
 
 Bolón-Canedo y ot. nos invitan a pensar que no existe un método que sea *superior a los otros* de manera general, sino que cada uno tiene sus ventajas y desventajas, y se ajustan distinto a diferentes tipos de contexto. De los tres enfoques, los métodos de filtro son los únicos que son independientes del algoritmo de aprendizaje, lo que les permite ser rápidos y eficientes computacionalmente. Sin embargo, los métodos de filtro no consideran la correlación entre características, lo que puede llevar a la selección de características irrelevantes o redundantes. 
 

@@ -16,7 +16,9 @@ Los autocodificadores son un tipo de MG especializado en representar un espacio 
 
 Los autocodificadores se componen de dos partes: un *codificador* y un *decodificador*. El *codificador* es una función no lineal que opera sobre una observación o patrón $x_i$ y la transforma en un vector de menor dimensión $z$, mientras que el *decodificador* opera a partir del vector $z$ y lo transforma en una observación $\hat{x_i}$ (o patrón reconstruido), buscando que se asemeje a la observación original. Este vector de menor dimensión $z$ es conocido como *espacio latente*.
 
-![Ejemplo esquemático de un autocodificador](autocodificadores.png)
+![](autocodificadores.png)
+
+> **Figura 3.1.**: *Ejemplo esquemático de un autocodificador*
 
 El esquema anterior muestra un autocodificador que transforma un patrón $x$ en un vector denso $z$, con dimensiones menores a las originales. Este vector es usado luego por el decodificador para reconstruir el patrón original, dando lugar a un patrón reconstruido $x'$.
 
@@ -42,9 +44,11 @@ En el proceso de aprendizaje antes descripto, la optimización no está sujeta a
 
 Esta discontinuidad en el espacio latente hace posible que ciertas regiones de este espacio no tengan  relación significativa con el espacio de características. Durante el entrenamiento el modelo simplemente no ha tenido que reconstruir datos cuyas distribuciones coincidan con estas regiones. Esto es un problema en la generación de datos, ya que la red podrá generar representaciones alejadas de los datos originales. Regularmente lo que se busca en los MG, no es simplemente una generación de datos completemante igual o totalmente distintos a los orginales, sino cierta situación intermedia donde los nuevos datos introducen variaciones en características específicas. 
 
-![Discontinuidad del espacio latente](espacio_latente_discontinuo.png){#fig-espacio-latente-discontinuo}
+![](espacio_latente_discontinuo.png)
 
-Un MG está conformado por dos componentes principales, un codificador y un decodificador, tal como se ilustra en la figura [-@fig-espacio-latente-discontinuo]. El vector de entrada continuo se somete a una transformación no lineal en el codificador, obteniendo así la representación latente en un espacio de menor dimensión. Esta transformación comprime la información original para capturar sus características más relevantes, mientras que el decodificador se encarga de proyectar la representación resultante de nuevo al espacio de características, generando una salida que se aproxima a la muestra inicial. Sin embargo, ciertas regiones de dicho espacio pueden quedar sin representar, y al muestrear en esas zonas, el modelo puede producir instancias muy alejadas de las distribuciones originales, como figuras que no 'encajan' entre aquellas que aparecen en el espacio de características. Este fenómeno está directamente relacionado con la discontinuidad del espacio latente, y pone de manifiesto la necesidad de enfoques que incorporen regularizaciones o mecanismos adicionales para lograr una generación más coherente.
+> **Figura 3.2.**: *Discontinuidad del espacio latente*
+
+Un MG está conformado por dos componentes principales, un codificador y un decodificador. El vector de entrada continuo se somete a una transformación no lineal en el codificador, obteniendo así la representación latente en un espacio de menor dimensión. Esta transformación comprime la información original para capturar sus características más relevantes, mientras que el decodificador se encarga de proyectar la representación resultante de nuevo al espacio de características, generando una salida que se aproxima a la muestra inicial. Sin embargo, ciertas regiones de dicho espacio pueden quedar sin representar, y al muestrear en esas zonas, el modelo puede producir instancias muy alejadas de las distribuciones originales, como figuras que no 'encajan' entre aquellas que aparecen en el espacio de características, tal como se ilustra en la **Figura 3.2.**. Este fenómeno está directamente relacionado con la discontinuidad del espacio latente, y pone de manifiesto la necesidad de enfoques que incorporen regularizaciones o mecanismos adicionales para lograr una generación más coherente.
 
 ## Autocodificadores Variacionales
 
@@ -59,7 +63,9 @@ Estos modelos, a diferencia de los autocodificadores que realizan transformacion
 
 La red codificadora, también llamada *red de reconocimiento*, mapea los datos de entrada $x$ a los vectores $\mu$ de medias y $\sigma$ de desvíos estándar, que parametrizan una distribución de probabilidad en el espacio latente. Generalmente, esta distribución es una distribución  simple, como la distribución normal multivariada. La red decodificadora, también llamada *red generativa*, toma muestras de esta distribución para generar un vector, y lo transforma según la distribución de probabilidad preexistente del espacio de características. De esta manera, se generan nuevas instancias que respetan la distribución de probabilidad de los datos originales. Estas transformaciones implican que, incluso para el mismo dato observado (donde los parámetros de $z$ son iguales), el dato de salida podrá ser diferente debido al proceso estocástico de reconstrucción.
 
-![Autocoficadores Variacionales](autocodificadores_variacionales.png)
+![](autocodificadores_variacionales.png)
+
+> **Figura 3.3.**: *Autocoficadores Variacionales*
 
 Una forma de entender esta arquitectura sería relacionar los vectores que componen $z$ como 'referecias', donde el vector de medias controla el *centro* en torno al cual se distribuirán los valores codificados de los datos de entrada, mientras que el vector de los desvíos traza el *área* que pueden asumir dichos valores en torno al *centro*. 
 
@@ -295,7 +301,10 @@ Además, se emplearon otras métricas para completar nuestro análisis, a saber:
 
 Los resultados obtenidos en nuestros experimentos revelaron que un Perceptron Multicapa (MLP) entrenado con datos sintéticos generados por un AV/AVC puede igualar o incluso superar en ciertos casos el rendimiento de un MLP entrenado con datos reales. En la siguiente figura se muestran los resultados obtenidos en los experimentos realizados para los cuatro conjuntos de datos estudiados, donde comparamos datos sintéticos con datos reales: en azul se indican los resultados en los datos de testeo para el entrenamiento con datos reales, y en rojo los resultados de entrenar con datos sintéticos.  
 
-![MLP con datos sintéticos vs MLP con datos reales](grafico_MLP-reales-vs-sintenticos.png){#fi-resultados-sintéticosVsreales}
+![](grafico_MLP-reales-vs-sintenticos.png)
+
+> **Figura 3.4.**: *MLP con datos sintéticos vs MLP con datos reales*
+
 
 Estos resultados son particularmente relevantes ya que sugieren que, bajo ciertas condiciones, los datos sintéticos pueden ser tan útiles como los datos reales para el entrenamiento de modelos predictivos. Como se aprecia en el gráfico, este fenómeno se observó de manera consistente en tres de los cuatro conjuntos de datos de nuestro estudio: Leukemia, Madelon y GCM, donde la precisión y la exactitud del modelo entrenado con datos sintéticos alcanzaron o superaron las métricas obtenidas con los datos originales. En el caso del dataset Gisette, el modelo entrenado con datos sintéticos estuvo muy cerca de igualar el rendimiento del modelo entrenado con datos reales.
 
@@ -447,7 +456,9 @@ Un aspecto crítico de nuestros experimentos se relaciona con la dimensionalidad
 
 Otra observación relevante asociada con la generación sintética de datos se vincula a la cantidad optima de muestras sintéticas. En relación a esto, se constataron resultados positivos en GCM incrementando las observaciones del conjunto de datos de entrenamiento de 190 a 3000 muestras balanceadas, con 214 observaciones por clase. Esta estrategia de aumentación, donde se igualan las cantidades de observaciones de todas las clases, es usada en @fajardoOversamplingImbalancedData2021 con buenos resultados. En nuestros experimentos el aumento resultó en una mejora significativa en la performance del modelo, logrando igualar los resultados obtenidos con el clasificador MLP entrenado con datos reales. Sin embargo, al continuar incrementando la cantidad de datos sintéticos a 6000 muestras, se observó una degradación en el rendimiento. 
 
-![Exactitud según cantidad de muestras sintéticas](n_samples_accuracy_comparison.png)
+![](n_samples_accuracy_comparison.png)
+
+> **Figura 3.5.**: *Exactitud según cantidad de muestras sintéticas*
 
 Esto sugiere la existencia de un umbral en la cantidad de datos sintéticos que, una vez superado, introduce ruido en el modelo en lugar de aportar valor. Este ruido puede estar relacionado con el solapamiento de las fronteras de decisión en las muestras generadas, lo que aumenta el error y disminuye la precisión del modelo.
 
