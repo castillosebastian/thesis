@@ -27,7 +27,7 @@ Consideremos un ejemplo con los siguientes parámetros:
 - Longitud de definición del esquema $\delta(H) = 4$ (dado que las posiciones fijas son 1, 3 y 5, la distancia entre las posiciones es 4).
 - Orden del esquema $o(H) = 3$ (el número de posiciones fijas es 3).
 
-Aplicando estos valores a la Ecuación del Esquema:
+Aplicando estos valores al teorema del esquema:
 
 1. **Factor de Selección**: 
    

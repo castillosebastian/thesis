@@ -1,10 +1,10 @@
-# Algoritmos Genéticos, datos sintéticos y selección de características {#sec-Capitulo4}
+# Algoritmos genéticos, datos sintéticos y selección de características {#sec-Capitulo4}
 
 En este capítulo presentamos una descripción general de los *algoritmos genéticos* (AG) como estrategia de selección de características, exponemos sus componentes y describimos la implementación realizada en nuestro trabajo. Seguidamente planteamos la integración del AG con la generación sintética de datos mediante *autocodificaciones variacionales* (AV) como estrategia de aumentación. Según el planteo hecho desde el inicio, la integración de ambas técnicas para favorecer la selección de características mediante la incorporación de datos sintéticos permitiría resolver problemas de alta dimensionalidad, escasez muestral y ruido. Para terminar, compartimos los experimentos realizados sobre esta integración entre AV y AG, y presentamos los resultados obtenidos a fin de determinar hasta qué punto hemos podido resolver los problemas motivantes de este trabajo.
 
-## Elementos básicos de los Algoritmos Genéticos
+## Elementos básicos de los algoritmos genéticos
 
-Los AG son una clase de algoritmos de optimización inspirados en la evolución biológica y en la teoría de la selección natural. Los mismos se basan en el concepto de evolución de una población de soluciones potenciales a lo largo de múltiples generaciones. Utilizando operadores genéticos como la selección, el cruce y la mutación los AG generan nuevas soluciones a partir de las disponibles, mejorando su calidad y favoreciendo la preeminencia de ciertas características. Una breve descripción del algoritmo se presenta en el diagrama que se muestra a continuación. 
+Los AG son una clase de algoritmo inspirado en la evolución biológica y en la teoría de la selección natural. Los mismos se basan en el concepto de evolución de una población de soluciones potenciales a lo largo de múltiples generaciones. Utilizando operadores genéticos como la selección, el cruce y la mutación los AG generan nuevas soluciones a partir de las disponibles, mejorando su calidad y favoreciendo la preeminencia de ciertas características. Una breve descripción del algoritmo se presenta en el diagrama que se muestra a continuación. 
 
 En la **Figura 4.1** se ilustra la estructura general de un algoritmo genético. En términos generales, se parte de un conjunto de datos (por ejemplo, un vector $(x)$) y se crea una población inicial de soluciones candidatas (individuos), cada una codificada en un cromosoma (por ejemplo, una cadena binaria). A continuación, cada individuo se evalúa mediante una función de aptitud (*fitness*) que refleja la calidad de la solución propuesta. Si no se cumple la condición de terminación (que puede estar representada por un umbral de error o un número máximo de iteraciones), se aplican las fases de selección, cruce y mutación para generar una nueva generación de individuos potencialmente más aptos. Estos pasos se repiten de manera iterativa hasta que se cumpla el criterio de terminación. Para ilustrar lo anterior, consideremos la función $y = -x^2$ y el objetivo de maximizar su valor. En este caso, cada individuo del algoritmo genético representa un posible valor de $x$ codificado en un cromosoma binario. La aptitud de cada individuo se calcula como $y = -x^2$. Tras las etapas de selección, cruce y mutación, los valores de $x$ que producen valores más altos de $-x^2$ tienden a sobrevivir y propagarse. Al cabo de varias iteraciones, el algoritmo converge hacia el valor $x = 0$, que es la solución que maximiza $-x^2$. De este modo, el diagrama de la figura refleja cómo, a través de procesos inspirados en la evolución biológica, se van refinando las soluciones hasta cumplir cierto objetivo.
 
@@ -36,18 +36,18 @@ Un proceso típico de codificación y decodificación en un AG incluye los sigui
 2.  **Operadores Genéticos**: Aplicación de mutación, cruce y selección en la representación codificada.
 3.  **Decodificación**: Traducción inversa de la solución codificada al espacio original para evaluación.
 
-[^codificacion]: Cabe aclarar que en el caso de espacios continuos, el AG debe establecer una resolución o granularidad específica para la representación discreta del problema. Esto se debe a que un cromosoma binario solo puede representar un número finito de valores dentro del rango establecido, no cualquier valor continuo arbitrario. La elección de esta granularidad afecta directamente la precisión con la que el AG puede aproximar soluciones en el espacio continuo.
+[^codificacion]: Cabe aclarar que en el caso de espacios continuos, el AG debe establecer una resolución o granularidad específica para la representación discreta del problema. Esto se debe a que un cromosoma binario solo puede representar un número finito de valores dentro del rango establecido, no cualquier valor continuo arbitrario. La elección de esta granularidad afecta directamente la exactitud con la que el AG puede aproximar soluciones en el espacio continuo.
 
 
 ![](codificacion-decodificacion.png)
 
 > **Figura 4.2.**: *Diagrama de codificación y decodificación*
 
-En el caso de nuestra investigación, dada la alta dimensionalidad de los datos y la complejidad de los modelos, la codificación adecuada de las soluciones fue un proceso fundamental para permitir que los AG pudieran encontrar soluciones óptimas o cercanas al óptimo en tiempo razonable.
+En el caso de nuestra investigación, dada la alta dimensionalidad de los datos y la complejidad de los modelos, la codificación adecuada de las soluciones fue un proceso fundamental para permitir que los AG pudieran encontrar buenas soluciones o cercanas al óptimo en tiempo razonable.
 
 ## Búsqueda por población de soluciones
 
-Otra característica distintiva de los AG es su enfoque en la evaluación de una **población** de soluciones en cada iteración, en lugar de centrarse en una única solución. Esta población de soluciones, también conocida como población de **individuos**, permite a los AG explorar simultáneamente múltiples regiones del espacio de búsqueda, aumentando así la probabilidad de encontrar soluciones óptimas o cercanas al óptimo.
+Otra característica distintiva de los AG es su enfoque en la evaluación de una **población** de soluciones en cada iteración, en lugar de centrarse en una única solución. Esta población de soluciones, también conocida como población de **individuos**, permite a los AG explorar simultáneamente múltiples regiones del espacio de búsqueda, aumentando así la probabilidad de encontrar buenas soluciones o cercanas al óptimo.
 
 Como vimos en el ejemplo precedente, la población inicial regularmente se genera de manera aleatoria, y cada individuo dentro de esta población representa una solución potencial al problema. A lo largo de las generaciones, los AG aplican operadores genéticos como selección, cruce y mutación para producir nuevas generaciones de individuos, mejorando iterativamente la calidad de las soluciones. 
 
@@ -79,7 +79,7 @@ La función de aptitud es el núcleo que dirige el proceso evolutivo en los AG, 
 
 En el proceso evolutivo de los AG, la función de aptitud se aplica al **fenotipo** de cada solución, es decir, a su manifestación en el contexto del problema a resolver, después de que el **genotipo** (la representación codificada de la solución) ha sido transformado. Esta evaluación cuantifica qué tan bien una solución potencial cumple con los objetivos del problema, asignándole un valor numérico que refleja su desempeño relativo en comparación con otras soluciones dentro de la población.
 
-El diseño de la función de aptitud es un aspecto crítico del proceso de modelado en los AG, ya que guía la dirección de la búsqueda evolutiva. Específicamente, la función de aptitud debe estar alineada con los objetivos del problema, reflejando correctamente las restricciones necesarias a satisfacer. En situaciones de optimización multiobjetivo, donde varios criterios deben ser optimizados simultáneamente, es común que funciones de aptitud individuales se combinen en una única métrica a través de técnicas como la suma ponderada de los valores de aptitud individuales. En el contexto de nuestra investigación, orientada a la selección de características, la función de aptitud combina la aptitud de un individuo en términos de precisión y el tamaño del conjunto de características seleccionadas (veremos un ejemplo en breve).
+El diseño de la función de aptitud es un aspecto crítico del proceso de modelado en los AG, ya que guía la dirección de la búsqueda evolutiva. Específicamente, la función de aptitud debe estar alineada con los objetivos del problema, reflejando correctamente las restricciones necesarias a satisfacer. En situaciones de optimización multiobjetivo, donde varios criterios deben ser optimizados simultáneamente, es común que funciones de aptitud individuales se combinen en una única métrica a través de técnicas como la suma ponderada de los valores de aptitud individuales. En el contexto de nuestra investigación, orientada a la selección de características, la función de aptitud combina la aptitud de un individuo en términos de exactitud y el tamaño del conjunto de características seleccionadas (veremos un ejemplo en breve).
 
 En línea con lo anterior, la evaluación precisa de las soluciones mediante la función de aptitud puede constituir un proceso sujeto a múltiples restricciones. Aunque la asignación de valores de aptitud más bajos a soluciones subóptimas y más altos a soluciones superiores pueda parecer un criterio ineludible, en la práctica, este proceso requiere comúnmente consideraciones adicionales. Por ejemplo, en problemas con restricciones, una solución cercana al óptimo global, pero que infrinja requerimientos del problema, debe recibir una calificación de aptitud inferior a una solución menos cercana al óptimo pero libre de tales infracciones. De esa forma, el AG puede orientar la búsqueda hacia soluciones viables. Con esa lógica, en la optimización multiobjetivo es necesario establecer criterios para ponderar la proximidad al óptimo, especialmente cuando los distintos objetivos compiten entre sí.
 
@@ -89,7 +89,7 @@ Como hemos señalado los AG emplean métodos probabilísticos de transición con
 
 Los operadores genéticos fundamentales en este proceso son la **selección**, el **cruce** y la **mutación**. Los mismos son responsables de la generación de nuevas soluciones, e inciden directamente en la evolución de los  patrones genéticos que los AG tienden a preservar y reproducir. Patrones que se conocen como **esquemas** [@goldbergdavide.GeneticAlgorithmsSearch1989].
 
-Según explica Goldberg, los **esquemas** son estructuras genéticas que se repiten en la población y que influyen en la evolución de los individuos. Estos esquemas pueden ser de **orden bajo** (pocos genes) o de **orden alto** (más genes), y de **longitud de definición baja** (pocos bits) o de **longitud de definición alta** (más bits). En su operatoria, los AG tienden a favorecer los esquemas de orden bajo y longitud de definición baja que muestran un rendimiento mejor que la media. Este fenómeno, conocido como **Teorema del Esquema**, proporciona una base para entender cómo la selección y los operadores estocásticos actúan en conjunto para guiar la evolución hacia soluciones óptimas. 
+Según explica Goldberg, los **esquemas** son estructuras genéticas que se repiten en la población y que influyen en la evolución de los individuos. Estos esquemas pueden ser de **orden bajo** (pocos genes) o de **orden alto** (más genes), y de **longitud de definición baja** (pocos bits) o de **longitud de definición alta** (más bits). En su operatoria, los AG tienden a favorecer los esquemas de orden bajo y longitud de definición baja que muestran un rendimiento mejor que la media. Este fenómeno, conocido como **Teorema del Esquema**, proporciona una base para entender cómo la selección y los operadores estocásticos actúan en conjunto para guiar la evolución hacia buenas soluciones. 
 
 Pasando a ver cada uno de los operadores, tenemos que la **selección** opera identificando y preservando los esquemas con aptitudes superiores a la media de la población. En términos probabilísticos, los esquemas con mejor aptitud tienen una mayor probabilidad de ser seleccionados y reproducidos en la siguiente generación. Esta selección basada en aptitud es clave para mantener y amplificar características beneficiosas dentro de la población. Dentro de los operadores de selección encontramos diversas estrategias, entre las que se destacan: selección por ruleta, torneo y ventana: 
 
@@ -103,11 +103,9 @@ El operador de **cruce** permite la recombinación de material genético entre d
 
 Un ejemplo de cruce de un punto entre dos soluciones binarias sería:
 
--   Padre 1: `110010`
--   Padre 2: `101101`
--   Punto de Cruce: `3`
--   Hijo 1: `110101`
--   Hijo 2: `101010`
+![](ag_cruce.png)
+
+> **Figura 4.3.**: *Diagrama de cruce de un punto*
 
 En este caso, el cruce de un punto en la posición 3 divide los padres en dos segmentos y combina los segmentos para generar dos nuevos individuos. Este proceso de cruce permite la recombinación de material genético entre los padres, preservando y mejorando las características exitosas encontradas en ellos.
 
@@ -115,62 +113,129 @@ El operador de **mutación**, por su parte, introduce cambios aleatorios en las 
 
 Un ejemplo de mutación en una solución binaria sería:
 
--   Solución Original: `110010`
--   Posición de Mutación: `4`
--   Solución Mutada: `110110`
+![](ag_mutacion.png)
 
-A esta altura ha de ser evidente que la preservación de ciertos patrones genéticos de aptitud superior es fundamental para la evolución de la población en un AG. La teoría de los esquemas, que se basa en el concepto de esquemas genéticos, proporciona un marco formal para entender cómo los operadores genéticos actúan en conjunto para guiar la evolución hacia soluciones óptimas. @goldbergdavide.GeneticAlgorithmsSearch1989
-nos presenta, en relación a este punto, lo que se conoce como la **Ecuación del Esquema**, que es una herramienta teórica que permite predecir la evolución de los esquemas en una población a lo largo de múltiples generaciones. Esta ecuación tiene en cuenta factores como la aptitud de los esquemas, la probabilidad de cruce y mutación, la longitud de definición y el orden de los esquemas, y proporciona una guía para entender cómo los esquemas se propagan y se mantienen en la población. Para una revisión más detallada de la ecuación del esquema, remitimos al lector al **Apéndice B**.
+> **Figura 4.4.**: *Diagrama de mutación*
+
+A esta altura ha de ser evidente que la preservación de ciertos patrones genéticos de aptitud superior es fundamental para la evolución de la población en un AG. La teoría de los esquemas, que se basa en el concepto de esquemas genéticos, proporciona un marco formal para entender cómo los operadores genéticos actúan en conjunto para guiar la evolución hacia buenas soluciones. @goldbergdavide.GeneticAlgorithmsSearch1989
+nos presenta, en relación a este punto, lo que se conoce como el **Teorema del Esquema**, que es una herramienta teórica que permite predecir la evolución de los esquemas en una población a lo largo de múltiples generaciones. Este teorema tiene en cuenta factores como la aptitud de los esquemas, la probabilidad de cruce y mutación, la longitud de definición y el orden de los esquemas, y proporciona una guía para entender cómo los esquemas se propagan y se mantienen en la población. Para una revisión más detallada del teorema del esquema, remitimos al lector al **Apéndice B**.
 
 Hasta aquí hemos expuestos los fundamentos teóricos de los AG, que nos permitirán entender la implementación de los mismos en la siguiente sección. 
 
 ## Integración de Autocodificadores Variacionales y Algoritmos Genéticos 
 
-En esta sección decribimos la integración de AV y AG como estrategia que favorece la selección de características en contexto donde los datos pueden ser caracterizados por alta dimensionalidad y escasez muestral, desbalance de clases y ruido. La estrategia propuesta incluye la generación de datos sintéticos mediante AV para aumentar el número de muestras originales y de esta forma mejorar la selección de características con AG. Estos datos aumentados contienen las observaciones originales y también las observaciones sintéticas creadas a partir de ellas. 
-
-El proceso comienza con la etapa de generación de datos sintéticos donde se emplea un AV o AVC según el tipo de problema a resolver (clasificación binaria o multiclase). En esta etapa el modelo de *autocodificador* es entrenado con los datos originales, y parametrizado según una configuración óptima definida. En nuestro caso, dicha configuración se obtuvo mediante el proceso de optimización de hiperparámetros descrito en el capítulo anterior. 
-
-Seguidamente, se emplea el modelo de *autocodificador* entrenado para generar *N* datos sintéticos, que se concatenan con los datos originales. Ya veremos que el valor de *N* no es trivial, dado su impacto en los resultados del AG. Como consecuencia de esta etapa, tenemos como nueva integración de los datos un conjunto que incluye tanto instancias originales y como instancias sintéticas. Finalmente, se emplea un AG para la selección de características empleando como entrada este dataset aumentado. Detallamos este proceso en el diagrama de flujo que se presenta mas abajo.
+En esta sección decribimos la integración de AV y AG como estrategia que puede favorecer la selección de características en contexto donde los datos pueden ser caracterizados por alta dimensionalidad y escasez muestral, desbalance de clases y ruido. La estrategia propuesta, representada en la **Figura 4.5.**, incluye la generación de datos sintéticos mediante AV para aumentar el número de muestras originales y de esta forma mejorar la selección de características con AG. Estos datos aumentados contienen las observaciones originales y también las observaciones sintéticas creadas a partir de ellas. 
 
 ![](AV-AG.png)
 
-> **Figura 4.3.**: *Diagrama de flujo de AV - AG*
+> **Figura 4.5.**: *Diagrama de flujo de AV - AG*
+
+El proceso comienza con la etapa de generación de datos sintéticos donde se emplea un AV o AVC según el tipo de problema a resolver (clasificación binaria o multiclase). En esta etapa el modelo de *autocodificador* es entrenado con los datos originales, y parametrizado según una configuración óptima definida. En nuestro caso, dicha configuración se obtuvo mediante el proceso de optimización de hiperparámetros descrito en el capítulo anterior. 
+
+Seguidamente, se emplea el modelo de *autocodificador* entrenado para generar *N* datos sintéticos, que se concatenan con los datos originales. Ya veremos que el valor de *N* no es trivial, dado su impacto en los resultados del AG. Como consecuencia de esta etapa, tenemos como nueva integración de los datos un conjunto que incluye tanto instancias originales y como instancias sintéticas. Finalmente, se emplea un AG para la selección de características empleando como entrada este dataset aumentado -como se puede ver en la **Figura 4.5.**.
 
 Este primer paso vinculado a la generación de datos sintéticos mediante AV incluye tanto el entrenamiento del modelo como la generación de datos sintéticos. Su objetivo es aumentar el número de muestras disponibles, y de esa forma superar el problema de la escasez muestral y el desbalance de clases. Al mismo tiempo, dado que en la tarea de generación los *autocodificadores* involucran un proceso de codificación-decodificación de la distribución de probabilidad de los datos originales, se espera que las nuevas instancias sintéticas reduzcan el ruido presente en dichos datos. 
 
-El entrenamiento de los modelos en la etapa generativa fue un entrenamiento estándar donde se utilizaron las particiones originales de entrenamiento y testeo, subdividiendo la primera en dos subconjuntos, uno para entrenamiento y otro para validación. Presentamos a continuación los parámetros de los modelos de AV y AVC configurados para cada conjunto de datos:
+El entrenamiento de los modelos en la etapa generativa fue un entrenamiento estándar donde se utilizaron las particiones originales de entrenamiento y testeo, subdividiendo la primera en dos subconjuntos, uno para entrenamiento y otro para validación. 
 
-| dataset        | modelo | capa_1 | capa_2 | capa_3 | capa_latente | tasa_aprend. | epocas |
-|----------------|--------|--------|--------|--------|--------------|--------------|--------|
-| Leukemia       | AV     | 7129   | 346    | 178    | 108          | 0.00026927   | 2889   |
-| Madelon        | AV     | 500    | 835    | 308    | 25           | 0.00015503   | 1364   |
-| Gisette        | AV     | 5000   | 3870   | 2987   | 18           | 0.00094609   | 2739   |
-| GCM            | AVC    | 16063  | 358    | 189    | 35           | 0.00068850   | 3613   |
-| ALL-Leukemia   | AVC    | 12600  | 434    | 176    | 35           | 0.00040148   | 949    |
+Para la configuración óptima de los modelos AV y AVC, se implementó una estrategia de Optimización Bayesiana (BO), tal como se detalló en el capítulo anterior. Esta metodología fue seleccionada por su eficiencia para explorar espacios de hiperparámetros amplios, logrando un equilibrio entre exploración y explotación que resultó particularmente ventajoso dado el tamaño del espacio de búsqueda. Para el modelo AV, se exploraron rangos entre 50 y 5000 neuronas para las capas 2 y 3, mientras que para la capa latente se consideraron dimensiones entre 10 y 300. En el caso del modelo AVC, los rangos explorados fueron de 50 a 3000 neuronas para las capas 2 y 3, y de 10 a 1000 para la dimensión de la capa latente. La tasa de aprendizaje se exploró en un rango entre $10^-5$ y $10^-2$, permitiendo cubrir órdenes de magnitud que típicamente resultan efectivos en el entrenamiento de redes neuronales profundas. Esta estrategia de búsqueda sistemática nos permitió identificar configuraciones óptimas para cada conjunto de datos, maximizando tanto la capacidad generativa como la calidad de las representaciones latentes.
+
+Presentamos a continuación los parámetros de los modelos de AV y AVC configurados para cada conjunto de datos:
+
+| dataset    | modelo | capa       | neuronas | tasa_aprend. | epocas |
+|------------|--------|------------|----------|--------------|--------|
+| Leukemia   | AV     | 1          | 7129     | 0.00026927   | 2889   |
+|            |        | 2          | 346      |              |        |
+|            |        | 3          | 178      |              |        |
+|            |        | latente    | 108      |              |        |
+| Madelon    | AV     | 1          | 500      | 0.00015503   | 1364   |
+|            |        | 2          | 835      |              |        |
+|            |        | 3          | 308      |              |        |
+|            |        | latente    | 25       |              |        |
+| Gisette    | AV     | 1          | 5000     | 0.00094609   | 2739   |
+|            |        | 2          | 3870     |              |        |
+|            |        | 3          | 2987     |              |        |
+|            |        | latente    | 18       |              |        |
+| GCM        | AVC    | 1          | 16063    | 0.00068850   | 3613   |
+|            |        | 2          | 358      |              |        |
+|            |        | 3          | 189      |              |        |
+|            |        | latente    | 35       |              |        |
+| ALL        | AVC    | 1          | 12600    | 0.00040148   | 949    |
+|            |        | 2          | 434      |              |        |
+|            |        | 3          | 176      |              |        |
+|            |        | latente    | 35       |              |        |
 
 > **Tabla 4.1.**: *Parámetros de los modelos de AV y AVC*
 
 Las mismas dimensiones se emplearon para las capas de las redes codificadora y decodificadora que componen los modelos de AV y AVC.
 
-En cuanto al preprocesamiento de los datos, se aplicó una normalización estándar (mediante `StandardScaler`, scikit-learn) a cada conjunto para homogenizar las escalas de las características y favorecer la convergencia del modelo. Esta normalización consiste en sustraer la media y dividir por la desviación estándar de cada variable, minimizando así el efecto de distintas magnitudes o unidades de medida.
+En cuanto al preprocesamiento de los datos, se aplicó una normalización estándar (mediante `StandardScaler`, scikit-learn) durante entrenamiento y validación a cada conjunto para homogenizar las escalas de las características y favorecer la convergencia del modelo. Esta normalización consiste en sustraer la media y dividir por la desviación estándar de cada variable, minimizando así el efecto de distintas magnitudes o unidades de medida.
 
-Avanzando al segundo paso, la selección de características se realiza utilizando un AG con datos aumentados. La implementación se centra en la optimización simultánea de la precisión de un modelo MLP y la reducción del número de características seleccionadas, utilizando los operadores genéticos vistos en la sección anterior.
+Avanzando al segundo paso, la selección de características se realiza utilizando un AG con datos aumentados. La implementación se centra en la optimización simultánea de la exactitud de un modelo MLP y la reducción del número de características seleccionadas, utilizando los operadores genéticos vistos en la sección anterior. 
+
+La función de aptitud empleada en nuestro algoritmo genético está diseñada para optimizar simultáneamente dos objetivos: maximizar la exactitud del modelo de clasificación y minimizar el número de características seleccionadas. Esta función se define como una combinación ponderada de estos dos objetivos:
+
+> $f = \alpha \cdot \text{acc} + (1 - \alpha) \cdot \text{n\_genes},$
+
+donde:   
+- $\text{acc}$ representa la exactitud del modelo de clasificación (*exactitud* para clasificación binaria o *exactitud balanceada* para clasificación multiclase)  
+- $\text{n\_genes}$ representa la proporción de características no seleccionadas (calculada como $1 - \frac{\text{características seleccionadas}}{\text{total de características}}$)   
+- $\alpha$ es un parámetro de ponderación que controla el equilibrio entre exactitud y reducción del número de características.   
+  
+En todos nuestros experimentos, el parámetro de ponderación $\alpha$ se estableció en 0.5, asignando igual importancia a ambos componentes: la exactitud del modelo y la reducción del número de características. Esta configuración refleja nuestro objetivo de encontrar un subconjunto de características que no solo maximice el rendimiento predictivo, sino que también simplifique el modelo resultante.
+
+<!-- 
+> f = α · acc + (1 - α) · n_genes
+
+Donde:
+- f es el puntaje final (entre 0 y 1)
+- α es 0.5 en todos los experimentos (igual peso para ambos componentes)
+- acc es la precisión del modelo (porcentaje de aciertos)
+- n_genes es la proporción de características NO seleccionadas
+
+Cómo funciona cada componente
+- 1. Componente de precisión (acc)
+    Es simplemente el porcentaje de predicciones correctas
+    Para problemas binarios: acc = (y_test == yp).sum() / len(y_test)
+    Para problemas multiclase: se usa precisión balanceada para manejar el desbalance de clases
+    Este valor está entre 0 y 1, donde 1 es perfecto
+    Se multiplica por α (0.5)
+- 2. Componente de características (n_genes)
+    Se calcula como: n_genes = 1 - (features.sum() / len(features))
+    features.sum() cuenta cuántas características están seleccionadas (los 1's en el cromosoma)
+    len(features) es el número total de características disponibles
+    Por lo tanto, features.sum() / len(features) es la proporción de características seleccionadas
+    Al restar de 1, obtenemos la proporción de características NO seleccionadas
+    Este valor también está entre 0 y 1, donde 1 significa que no se seleccionó ninguna característica
+    Se multiplica por (1 - α) (también 0.5)
+- En resumen
+    La función busca maximizar dos cosas simultáneamente:
+    - La precisión del modelo (queremos que sea lo más alta posible)
+    - La proporción de características NO seleccionadas (queremos usar la menor cantidad de características posible)
+    Ambos componentes tienen el mismo peso (α = 0.5), por lo que el algoritmo genético buscará un equilibrio entre tener un modelo preciso y usar pocas características.
+- Por ejemplo:
+    Un modelo con 100% de precisión usando todas las características tendría: f = 0.5 × 1 + 0.5 × 0 = 0.5
+    Un modelo con 80% de precisión usando solo 20% de las características tendría: f = 0.5 × 0.8 + 0.5 × 0.8 = 0.8
+    Un modelo con 90% de precisión usando 50% de las características tendría: f = 0.5 × 0.9 + 0.5 × 0.5 = 0.7
+Esto incentiva al algoritmo a encontrar soluciones que usen pocas características pero mantengan una buena precisión.
+ -->
+
 
 La configuración del AG a lo largo de los distintos experimentos que formaron parte de esta investigación (y que revisaremos en detalle en el próximo punto) incluyó: 
 
 - **Población inicial**: individuos generados aleatoriamente, cada uno representado como una lista de bits de longitud igual al número de características.
-- **Función de aptitud**: Maximización de la precisión del modelo de clasificación y minimización del número de características activas.
+- **Función de aptitud**: Maximización de la exactitud del modelo de clasificación y minimización del número de características activas.
 - **Operadores genéticos**: Selección por torneo, cruce de dos puntos y mutación por inversión de bits.
 - **Parámetros del AG**: Probabilidad de mutación (e.g.`PROB_MUT = 0.1`), probabilidad de cruce (e.g. `PX = 0.75`), número máximo de generaciones (e.g.`GMAX = 15`).
 - **Evaluación de características**: Análisis de la frecuencia de activación de las características a lo largo de las generaciones.
 - **Criterio de terminación**: Convergencia o número máximo de generaciones alcanzado.
 - **Análisis de resultados**: Selección de las características más relevantes basadas en su frecuencia de activación.
 
-En cada experimento, la implementación del AG comienza con la definición de los componentes básicos del algoritmo. Se define una función de aptitud (`fitness`) orientada a maximizar, que evalúa cada individuo en función de dos criterios: la precisión (`accuracy`) del modelo de clasificación entrenado con las características seleccionadas, y la fracción de características activas. Esta función de aptitud está diseñada para balancear la necesidad de un modelo predictivo preciso con la simplicidad y la eficiencia del modelo, evitando el sobreajuste y facilitando la interpretación del modelo final.
+En cada experimento, la implementación del AG comienza con la definición de los componentes básicos del algoritmo. Se define una función de aptitud (`fitness`) orientada a maximizar, que evalúa cada individuo en función de dos criterios: la exactitud del modelo de clasificación entrenado con las características seleccionadas, y la fracción de características activas. Esta función de aptitud está diseñada para balancear la necesidad de un modelo predictivo preciso con la simplicidad y la eficiencia del modelo, evitando el sobreajuste y facilitando la interpretación del modelo final.
 
 Los individuos, representados como listas de bits, se construyen utilizando una función de construcción de genes que genera un bit aleatorio basado en una probabilidad definida (`p_indpb`). Estos individuos se agrupan en una población inicial, que luego se somete a un proceso evolutivo. Durante la evolución, los individuos se seleccionan mediante la técnica de torneo, donde aquellos con mejor aptitud tienen una mayor probabilidad de ser elegidos para reproducción. Los individuos seleccionados se cruzan utilizando un operador de cruce de dos puntos (`cxTwoPoint`), que intercambia segmentos de los cromosomas de los padres para generar descendientes con combinaciones genéticas novedosas. Posteriormente, se aplica un operador de mutación que invierte los bits en el cromosoma según la probabilidad de mutación definida, asegurando que el AG mantenga la capacidad de explorar nuevas regiones del espacio de búsqueda.
 
-A lo largo de las generaciones, el AG monitoriza y registra diversas estadísticas de la población, como la aptitud promedio, la precisión y el número de genes activos. Estas métricas permiten evaluar el progreso del algoritmo y la convergencia hacia soluciones óptimas. Al final del proceso evolutivo, se realiza un análisis de las características seleccionadas, calculando la frecuencia de activación de cada característica a lo largo de las generaciones y seleccionando las más recurrentes como las más relevantes. Este enfoque permite identificar un subconjunto óptimo de características que no solo maximiza la precisión del modelo, sino que también minimiza su complejidad.
+A lo largo de las generaciones, el AG monitoriza y registra diversas estadísticas de la población, como la aptitud promedio, la exactitud y el número de genes activos. Estas métricas permiten evaluar el progreso del algoritmo y la convergencia hacia buenas soluciones. Al final del proceso evolutivo, se realiza un análisis de las características seleccionadas, calculando la frecuencia de activación de cada característica a lo largo de las generaciones y seleccionando las más recurrentes como las más relevantes. Este enfoque permite identificar un subconjunto óptimo de características que no solo maximiza la exactitud del modelo, sino que también minimiza su complejidad.
 
 Con fines ilustrativos, en el **Apéndice A** se presenta un script genérico de un Algoritmo Genético implementado con la librería `DEAP` de Python, que puede ser adaptado para la selección de características en problemas de alta dimensionalidad. 
 
@@ -182,17 +247,17 @@ El enfoque experimental adoptado fue comparativo, contrastando el desempeño de 
 
 ## Metodología seguida en los experimentos
 
-Los experimentos se diseñaron para comparar el rendimiento de los AG aplicados a los datos originales y a un conjunto de datos aumentado con muestras sintéticas. El objetivo de esta comparación era evaluar el impacto de la aumentación de datos en el proceso de selección de características. Para ello, se utilizaron los siguientes criterios de evaluación: *precisión en la clasificación*, *número de características seleccionadas* y *estabilidad de la selección de características*. Con el fin de asegurar la comparabilidad de los resultados, siempre se empleó la partición original de testeo para medir la precisión del algoritmo.
+Los experimentos se diseñaron para comparar el rendimiento de los AG aplicados a los datos originales y a un conjunto de datos aumentado con muestras sintéticas. El objetivo de esta comparación era evaluar el impacto de la aumentación de datos en el proceso de selección de características. Para ello, se utilizaron los siguientes criterios de evaluación: *exactitud en la clasificación*, *número de características seleccionadas* y *estabilidad de la selección de características*. Con el fin de asegurar la comparabilidad de los resultados, siempre se empleó la partición original de testeo para evaluar la exactitud del algoritmo.
 
-Se llevaron a cabo experimentos utilizando el modelo de AG descrito previamente, adoptando una representación binaria para las características. La función de aptitud se basó en un clasificador de perceptrón multicapa (MLP), que evaluaba la precisión de la clasificación y penalizaba el número de características seleccionadas. El objetivo del AG era identificar un subconjunto óptimo de características que maximizara la precisión y minimizara la dimensionalidad del espacio de características.
+Se llevaron a cabo experimentos utilizando el modelo de AG descrito previamente, adoptando una representación binaria para las características. La función de aptitud se basó en un clasificador de perceptrón multicapa (MLP), que evaluaba la exactitud de la clasificación y penalizaba el número de características seleccionadas. El objetivo del AG era identificar un subconjunto óptimo de características que maximizara la exactitud y minimizara la dimensionalidad del espacio de características.
 
-El aspecto innovador de este enfoque está en el uso de un AV para enriquecer el proceso de entrenamiento del AG. El AV, según vimos en el Capítulo 3, fue optimizado para generar muestras sintéticas que preservaran la estructura subyacente de los datos originales, y permitiera al AG explorar un espacio de características más amplio y diverso. La hipóstesis que se buscó validar en el presente trabajo fue que: aumentar sintéticamente el número de muestras disponibles permitiría al AG identificar un subconjunto más relevante de características, que se traduciría en una mejora en la precisión y la eficiencia de la selección.
+El aspecto innovador de este enfoque está en el uso de un AV para enriquecer el proceso de entrenamiento del AG. El AV, según vimos en el Capítulo 3, fue optimizado para generar muestras sintéticas que preservaran la estructura subyacente de los datos originales, y permitiera al AG explorar un espacio de características más amplio y diverso. La hipóstesis que se buscó validar en el presente trabajo fue que: aumentar sintéticamente el número de muestras disponibles permitiría al AG identificar un subconjunto más relevante de características, que se traduciría en una mejora en la exactitud y la eficiencia de la selección.
 
 ![](diseño_experimentos.png)
 
-> **Figura 4.4.**: *Comparación de experimentos*
+> **Figura 4.6.**: *Comparación de experimentos*
 
-## -Leukemia
+## Leukemia
 
 Según lo visto en el Capítulo 1, el conjunto de datos *Leukemia* de expresión génica obtenidos de micro-datos de ADN es reconocido por su alta dimensionalidad (7129 mediciones) relativa al número de muestras (38 para entrenamiento y 34 para testeo). Esto lo convierte en un candidato apropiado para evaluar la capacidad de los AV para generar datos sintéticos, a partir de los cuales aumentar el número de muestras disponibles y mejorar el desempeño de los AG en la selección de características. 
 
@@ -205,72 +270,72 @@ La primera serie de experimentos con datos originales y datos aumentados tuvo po
 
 En el primer conjunto de experimentos, se estableció una configuración base utilizando una probabilidad de mutación de 0.01, una probabilidad de cruce del 0.75, y una proporción de genes activos en el cromosoma del 10% del total de características, limitado a un máximo de 20 generaciones. Esta configuración fue seleccionada para equilibrar la exploración y explotación del espacio de búsqueda, asegurando que el AG pudiera explorar adecuadamente las posibles combinaciones de características sin prologar la búsqueda en exceso. Para los experimentos con aumentación de datos, se generaron 100 muestras sintéticas adicionales mediante un AV. 
 
-En estas primeras pruebas los resultados mostraron que tanto la precisión como el número de genes seleccionados fueron similares entre los grupos con y sin aumentación de datos. Sin embargo, se destacó una menor dispersión en la variaza de la precisión en los resultados del grupo con aumentación, lo que sugirió que la generación de datos sintéticos contribuyó a una mayor estabilidad del modelo.
+En estas primeras pruebas los resultados mostraron que tanto la exactitud como el número de genes seleccionados fueron similares entre los grupos con y sin aumentación de datos. Sin embargo, se destacó una menor dispersión en la variaza de la exactitud en los resultados del grupo con aumentación, lo que sugirió que la generación de datos sintéticos contribuyó a una mayor estabilidad del modelo.
 
-En un segundo grupo de experimentos exploratorios, se investigaron variaciones en la configuración de la proporción de genes activos en el cromosoma y el tamaño del conjunto de datos, para examinar en profundidad los efectos de la aumentación. Específicamente, se realizaron pruebas con conjuntos de datos aumentados que incluían 200 y 1000 muestras sintéticas adicionales, y se redujo agresivamente la proporción de genes activos en el cromosoma, en algunos casos hasta un 0.5% de las características totales. Estas configuraciones más extremas fueron seleccionadas para evaluar la robustez del AG frente a diferentes tamaños del espacio de búsqueda, especialmente en escenarios donde se esperaba que la reducción dimensional comprometiera la capacidad del AG para encontrar soluciones óptimas. 
+En un segundo grupo de experimentos exploratorios, se investigaron variaciones en la configuración de la proporción de genes activos en el cromosoma y el tamaño del conjunto de datos, para examinar en profundidad los efectos de la aumentación. Específicamente, se realizaron pruebas con conjuntos de datos aumentados que incluían 200 y 1000 muestras sintéticas adicionales, y se redujo agresivamente la proporción de genes activos en el cromosoma, en algunos casos hasta un 0.5% de las características totales. Estas configuraciones más extremas fueron seleccionadas para evaluar la robustez del AG frente a diferentes tamaños del espacio de búsqueda, especialmente en escenarios donde se esperaba que la reducción dimensional comprometiera la capacidad del AG para encontrar buenas soluciones. 
 
-### Resultados
+**Resultados**
 
-En los experimentos realizados sobre el conjunto de datos *Leukemia*, los resultados mostraron leves diferencias en favor de la aumentación en lo que respecta a precisión. Aunque la diferencia no es estadísticamente significativa -como puede verse en el gráfico de caja-, sí se observa una mayor estabilidad (menor varianza) en los resultados del grupo con datos aumentados.
+En los experimentos realizados sobre el conjunto de datos *Leukemia*, los resultados mostraron leves diferencias en favor de la aumentación en lo que respecta a exactitud. Aunque la diferencia no es estadísticamente significativa -como puede verse en el gráfico de caja-, sí se observa una mayor estabilidad (menor varianza) en los resultados del grupo con datos aumentados.
 
 ![](boxplot_leukemia_combined.png)
 
-> **Figura 4.5.**: *Precisión y número de características seleccionadas en Leukemia*
+> **Figura 4.7.**: *Exactitud (izquierda) y número de características seleccionadas (derecha) en Leukemia. Datos aumentados (rosado) y datos originales (gris).*
 
-Entendemos posible que, en conjuntos de datos donde los modelos alcanzan una precisión alta (como sucede en este caso con *Leukemia*, pero también sucede con *Gisette*, que veremos en breve), la aumentación no produce diferencias sustanciales en la performance del AG.
+Entendemos posible que, en conjuntos de datos donde los modelos alcanzan una exactitud alta (como sucede en este caso con *Leukemia*, pero también sucede con *Gisette*, que veremos en breve), la aumentación no produce diferencias sustanciales en la performance del AG.
 
 Un punto a resaltar sobre este dataset es la alta correlación entre las características, lo que se refleja en la cantidad significativa de características seleccionadas al menos una vez durante todas las pruebas realizadas. Tanto en los experimentos con datos aumentados como en los originales, el AG seleccionó al menos una vez un número muy similar de características: 6779 y 6772. Este comportamiento sugiere que la mayoría de las características están fuertemente vinculadas, lo que permite que el AG identifique soluciones efectivas utilizando diferentes subconjuntos de características. Asimismo, se observó que un pequeño porcentaje de características (aproximadamente el 10%) es suficiente para resolver el problema de clasificación, independientemente de cuáles sean esas características, debido a la redundancia en la información aportada por las correlaciones. El análisis cuantitativo de las correlaciones muestra que, aunque solo el 0.32% de los pares de características posibles tienen una correlación absoluta mayor a 0.7, estos representan un número considerable (80742) de correlaciones significativas. Es decir: aunque el número de características altamente correlacionadas es una fracción pequeña del total, su impacto en la selección de características es notable, dado que el AG tiende a seleccionar conjuntos de características que son efectivamente intercambiables debido a su alta redundancia.
 
-## -Gisette
+## Gisette
 
 El conjunto de datos *Gisette* es un problema de clasificación binaria con alta dimensionalidad y un número equilibrado de muestras en ambas clases. Es un set de datos creado para trabajar el problema de reconocimiento de dígitos escritos a mano [@isabelleguyonGisette2004], y tiene 13500 observaciones y 5000 atributos. Este conjunto de datos fue seleccionado para evaluar cómo la aumentación de datos afecta la selección de características en un contexto donde el espacio de características es grande, pero la relación señal-ruido es moderada.
 
 La metodología seguida en los experimentos con *Gisette* fue similar a la utilizada en *Leukemia*. La configuración del AG estuvo establecida en: probabilidad de mutación de 0.0002, probabilidad de cruce de 0.75, proporción de genes activos en el cromosoma de 0.1 y un número máximo de generaciones de 30. Se prestó especial atención a la reducción del espacio de búsqueda mediante una proporción de genes activos en el cromosoma equivalente a 500 características. Se investigó también el impacto de generar un número mucho mayor de muestras sintéticas (6000).
 
-### Resultados
+**Resultados**
 
-Los resultados en *Gisette* fueron similares a los observados en *Leukemia*. La precisión media en el conjunto de datos de testeo fue ligeramente superior en los experimentos con datos aumentados (0.960) en comparación con los datos originales (0.959), pero sin diferencia estadística significativa.
+Los resultados en *Gisette* fueron similares a los observados en *Leukemia*. La exactitud media en el conjunto de datos de testeo fue ligeramente superior en los experimentos con datos aumentados (0.960) en comparación con los datos originales (0.959), pero sin diferencia significativa.
 
 ![](boxplot_gisette_combined.png)
 
-> **Figura 4.6.**: *Precisión y número de características seleccionadas en Gisette*
+> **Figura 4.8.**: *Exactitud (izquierda) y número de características seleccionadas (derecha) en Gisette. Datos aumentados (rosado) y datos originales (gris).*
 
-Este hallazgo parece sugerir que la aumentación de datos no produce diferencias significativas en la performance del AG en conjuntos de datos donde los modelos ya alcanzan una alta precisión, y donde la cantidad de observaciones originales es suficiente para la aplicación de estrategias de selección. Sin embargo, la estabilidad de la selección de características sí parece sugerir una mejora con la aumentación, como se refleja en la menor desviación estándar y el rango intercuartílico (IQR):
+Este hallazgo parece sugerir que la aumentación de datos no produce diferencias significativas en la performance del AG en conjuntos de datos donde los modelos ya alcanzan una alta exactitud, y donde la cantidad de observaciones originales es suficiente para la aplicación de estrategias de selección. Sin embargo, la estabilidad de la selección de características sí parece sugerir una mejora con la aumentación, como se refleja en la menor desviación estándar y el rango intercuartílico (IQR):
 
 
 |                    | Datos aumentados    | Datos originales    |
 |--------------------|---------------------|---------------------|
-|**Características seleccionadas (media)** | 424.231             | 436.667             |
-|**Desviación Estándar**                  | 17.796              | 14.355              |
-|**Rango Intercuartil (IQR)**             | 8.000               | 21.500              |
+|**Características seleccionadas (media)** | 424                 | 436                 |
+|**Desviación Estándar**                  | 17                  | 14                  |
+|**Rango Intercuartil (IQR)**             | 8                   | 21                  |
 
 > **Tabla 4.2.**: *Comparación de experimentos en Gisette*
 
-En efecto, en *Gisette* se observa una diferencia más importante en la eficiencia de la selección de características. En los experimentos con datos aumentados, el número promedio de características seleccionadas fue menor (424) en comparación con los datos originales (436), señalando que el AG fue más efectivo en el reconocimiento de un subconjunto relevantes. 
+En efecto, en *Gisette* se observa una diferencia más importante en la estabilidad de la selección de características. En los experimentos con datos aumentados, el número promedio de características seleccionadas fue menor (424) en comparación con los datos originales (436), señalando que el AG fue más efectivo en el reconocimiento de un subconjunto relevantes. 
 
-## -Madelon
+## Madelon
 
-El conjunto de datos *Madelon* es un caso especial donde solo cinco características son relevantes, mientras que otras quince son combinaciones lineales de estas, y el resto son datos aleatorios. Así, este conjunto representa un desafío interesante para evaluar la capacidad de los AG para identificar características útiles en un entorno donde la señal está oculta entre una gran cantidad de ruido.
+El conjunto de datos *Madelon* es un caso especial donde solo cinco características son relevantes, y las otras quince son combinaciones lineales de estas, y el resto son datos aleatorios. Así, este conjunto representa un desafío interesante para evaluar la capacidad de los AG para identificar características útiles en un entorno donde la señal está oculta entre una gran cantidad de ruido.
 
 La metodología seguida en los experimentos con *Madelon* fue similar a la utilizada en *Leukemia* y *Gisette*. La configuración del AG fue la siguiente: la probabilidad de mutación se estableció en 0.002, la probabilidad de cruce en 0.75 y la proporción de genes activos en el cromosoma en 0.1. El número máximo de generaciones se estableció en 30.
 
 Se generaron 2000 muestras sintéticas para incrementar el número de observaciones disponibles y evaluar si esto mejoraba la capacidad del AG para encontrar las características relevantes. Como en los experimentos precedentes, se exploraron diferentes configuraciones de la proporción de genes activos en el cromosoma y se investigó cómo la aumentación de datos, en el contexto de un espacio de búsqueda complejo y ruidoso, afectaba la eficiencia de la selección de características.
 
-### Resultados
+**Resultados**
 
-Los experimentos en Madelon mostraron resultados significativamente diferentes a Leukemia y Gisette. La precisión media en los experimentos con datos aumentados fue de 0.83, lo que representa un aumento del 10.4% en comparación con la precisión de los datos originales de 0.75. Esta diferencia es estadísticamente significativa, lo que indica que la aumentación de datos tuvo un impacto positivo en el desempeño del AG.
+Los experimentos en Madelon mostraron resultados significativamente diferentes a Leukemia y Gisette. La exactitud media en los experimentos con datos aumentados fue de 0.83, lo que representa un aumento del 10.4% en comparación con la exactitud de los datos originales de 0.75. Esta diferencia es significativa, lo que indica que la aumentación de datos tuvo un impacto positivo en el desempeño del AG.
 
 ![](boxplot_madelon_combined.png)
 
-> **Figura 4.7.**: *Precisión y número de características seleccionadas en Madelon*
+> **Figura 4.9.**: *Exactitud (izquierda) y número de características seleccionadas (derecha) en Madelon. Datos aumentados (rosado) y datos originales (gris).*
 
-Estos resultados sugieren que la aumentación de datos puede ser especialmente efectiva en conjuntos de datos con características complejas y un alto nivel de ruido, como es el caso de Madelon. La generación de muestras sintéticas permitió al AG identificar mejor las características relevantes, lo que se tradujo en una mejora significativa en la precisión del modelo.
+Estos resultados sugieren que la aumentación de datos puede ser especialmente efectiva en conjuntos de datos con características complejas y un alto nivel de ruido, como es el caso de Madelon. La generación de muestras sintéticas permitió al AG identificar mejor las características relevantes, lo que se tradujo en una mejora significativa en la exactitud del modelo.
 
-Por otro lado, el análisis de selección de características reveló que, en promedio, el número de características seleccionadas fue menor en los experimentos con datos aumentados (29) en comparación con los datos originales (35). Este hallazgo, también resalta la eficiencia de la aumentación de datos en la selección de características.
+Por otro lado, el análisis de selección de características reveló que, en promedio, el número de características seleccionadas fue menor en los experimentos con datos aumentados (29) en comparación con los datos originales (35). Este hallazgo, también resalta el efecto positivo que produce la aumentación de datos en la selección de características.
 
-Finalmente, podemos destacar también que de los algoritmos clásicos evaluados (cuyo reporte hicimos en el Capítulo 2) solo 2 de los 18 logran superan los valores de precisión obtenidos con el AG en los datos aumentados. Ambos modelos, AdaBoost y Bagging, lograron esos resultados luego de un proceso de optimización de hiperparámetros. El resto de los modelos clásicos oscila entre 0.5 y 0.7 de precisión, lo que refuerza la idea de que la aumentación de datos puede ser una estrategia efectiva para mejorar el desempeño de los AG en conjuntos de datos complejos.
+Finalmente, podemos destacar también que de los algoritmos clásicos evaluados (cuyo reporte hicimos en el Capítulo 2) solo 2 de los 18 logran superan los valores de exactitud obtenidos con el AG en los datos aumentados. Ambos modelos, AdaBoost y Bagging, lograron esos resultados luego de un proceso de optimización de hiperparámetros. El resto de los modelos clásicos oscila entre 0.5 y 0.7 de exactitud, lo que refuerza la idea de que la aumentación de datos puede ser una estrategia efectiva para mejorar el desempeño de los AG en conjuntos de datos complejos.
 
-## -GCM
+## GCM
 
 El conjunto de datos *GCM* consiste en 16063 atributos (biomarcadores), sobre 190 muestras de tumores que refieren a 14 clases de cáncer humano. Este problema representa un desafío aún mayor que los anteriores no solo debido a la alta dimensionalidad y bajo número de muestras, sino también por las múltiples clases y el desbalance entre ellas.  
 
@@ -294,28 +359,28 @@ La cantidad de muestras sintéticas generadas en los experimentos fue ajustada a
 
 ### Primera etapa de experimentación
 
-Al enfrentarnos a GCM asumíamos que la generación sintética de muestras y ulterior proceso de selección de características plantearía un desafío significativo al AG debido a la complejidad del dataset. La calidad de reconstrucción lograda en los datos sintéticos generados por el AVC presentado en el Capítulo 3, aunque capaz de preservar la estructura subyacente del conjuntos de datos de GCM, no permitía suponer una mejora significativa en la precisión de la clasificación con un AG. Por otro lado, el desbalance que tienen las clases en GCM, determinaba que la calidad de reconstrucción de las clases minoritarias fuera menor, lo que podría afectar la capacidad del AG para identificar un subconjunto relevante de características. Por todo ello, esperábamos que los experimentos con datos aumentados presentaran resultados mixtos, con posibles mejoras en la estabilidad de la selección de características, pero sin mejoras significativas en la precisión. 
+Al enfrentarnos a GCM asumíamos que la generación sintética de muestras y ulterior proceso de selección de características plantearía un desafío significativo al AG debido a la complejidad del dataset. La calidad de reconstrucción lograda en los datos sintéticos generados por el AVC presentado en el Capítulo 3, aunque capaz de preservar la estructura subyacente del conjuntos de datos de GCM, no permitía suponer una mejora significativa en la exactitud de la clasificación con un AG. Por otro lado, el desbalance que tienen las clases en GCM, determinaba que la calidad de reconstrucción de las clases minoritarias fuera menor, lo que podría afectar la capacidad del AG para identificar un subconjunto relevante de características. Por todo ello, esperábamos que los experimentos con datos aumentados presentaran resultados mixtos, con posibles mejoras en la estabilidad de la selección de características, pero sin mejoras significativas en la exactitud. 
 
 Respecto de los recursos de hardware utilizados, dado que la aumentación de datos requeriría un poder de cómputo proporcional al tamaño del dataset por la cantidad de muestras sintéticas generadas, se optó por utilizar un entorno en la nube para ejecutar los experimentos de manera eficiente. Para este propósito, se trabajó con una máquina virtual con 8 vCPUs y 30 GB de RAM.
 
 La configuración inicial del AG fue la siguiente: se establecieron probabilidades de mutación en 0.0006, 0.01 y 0.1, probabilidad de cruce en 0.75, proporción de genes activos en el cromosoma en 0.1 y un número máximo de generaciones de 20.
 
-En la primera etapa se experimentó con una proporción de genes activos en el cromosoma que representaba el 10% de las características totales, alrededor de 1600 genes por cromosoma, tanto para el grupo de experimentos con datos originales como al grupo de experimentos con datos aumentados. Esta medida se adoptó luego de realizados dos experimentos exploratorios con cromosomas activos en valores del 20% y 30% de las características totales, donde se observó una acentuada degradación en la precisión (en el rango de 0.2 y 0.35). 
+En la primera etapa se experimentó con una proporción de genes activos en el cromosoma que representaba el 10% de las características totales, alrededor de 1600 genes por cromosoma, tanto para el grupo de experimentos con datos originales como al grupo de experimentos con datos aumentados. Esta medida se adoptó luego de realizados dos experimentos exploratorios con cromosomas activos en valores del 20% y 30% de las características totales, donde se observó una acentuada degradación en la exactitud (en el rango de 0.2 y 0.35). 
 
 Asimismo se varió la probabilidad de mutación en tres valores: 0.0006, 0.01 y 0.1, para instar una exploración más amplia del espacio de búsqueda. La probabilidad de cruce se mantuvo constante en 0.75, y el número máximo de generaciones fue de 20.
 
 Respecto del grupo de experimentos con datos aumentados, el dataset mixto de entrenamiento incluía 1400 muestras sintéticas (100 instancias por clase) y la partición original de entrenamiento (con 133 observaciones). La evaluación se realizó sobre los datos originales de testeo (57 observaciones). 
 
-Los resultados, como anticipabamos, nos fueron favorables. La precisión media fue ligeramente superior en los experimentos con datos originales (0.538) en comparación con los datos aumentados (0.512). La estabilidad de la selección de características fue similar en ambos grupos, con una dispersión similar en la cantidad de características seleccionadas, como se puede observar en el siguiente gráfico.
+Los resultados, como anticipabamos, no fueron favorables. Como puede verse en la **Figura 4.10** la exactitud media fue ligeramente superior en los experimentos con datos originales (0.538) en comparación con los datos aumentados (0.512). La estabilidad de la selección de características fue similar en ambos grupos, con una dispersión similar en la cantidad de características seleccionadas, como se puede observar en el siguiente gráfico.
 
 ![](boxplot_gcm_combined_part1.png)
 
-> **Figura 4.8.**: *Precisión y número de características seleccionadas en GCM, primera etapa.*
+> **Figura 4.10.**: *Exactitud (izquierda) y número de características seleccionadas (derecha) en GCM, primera etapa. Datos aumentados (rosado) y datos originales (gris).*
 
-Como resultado de esta primera etapa de experimentos se identificó una dificultad importante en la metodología utilizada. La calidad de los datos sintéticos generados por el AVC no contribuyó a mejorar la precisión de la clasificación, consecuentemente el AG con datos aumentados no tiene mejores resultados que el AG con datos originales. Ante esta circunstancia se procedió a realizar un test de diagnóstico para evaluar la calidad de los datos sintéticos. Se generaron 3000 muestras, se entrenó y evaluó un MLP con estos datos. Los resultados en la partición sintética de testeo fueron los siguientes:
+Como resultado de esta primera etapa de experimentos se identificó una dificultad importante en la metodología utilizada. La calidad de los datos sintéticos generados por el AVC no contribuyó a mejorar la exactitud de la clasificación, consecuentemente el AG con datos aumentados no tiene mejores resultados que el AG con datos originales. Ante esta circunstancia se procedió a realizar un test de diagnóstico para evaluar la calidad de los datos sintéticos. Se generaron 3000 muestras, se entrenó y evaluó un MLP con estos datos. Los resultados en la partición sintética de testeo fueron los siguientes:
 
 
-| Clase | Precisión | Recall | F1-Score | Support |
+| Clase | Precisión | Recall | F1-Score | Soporte |
 |-------|-----------|--------|----------|---------|
 | 0     | 1.00      | 1.00   | 1.00     | 23      |
 | 1     | 1.00      | 1.00   | 1.00     | 28      |
@@ -337,9 +402,9 @@ Como resultado de esta primera etapa de experimentos se identificó una dificult
 
 > **Tabla 4.4.**: *Resultados del MLP en los datos sintéticos de GCM*
 
-Estos resultados sugieren que el MLP fue capaz de aprender correctamente la estructura de los datos sintéticos, lo que se tradujo en una precisión del 100% en la clasificación, sin embargo, el mismo modelo evaluado en los datos de test originales arrojó una precisión de 0.5. Esta discrepancia sugiere que la distribución de probabilidad de los datos sintéticos no es representativa de la que caracteriza a los datos reales, circunstancia que estaría limitando la capacidad del AG para identificar un subconjunto relevante de características. Esto explicaría las motivos por los cuales los experimentos con datos aumentados no lograron mejorar la precisión de la clasificación.
+Estos resultados sugieren que el MLP fue capaz de aprender correctamente la estructura de los datos sintéticos, lo que se tradujo en una exactitud del 100% en la clasificación, sin embargo, el mismo modelo evaluado en los datos de test originales arrojó una exactitud de 0.5. Esta discrepancia sugiere que la distribución de probabilidad de los datos sintéticos no es representativa de la que caracteriza a los datos reales, circunstancia que estaría limitando la capacidad del AG para identificar un subconjunto relevante de características. Esto explicaría los motivos por los cuales los experimentos con datos aumentados no lograron mejorar la exactitud de la clasificación.
 
-En este punto, asumimos que un problema importante que tenía nuestro modelo de AVC se explicaba por efecto de la función de pérdida sobre la reconstrucción, en lo que se conoce como *colapso de la distribución posterior* [^colapsodistribucionposterior]. En efecto, como vimos en el Capítulo 3, dicha función resulta de la combinación de dos términos: la pérdida de reconstrucción y la divergencia KL. La divergencia KL es una medida de la diferencia entre dos distribuciones de probabilidad, y se utiliza para regularizar el espacio latente, mantenerlo distribuido y compacto; mientras que la pérdida de reconstrucción mide la diferencia entre los datos originales y los datos reconstruidos. En el caso de GCM, la divergencia KL podría estar dominando la función de pérdida, lo que resultaría en una distribución latente regularizada, pero no necesariamente representativa de los datos reales. Esto significa que el modelo está produciendo una distribución convenientemente discriminada, a expensas de la precisión en la reconstrucción de los datos originales. Situación particularmente problemática cuando los datos presentan relaciones complejas como en GCM. Ante esta problemática, entendimos que se abrían distintos caminos: podíamos ajustar los pesos de la divergencia KL y la reconstrucción para que el AVC sea capaz de generar datos que sean representativos de los datos reales, o bien, explorar la aplicación del AVC a un subespacio de características seleccionadas por un AG, lo que podría reducir la complejidad del problema y mejorar la calidad de los datos sintéticos. En la próxima parte de los experimentos, exploramos esta segunda opción. 
+En este punto, asumimos que un problema importante que tenía nuestro modelo de AVC se explicaba por efecto de la función de pérdida sobre la reconstrucción, en lo que se conoce como *colapso de la distribución posterior* [^colapsodistribucionposterior]. En efecto, como vimos en el Capítulo 3, dicha función resulta de la combinación de dos términos: la pérdida de reconstrucción y la divergencia KL. La divergencia KL es una medida de la diferencia entre dos distribuciones de probabilidad, y se utiliza para regularizar el espacio latente, mantenerlo distribuido y compacto; mientras que la pérdida de reconstrucción mide la diferencia entre los datos originales y los datos reconstruidos. En el caso de GCM, la divergencia KL podría estar dominando la función de pérdida, lo que resultaría en una distribución latente regularizada, pero no necesariamente representativa de los datos reales. Esto significa que el modelo está produciendo una distribución convenientemente discriminada, a expensas de la exactitud en la reconstrucción de los datos originales. Situación particularmente problemática cuando los datos presentan relaciones complejas como en GCM. Ante esta problemática, entendimos que se abrían distintos caminos: podíamos ajustar los pesos de la divergencia KL y la reconstrucción para que el AVC sea capaz de generar datos que sean representativos de los datos reales, o bien, explorar la aplicación del AVC a un subespacio de características seleccionadas por un AG, lo que podría reducir la complejidad del problema y mejorar la calidad de los datos sintéticos. En la próxima parte de los experimentos, exploramos esta segunda opción. 
 
 [^colapsodistribucionposterior]: El fenómeno de colapso de la distribución posterior se manifiesta cuando la distribución posterior aproximada, derivada de la red codificadora a partir de los datos de entrada, converge a la distribución previa (en nuestro caso una gaussiana estándar) durante el entrenamiento de un AV. Esto ocurre debido al término de divergencia de Kullback–Leibler incluido en el ELBO, el cual impone una regularización que penaliza la desviación de la distribución posterior respecto a la distribución previa [@dangVanillaVariationalAutoencoders2024]. El resultado es que el modelo se adapta a la distribución previa, produciendo una distribución posterior que no es representativa los datos reales.
 
@@ -353,39 +418,47 @@ En segundo lugar, se integró un muestreador aleatorio ponderado en la etapa de 
 
 Finalmente, se ajustó la etapa de inicio del proceso generativo, aplicando el AVC ya no al conjunto de datos completo, sino a un subconjunto de características seleccionadas por un AG. La idea era reducir la complejidad del problema y mejorar la calidad de los datos sintéticos, permitiendo al AVC enfocarse en un espacio de características reducido y relevante. Veamos esto último en detalle.
 
-Como vimos, una de las limitaciones observadas en los experimentos iniciales fue la dificultad del AVC para generar datos sintéticos representativos de la distribución de los datos reales. Asumimos entonces, que aplicar el AVC a un subconjunto de características seleccionadas tendría como resultado una simplificación de la distribución de probabilidad original, y por lo tanto una mejora en la calidad de los datos sintéticos. Para ello, se diseñó un flujo de procesamiento que partía de un subespacio de características relevantes, y luego procedía a la generación de datos sintéticos con un AVC y la selección de características mediante un AG, tal cual el flujo de trabajo presentado más arriba. 
+Como vimos, una de las limitaciones principales identificadas en los experimentos iniciales fue la dificultad del AVC para generar datos sintéticos que representaran fielmente la distribución de los datos reales. Para abordar este problema, planteamos una hipótesis: si aplicábamos el AVC a un subconjunto seleccionado de características relevantes (en lugar de todas las características), podríamos simplificar la distribución de probabilidad que el modelo necesitaba aprender, y de esa manera podría mejorar la calidad de los datos sintéticos generados.
 
-La definición del subespacio de entrada partió de las características más frecuentes encontradas en los experimentos iniciales, donde se trabajó con una proporción de genes activos en el cromosoma que representaba el 10% de las características totales, alrededor de 1600 genes por cromosoma. Este subconjunto de características, que ya habían sido preseleccionadas por un AG, se utilizó como entrada para el AVC. A partir de este subconjunto, se aplicó el modelo generativo a la creación de datos sintéticos, y luego se procedió a la selección de características mediante un AG. Este flujo de trabajo, consistente en el encadenamiento de tres procesos: *selección-generación-selección*, permitió concentrar el aprendizaje de los modelos en un subespacio de características.
+Para verificar esta hipótesis, diseñamos un flujo de trabajo en tres etapas:
+
+1. **Selección inicial**: Primero identificamos un subespacio de características relevantes utilizando los resultados de experimentos previos con AG. Este era un paso crítico porque debía reducir el espacio del problema pero al mismo tiempo evitar pérdida de información relevante. Entonces, para lograr esos objectivos, seleccionamos las características que aparecían con mayor frecuencia en los cromosomas de experimentos previos, donde cada cromosoma representaba aproximadamente el 10% de las características totales (alrededor de 1600 genes por cromosoma).
+
+2. **Generación**: Este subconjunto preseleccionado de características se utilizó como entrada para el AVC, que ahora podía enfocarse en aprender y modelar un espacio de menor dimensionalidad. El modelo generativo entrenado con este subespacio produjo datos sintéticos potencialmente de mayor calidad.
+
+3. **Selección final**: Finalmente, aplicamos nuevamente un AG para realizar la selección de características, pero esta vez utilizando los datos aumentados (originales + sintéticos) generados en la etapa anterior.
+
+Este enfoque secuencial de **"selección-generación-selección"** permitió concentrar el aprendizaje de los modelos en un subespacio de características más relevante, facilitando que el AVC capturara mejor las relaciones importantes entre variables y generara datos sintéticos más representativos de la distribución original.
 
 Respecto de la configuración de los experimentos se implementaron las siguientes modificaciones: se ajustó el total de muestras sintéticas generadas por el AVC a 3000. Se redujo la proporción de genes activos en el cromosoma a 0.05 y 0.025 respecto del espacio original de características (~750 y ~450 atributos respectivamente). Se mantuvo constante la probabilidad de cruce en 0.75, como también la probabilidad de mutación en 0.1 (~0.0006). El número máximo de generaciones se redujo a 15, considerando la reducción en la complejidad del problema.
 
-Como resultado de todas estas modificaciones, se esperaba una mayor calidad de los datos sintéticos, lo que se traduciría en una mejora en la precisión de la clasificación, y en la eficiencia de la selección de características.
+Como resultado de todas estas modificaciones, se esperaba una mayor calidad de los datos sintéticos, lo que se traduciría en una mejora en la exactitud de la clasificación, y en la eficiencia de la selección de características.
 
-### Resultados Parte 2
+**Resultados Parte 2**
 
-Efectivamente, los experimentos realizados en la segunda parte de la investigación mostraron una mejora significativa en la precisión de la clasificación. 
+Efectivamente, los experimentos realizados en la segunda parte de la investigación mostraron una mejora significativa en la exactitud de la clasificación. 
 
-A pesar del desafío que supone la clasificación de las 14 clases desbalancedadas que posee el dataset de testeo de GCM, la precisión media en los experimentos con datos aumentados fue de 0.541, lo que representa un aumento de 8.85% en comparación con la precisión de los datos originales de 0.497. Esta diferencia es estadísticamente significativa, lo que indica que la aumentación de datos tuvo un impacto positivo en el desempeño del AG. 
+A pesar del desafío que supone la clasificación de las 14 clases desbalancedadas que posee el dataset de testeo de GCM, la exactitud media en los experimentos con datos aumentados fue de 0.541, lo que representa un aumento de 8.85% en comparación con la exactitud de los datos originales de 0.497. Esta diferencia es significativa, lo que indica que la aumentación de datos tuvo un impacto positivo en el desempeño del AG. 
 
 ![](boxplot_gcm_combined.png)
 
-> **Figura 4.9.**: *Precisión y número de características seleccionadas en GCM, segunda etapa.*
+> **Figura 4.11.**: *Exactitud (izquierda) y número de características seleccionadas (derecha) en GCM, segunda etapa. Datos aumentados (rosado) y datos originales (gris).*
 
 Respecto de la selección de características, no se observa gran diferencia en el número de características seleccionadas entre los experimentos con datos originales y los datos aumentados. En efecto, el número de características promedio seleccionadas en los experimentos con aumentación y cromosomas de tamaño 0.05 y 0.025 fue de 453 y 784 respectivamente, en comparación con 461 y 781 en los experimentos con datos originales.
 
-Para validar los resultados obtenidos, se realizó un grupo de experimentos adicionales donde se disminuyó la proporción de genes activos en el cromosoma a 0.015 y 0.003, lo que representó una selección de atributos en torno a ~200 y ~45. Los resultados mostraron que, pese a la importante reducción en el espacio de búsqueda, la precisión se mantuvo en un nivel aceptable en ambos grupos. La mejor performance del grupo con datos aumentados tiene lugar en los experimentos con reducción más agregisiva del cromosomas, con un tamaño 0.003 (~45). 
+Para validar los resultados obtenidos, se realizó un grupo de experimentos adicionales donde se disminuyó la proporción de genes activos en el cromosoma a 0.015 y 0.003, lo que representó una selección de atributos en torno a ~200 y ~45. Los resultados de la **Figura 4.10** mostraron que, pese a la importante reducción en el espacio de búsqueda, la exactitud se mantuvo en un nivel aceptable en ambos grupos. La mejor performance del grupo con datos aumentados tiene lugar en los experimentos con reducción más agregisiva del cromosomas, con un tamaño 0.003 (~45). 
 
-A continuación presentamos la serie completa de experimentos realizados en GCM, donde se puede observar la evolución de la precisión en función dla proporción de genes activos en el cromosoma. 
+A continuación presentamos la serie completa de experimentos realizados en GCM, donde se puede observar la evolución de la exactitud en función dla proporción de genes activos en el cromosoma. 
 
 ![](boxplot_gcm_ngenes_accuracy.png)
 
-> **Figura 4.10.**: *Resultados completos de GCM*
+> **Figura 4.12.**: *Experimentos con GCM variando el número de características seleccionadas. Datos aumentados (rosado) y datos originales (gris).*
 
-Finalmente, se realizó un experimento con 6000 muestras sintéticas, donde se observó una degradación de los resultados. Esto sugiere que la generación de un número excesivo de muestras sintéticas puede comprometer la calidad de los datos y afectar negativamente la precisión de la clasificación.
+Finalmente, se realizó un experimento con 6000 muestras sintéticas, donde se observó una degradación de los resultados. Esto sugiere que la generación de un número excesivo de muestras sintéticas puede comprometer la calidad de los datos y afectar negativamente la exactitud de la clasificación.
 
-Todo lo anterior sugiere que, si bien la aumentación de datos mediante AV puede enfrentar desafíos significativos en conjuntos de datos complejos como *GCM*, es posible mejorar la calidad de los datos sintéticos mediante ajustes en la arquitectura del AV y en la metodología de selección de características. La combinación de AV y AG en un flujo de trabajo encadenado demostró ser una estrategia prometedora para mejorar la precisión y la eficiencia en la selección de características.
+Todo lo anterior sugiere que, si bien la aumentación de datos mediante AVC puede enfrentar desafíos significativos en conjuntos de datos complejos como *GCM*, es posible mejorar la calidad de los datos sintéticos mediante ajustes en la arquitectura del AVC y en la metodología de selección de características. La combinación de AVC y AG en un flujo de trabajo encadenado demostró ser una estrategia prometedora para mejorar la exactitud y la eficiencia en la selección de características.
 
-## -All Leukemia
+## All Leukemia
 
 Con el fin de validar el tratamiento dado a GCM, particularmente la estrategia de encadenamiento de procesos de *selección-generación-selección*, se decidió aplicar la misma metodología a un nuevo dataset *All-Leukemia*. Este dataset, que contiene 12600 variables (i.e. genes) y 327 muestras, es un caso de estudio clásico en la literatura de clasificación de tumores.
 
@@ -395,45 +468,41 @@ Al igual que en GCM, se realizaron experimentos con datos originales y aumentado
 
 Se probaron 3 escenarios de reducción de características, con un ratio de genes activos de 0.003, 0.015 y 0.025, dando como resultado un tamaño de cromosoma en torno a las 35, 180 y 300 variables. El algoritmo genético utilizado en esta oportunidad realizaba 15 generaciones.
 
-Los resultados generales se pueden observar en el siguiente gráfico.
+Los resultados generales se pueden observar en la **Figura 4.13**.
 
-![All-Leukemia Resultados](boxplot_all_leukemia_ngenes_accuracy.png)
+![](boxplot_all_leukemia_ngenes_accuracy.png)
 
-> **Figura 4.11.**: *Resultados completos de All-Leukemia*
+> **Figura 4.13.**: *Experimentos con ALL-Leukemia variando el número de características seleccionadas. Datos aumentados (rosado) y datos originales (gris).*
 
-Como puede advertirse, los experimentos muestran que la estrategia de encadenamiento de procesos de *selección-generación-selección* presenta una ligera mejora en la precisión de clasificación en los casos de drástica reducción de características en torno a los 35 y 200 genes activos. No se evidencia diferencia significativa entre los experimentos con 300 genes activos. 
+Como puede advertirse, los experimentos muestran que la estrategia de encadenamiento de procesos de *selección-generación-selección* presenta una ligera mejora en la exactitud de clasificación en los casos de drástica reducción de características en torno a los 35 y 200 genes activos. No se evidencia diferencia significativa entre los experimentos con 300 genes activos. 
 
 Respecto de la eficacia en la selección de características, no se observa una diferencia significativa entre los experimentos con datos originales y los datos aumentados como puede apreciarse en los siguientes gráficos.
 
 ![](boxplot_all_leukemia_35_med_combined.png)
 
-> **Figura 4.12.**: *Resultados de All-Leukemia con 35 genes activos*
+> **Figura 4.14.**: *Resultados de All-Leukemia con 35 genes activos. Datos aumentados (rosado) y datos originales (gris).*
 
 ![](boxplot_all_leukemia_180_med_combined.png)
 
-> **Figura 4.13.**: *Resultados de All-Leukemia con 180 genes activos*
+> **Figura 4.15.**: *Resultados de All-Leukemia con 180 genes activos. Datos aumentados (rosado) y datos originales (gris).*
 
-En el caso del experimento con 35 genes activos (promedio) se advierte, pese a la mejora en la precisión, una leve degradación en la estabilidad de los resultados. Entendemos que esto se explica por la reducción en la cantidad de genes activos y la sensibilidad del AG a parámetros como la probabilidad de mutación. En este caso, el experimento tuvo una probabilidad de mutación de 0.028, operando una importante variabilidad en la estructura de los cromosomas y afectando la estabilidad de la selección.
+En el caso del experimento con 35 genes activos (promedio) se advierte, pese a la mejora en la exactitud, una leve degradación en la estabilidad de los resultados. Entendemos que esto se explica por la reducción en la cantidad de genes activos y la sensibilidad del AG a parámetros como la probabilidad de mutación. En este caso, el experimento tuvo una probabilidad de mutación de 0.028, operando una importante variabilidad en la estructura de los cromosomas y afectando la selección.
 
 ## Resumen de los resultados
 
-Los experimentos realizados en los cuatro conjuntos de datos (*Leukemia*, *Gisette*, *Madelon* y *GCM*) evidencian resultados positivos sobre el impacto de la aumentación de datos mediante Autocodificacadores Variacionales en la selección de características utilizando Algoritmos Genéticos. Dicha tendencia tiene confirmación en los resultados obtenidos en el dataset *All-Leukemia*.
+Los experimentos realizados en los cuatro conjuntos de datos (*Leukemia*, *Gisette*, *Madelon* y *GCM*) evidencian resultados positivos sobre el impacto de la aumentación de datos mediante Autocodificacadores Variacionales en la selección de características utilizando Algoritmos Genéticos. Dicha tendencia tiene confirmación en los resultados obtenidos en el dataset *All-Leukemia* como se puede apreciar en la **Figura 4.13**.
 
 ![](boxplot_resultados_precision.png)
 
-> **Figura 4.14.**: *Precisión en los 4 datasets*
+> **Figura 4.16.**: *Exactitud en los 4 datasets.*
 
 ![](boxplot_resultados_ngenes.png)
 
-> **Figura 4.15.**: *Número de características seleccionadas en los 4 datasets*
+> **Figura 4.17.**: *Número de características seleccionadas en los 4 datasets.*
  
-![](boxplot_all_leukemia_ngenes_accuracy.png)
+El uso de datos aumentados no siempre produjo mejoras en la exactitud de clasificación, pero sí marcó una diferencia relevante ante los casos más difíciles. En efecto, en problemas con métricas saturadas su aporte agrega un valor marginal, asociado a la estabilidad de los resultados, como se vió en *Leukemia* y *Gisette*. Ambos datasets representan desafíos donde los modelos ya alcanzan una alta performance procesando los datos en su estado original. Sin embargo, en dataset más complejos, donde el margen de mejora en las predicciones es mayor, como los casos de *Madelon*, *GCM* y *All-Leukemia*, la técnica de aumentación generó resultados positivos, particularmente en los dos primeros donde se observó un salto del 10% y 9% respectivamente en el resultado final. Este hallazgo sugiere que la aumentación de datos puede contribuir a generar modelos más consistentes a lo largo de múltiples generaciones, lo cual es particularmente relevante en escenarios de alta dimensionalidad, escasez muestral y ruido.
 
-> **Figura 4.16.**: *Precisión en el dataset de validación*
-> 
-El uso de datos aumentados no siempre produjo mejoras estadísticamente significativas en la precisión de clasificación, pero sí marcó una diferencia relevante ante los casos más difíciles. En efecto, en problemas con métricas saturadas su aporte agrega un valor marginal, asociado a la estabilidad de los resultados, como se vió en *Leukemia* y *Gisette*. Ambos datasets representan desafíos donde los modelos ya alcanzan una alta performance procesando los datos en su estado original. Sin embargo, en dataset más complejos, donde el margen de mejora en las predicciones es mayor, como los casos de *Madelon*, *GCM* y *All-Leukemia*, la técnica de aumentación generó resultados positivos, particularmente en los dos primeros donde se observó un salto del 10% y 9% respectivamente en el resultado final. Este hallazgo sugiere que la aumentación de datos puede contribuir a generar modelos más consistentes a lo largo de múltiples generaciones, lo cual es particularmente relevante en escenarios de alta dimensionalidad, escasez muestral y ruido.
-
-En el caso del conjunto de datos *Madelon*, donde el problema de selección de características presenta una clara distinción entre señales relevantes y ruido, la aumentación de datos mostró una mejora significativa en la precisión, incrementando la capacidad del AG para identificar las características correctas en un espacio de búsqueda extremadamente ruidoso. Este resultado resalta la utilidad de la aumentación en problemas donde la presencia de señales distractoras dificulta la tarea de selección.
+En el caso del conjunto de datos *Madelon*, donde el problema de selección de características presenta una clara distinción entre señales relevantes y ruido, la aumentación de datos mostró una mejora significativa en la exactitud, incrementando la capacidad del AG para identificar las características correctas en un espacio de búsqueda extremadamente ruidoso. Este resultado resalta la utilidad de la aumentación en problemas donde la presencia de señales distractoras dificulta la tarea de selección.
 
 Por otro lado, los experimentos con *GCM* ilustran las limitaciones de la aumentación en conjuntos de datos con una distribución de clases desbalanceada y de alta complejidad. Sin embargo los ajustes en la arquitectura del AVC y en la configuración experimental permitieron mejoras importantes, alcanzando una generación de datos sintéticos de mayor calidad y una selección de características más eficiente. Resultados que se validaron mediante los experimentos en *All-Leukemia*. En este sentido, la integración de estrategias más complejas, como la combinación de selección de características previa a la aumentación, demostró ser una vía prometedora para mejorar los resultados.
 
