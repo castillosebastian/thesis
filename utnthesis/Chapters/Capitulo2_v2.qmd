@@ -57,7 +57,7 @@ En particular, establecimos un rango de parámetros numéricos que incluye de 3 
 
 Para los parámetros no numéricos (como funciones de activación en MLP, criterios de partición en árboles, tipo de kernel en SVM, entre otros) se utilizaron configuraciones estándar y reconocidas por la comunidad, con el fin de reducir la complejidad combinatoria. Aun así, para cada modelo se revisó la documentación de `scikit-learn` y la literatura relacionada, asegurando una cobertura apropiada de las variantes más importantes.
 
-La métrica de evaluación que hemos seleccionado es **AUC** para los dataset de clasificación binaria (Madelon, Gisette y Leukemia), y **F1 score** para los dataset de clasificación multiclase (GCM). 
+La métrica de evaluación que hemos seleccionado es **AUC** para los dataset de clasificación binaria (Madelon, Gisette y Leukemia), y **macro-F1** para los dataset de clasificación multiclase (GCM). 
 
 La métrica AUC mide el área bajo la curva ROC, donde la curva ROC traza la Tasa de Verdaderos Positivos (TPR o Sensibilidad) frente a la Tasa de Falsos Positivos (FPR) a distintos umbrales de decisión.  Matemáticamente, la AUC puede interpretarse (bajo ciertas condiciones) como la probabilidad de que el clasificador asigne una puntuación más alta a una muestra positiva que a una negativa. Un valor de AUC igual a 1 indica un modelo perfecto, mientras que un valor cercano a 0.5 sugiere un desempeño cercano al de un clasificador aleatorio.  
 
@@ -69,13 +69,15 @@ En *clasificación multiclase*, la macro-F1 proporciona una forma de resumir la 
 
 ## Resultados obtenidos
 
-Las métricas presentadas en la Tabla 2.1, y el gráfico de la Figura 2.1, evidencian que los resultados de los modelos clásicos varían ampliamente según las características de cada dataset. En particular, los conjuntos de datos **Leukemia** y **Gisette** muestran, en términos generales, un desempeño sólido para la mayoría de los algoritmos analizados. La **AUC** alcanzada por varios modelos en *Leukemia* (en algunos casos 1.00) ilustra la capacidad de separar correctamente los casos, a pesar de tratarse de un problema con alta dimensionalidad y desbalance. Asimismo, *Gisette* se beneficia del hecho de contar con más observaciones que *features*, lo que facilita la labor de los clasificadores (algunos, como Gradient Boosting, alcanzan AUC = 1.00).
+Las métricas presentadas en la Tabla 2.1, evidencian que los resultados de los modelos clásicos varían ampliamente según las características de cada dataset. En particular, los conjuntos de datos **Leukemia** y **Gisette** muestran, en términos generales, un desempeño sólido para la mayoría de los algoritmos analizados. La **AUC** alcanzada por varios modelos en *Leukemia* (en algunos casos 1.00) ilustra la capacidad de separar correctamente los casos, a pesar de tratarse de un problema con alta dimensionalidad y desbalance. Asimismo, *Gisette* se beneficia del hecho de contar con más observaciones que *features*, lo que facilita la labor de los clasificadores (algunos, como Gradient Boosting, alcanzan AUC = 1.00).
 
 En contraste, **Madelon** y, muy especialmente, **GCM**, exhiben una dificultad sustancialmente mayor para casi todas las familias de modelos clásicos. En *Madelon*, la presencia de ruido y características irrelevantes afecta la capacidad de generalización, quedando reflejado en valores de AUC relativamente bajos (en general por debajo de 0.70). Esta situación concuerda con la naturaleza artificial de *Madelon*, donde únicamente un subconjunto pequeño de atributos tiene poder predictivo y los modelos se enfrentan a espacios de búsqueda con muchos distractores. Este resultado subraya la relevancia de algoritmos que incorporen estrategias que mitiguen el impacto del ruido en el aprendizaje o mecanismos de selección de características que permitan descartar las irrelevantes.
 
-> **Tab.2.1**: Resultados en el dataset de testeo
+\begin{center}
+Tab.2.1 Resultados en el dataset de testeo
+\end{center}
 
-| Modelo               | Leukemia      | Madelon       | Gisette       | GCM           |
+| Modelo               | Leukemia(auc) | Madelon(auc)  | Gisette(auc)  | GCM(mf1)      |
 |:---------------------|:-------------:|:-------------:|:-------------:|:-------------:|
 | **Modelos Lineales** |               |               |               |               |
 | LDA                  | 0.85          | 0.60          | 0.96          | -             |
@@ -102,17 +104,15 @@ En contraste, **Madelon** y, muy especialmente, **GCM**, exhiben una dificultad 
 | **Redes Neuronales** |               |               |               |               |
 | MLP                  | 0.96          | 0.58          | 0.99          | **0.68**      |
 
-![](model_performance_heatmap_grouped.png)
-
-> **Figura 2.1.**: *Desempeño de algoritmos clásicos*
-
 El caso de **GCM** es aún más crítico, como se puede apreciar en la Tabla 2.2. Se trata de un problema multiclase severamente desbalanceado y con una dimensionalidad desproporcionadamente alta en comparación con el número de muestras disponibles. Dichas condiciones propician que todos los modelos clásicos evidencien dificultades para capturar las fronteras de decisión y generalizar correctamente. El hecho de que el **MLP** sea, en este caso, el método de mayor desempeño (si bien con un F1 todavía moderado) puede atribuirse a la flexibilidad de las redes neuronales y su capacidad de aproximar funciones complejas, a pesar del reducido número de muestras de entrenamiento. No obstante, la mayoría de clasificadores enfrenta limitaciones para generalizar en este escenario de desequilibrio tan marcado, reforzando la hipótesis central de la tesis sobre la importancia de enfoques generativos para rebalancear la asimetría entre clases y mejorar la clasificación.
 
 Obsérvese que ciertas clases con muy pocas muestras (por ejemplo, *Breast* o *Prostate*) presentan métricas nulas, mientras que otras con más muestras, como *Leukemia* o *Lymphoma*, muestran resultados más consistentes. La presencia de clases con tan baja representatividad hace que el modelo no cuente con suficiente evidencia estadística para aprender patrones característicos, conduciendo a predicciones erróneas (o directamente inexistentes) para dichas clases. Como anticipamos en el capítulo anterior, en un escenario multiclase desbalanceado, puede ser común que las clases minoritarias obtengan poco o ningún peso en la función de pérdida, lo que lleva al modelo a ignorarlas o predecir muy pocas (o ninguna) instancias de dichas clases. 
 
-Los resultados que el MLP obtiene por clase se muestran en la Tabla 2.2:
+Los resultados que el MLP obtiene por clase se muestran en la Tabla 2.2.
 
-> **Tab.2.2**: *Resultados por clase en GCM*
+\begin{center}
+Tab.2.2 Resultados por clase en GCM
+\end{center}
 
 | **Class**        | **Precision** | **Recall** | **F1-Score** | **Support** |
 |------------------|--------------:|-----------:|------------:|------------:|

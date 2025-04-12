@@ -106,7 +106,9 @@ Los métodos **Embedded o Embebidos** realizan la selección de características
 
 ![](diagrama_seleccion_características.png)
 
-> **Figura 1.1.**: *Diagrama de enfoques para la selección de características*   
+\begin{center}
+Figura 1.1 Diagrama de enfoques para la selección de características
+\end{center}
 
 Bolón-Canedo et al. [@bolon-canedoFeatureSelectionHighDimensional2015] nos invitan a pensar que no existe un método que sea *superior a los otros* de manera general, sino que cada uno tiene sus ventajas y desventajas, y se ajustan distinto a diferentes tipos de contexto. De los tres enfoques, los métodos de filtro son los únicos que son independientes del algoritmo de aprendizaje, lo que les permite ser rápidos y eficientes computacionalmente. Sin embargo, los métodos de filtro no consideran la correlación entre características, lo que puede llevar a la selección de características irrelevantes o redundantes. 
 
