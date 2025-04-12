@@ -458,7 +458,7 @@ Finalmente, se realizó un experimento con 6000 muestras sintéticas, donde se o
 
 Todo lo anterior sugiere que, si bien la aumentación de datos mediante AVC puede enfrentar desafíos significativos en conjuntos de datos complejos como *GCM*, es posible mejorar la calidad de los datos sintéticos mediante ajustes en la arquitectura del AVC y en la metodología de selección de características. La combinación de AVC y AG en un flujo de trabajo encadenado demostró ser una estrategia prometedora para mejorar la exactitud y la eficiencia en la selección de características.
 
-## All Leukemia
+## ALL Leukemia
 
 Con el fin de validar el tratamiento dado a GCM, particularmente la estrategia de encadenamiento de procesos de *selección-generación-selección*, se decidió aplicar la misma metodología a un nuevo dataset *All-Leukemia*. Este dataset, que contiene 12600 variables (i.e. genes) y 327 muestras, es un caso de estudio clásico en la literatura de clasificación de tumores.
 

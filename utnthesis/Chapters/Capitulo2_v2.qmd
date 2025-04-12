@@ -1,10 +1,10 @@
 # Modelos clásicos aplicados al espacio completo de características {#sec-Capitulo2}
 
-En este capítulo revisamos el desempeño de *algoritmos clásicos* en la solución de los problemas elegidos para nuestra investigación, tomando como campo de búsqueda el espacio completo de características. El objetivo de esta exploración es doble: por un lado contar con métricas de base para comparar el desempeño de nuestras soluciones, y por el otro, estudiar las características de los datasets elegidos para nuestro estudio, procurando identificar aquellos rasgos que puedan influir en el desempeño de los modelos. Particularmente, nos centramos en la alta dimensionalidad y la escasez muestral, el desbalance de clases y el ruido.
+En este capítulo revisamos el desempeño de *algoritmos clásicos* en la solución de los problemas elegidos para nuestra investigación, utilizando el espacio completo de características. El objetivo de esta exploración es doble: por un lado contar con métricas de base para comparar el desempeño de nuestras soluciones, y por el otro, estudiar las características de los datasets elegidos para nuestro estudio, procurando identificar aquellos rasgos que puedan influir en el desempeño de los modelos. Para la selección de los dataset a utilizar, nos centramos en la alta dimensionalidad y la escasez muestral, el desbalance de clases y el ruido.
 
 ## Datos elegidos en nuestro estudio
 
-El conjunto de datos elegidos en este trabajo incluye cinco datasets: *Madelon*, *Gisette*, *Leukemia*, *GCM* y *All Leukemia*. El último de ellos, *All Leukemia*, es un dataset introducido en este trabajo iniciada la etapa de experimentación de integración entre AG y AV. Por esa razón, no está incluido en la revisión de desempeño de los algoritmos clásicos que presentaremos en este capítulo. No obstante ello, se incluye en el detalle de los datasets para que el lector tenga una idea de la variedad de problemas que se tuvieron en cuenta para validar los resultados de nuestra propuesta.
+El conjunto de datos elegidos en este trabajo incluye cinco datasets: *Madelon*, *Gisette*, *Leukemia*, *GCM* y *ALL Leukemia*. El último de ellos, *ALL Leukemia*, es un dataset introducido en este trabajo iniciada la etapa de experimentación de integración entre AG y AV. Por esa razón, no está incluido en la revisión de desempeño de los algoritmos clásicos que presentaremos en este capítulo. No obstante ello, se incluye en el detalle de los datasets para que el lector tenga una idea de la variedad de problemas que se tuvieron en cuenta para validar los resultados de nuestra propuesta.
 
 Como veremos a continuación, cada dataset plantea desafíos distintos en términos de aprendizaje, y posee distintos niveles de complejidad en su composición. El dataset *Madelon* es un conjunto artificial de datos con 2000 observaciones y 500 características (2000x500), donde el objetivo es resolver un problema XOR multidimensional con 5 características relevantes y 15 características corresponden a combinaciones lineales de aquellas (i.e. 15 características redundantes). Las otras 480 características fueron generadas aleatoriamente (no tienen poder predictivo). Madelon es un problema de clasificación de dos clases con variables de entrada binarias dispersas. Las dos clases están equilibradas, y los datos se dividen en conjuntos de entrenamiento y prueba. Fue creado para el desafío de Selección de Características NIPS2003[^nips2003], y está disponible en el Repositorio UCI[^linkmadelon]. Los datos están divididos en un conjunto de entrenamiento y un conjunto de testeo. 
 
@@ -13,25 +13,23 @@ Como veremos a continuación, cada dataset plantea desafíos distintos en térmi
 
 Como es fácil de advertir, este es un problema donde la información relevante está presente junto a información redundante y otra sin valor predictivo. Es decir, existe un alto nivel de ruido en los datos, planteando importantes desafíos para los algoritmos de aprendizaje, y uno particularmente interesante para el problema de selección de características. Respecto de las dimensiones del problema, no se estaría en una situación crítica de alta dimensionalidad y escasez muestral, ya que el número de observaciones es mayor que el de características. Sin perjuicio de ello, aún queda por determinar si la cantidad de patrones disponibles es suficiente para que los algoritmos de aprendizaje puedan encontrar una solución en un contexto tan ruidoso.
 
-El dataset *Gisette* es un dataset creado para trabajar el problema de reconocimiento de dígitos escritos a mano [@isabelleguyonGisette2004]. Este conjunto de datos forma parte de los cinco conjuntos utilizados en el desafío de selección de características NIPS 2003. Tiene 13500 observaciones y 5000 atributos (13500x5000). El desafío radica en diferenciar los dígitos '4' y '9', que suelen ser fácilmente confundibles entre sí. Los dígitos han sido normalizados en tamaño y centrados en una imagen fija de 28x28 píxeles. Además, se crearon nuevas características como combinación de las existentes para construir un espacio de mayor dimensión. También se añadieron características distractoras denominadas "sondas", que no tienen poder predictivo. El orden de las características y patrones fue aleatorizado. Los datos están divididos en un conjunto de entrenamiento y un conjunto de testeo.
+*Gisette* es un dataset creado para trabajar en el problema de reconocimiento de dígitos escritos a mano [@isabelleguyonGisette2004]. Este conjunto de datos forma parte de los cinco conjuntos utilizados en el desafío de selección de características NIPS 2003. Tiene 13500 observaciones y 5000 atributos (13500x5000), de los cuales solo 2500 son relevantes. El desafío radica en diferenciar los dígitos '4' y '9', que suelen ser fácilmente confundibles entre sí. Los dígitos han sido normalizados en tamaño y centrados en una imagen fija de 28x28 píxeles. Además, se crearon nuevas características como combinación de las existentes para construir un espacio de mayor dimensión. También se añadieron características distractoras denominadas "sondas", que no tienen poder predictivo. El orden de las características y patrones fue aleatorizado. Los datos están divididos en un conjunto de entrenamiento y un conjunto de testeo.
 
 En este caso, nos encontramos en un escenario similar al de *Madelon*, con un dataset ruidoso e información redundante. La particularidad de *Gisette* es que, pese a mantener una relación positiva entre obervaciones y características (las primeras son más que las segundas), posee un espacio de búsqueda sensiblemente más grande y, eventualmente, más complejo que el de *Madelon*. Por esa razón, esperamos que este dataset sea computacionalmente más exigente que el anterior.
 
-El dataset *Leukemia* es un análisis de datos de expresión genética obtenidos de microarreglos de ADN, se estudia en Golub [-@golubMolecularClassificationCancer1999] para la clasificación de tipos de cáncer. Se construyó un conjunto de datos con 72 observaciones y 7129 mediciones (72x7129) de las clases ALL (leucemia linfocítica aguda) y AML (leucemia mielogénica aguda). El problema es distinguir entre estas dos variantes de leucemia (ALL y AML). Los datos se dividen originalmente en dos subconjuntos: un conjunto de entrenamiento de 38 observaciones y un conjunto de testeo de 34 observaciones.
+El dataset *Leukemia* es un análisis de datos de expresión genética obtenidos de microarreglos de ADN para la clasificación de tipos de cáncer [@golubMolecularClassificationCancer1999]. Se construyó un conjunto de datos con 72 observaciones y 7129 mediciones (72x7129) de las clases ALL (leucemia linfocítica aguda) y AML (leucemia mielogénica aguda). El problema es distinguir entre estas dos variantes de leucemia (ALL y AML). Los datos se dividen originalmente en dos subconjuntos: un conjunto de entrenamiento de 38 observaciones y un conjunto de testeo de 34 observaciones.
 
 Con este dataset nos encontramos, precisamente, en el escenario de alta dimensionalidad y escasez muestral. El número de observaciones es menor que el de características, y las dimensiones del problema son significativamente más altas que en los casos anteriores. Además, el dataset está desbalanceado, con 27 observaciones de la clase ALL y 11 de la clase AML en la partición de entrenamiento, lo que plantea un desafío adicional para los algoritmos de aprendizaje.
 
-El dataset *All Leukemia* es un estudio de pacientes pediátricos con leucemia linfoblástica aguda (LLA). Incluye 327 muestras con información de 12600 genes (327x12600). Está compuesto por 14 clases desequilibradas. Fue compilado por Yeoh *et al.* y está disponible para consulta[^linkallleukemia]. 
+El dataset *ALL Leukemia* es un estudio de pacientes pediátricos con leucemia linfoblástica aguda (LLA). Incluye 327 muestras con información de 12600 genes (327x12600). Está compuesto por 14 clases desequilibradas. Fue compilado por Yeoh *et al.* y está disponible para consulta[^linkallleukemia]. 
 
-[^linkallleukemia]:[https://www.cell.com/cancer-cell/fulltext/S1535-6108(02)00032-6?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS1535610802000326%3Fshowall%3Dtrue](https://www.cell.com/cancer-cell/fulltext/S1535-6108(02)00032-6?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS1535610802000326%3Fshowall%3Dtrue).
+[^linkallleukemia]: [Acceso público](https://www.cell.com/cancer-cell/fulltext/S1535-6108(02)00032-6?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS1535610802000326%3Fshowall%3Dtrue).
 
 Este caso es, sin duda, uno de los más complejos de todos, y plantea un desafío computacional significativo. El número de observaciones es significativamente menor que el de características, y las dimensiones del problema son significativamente más altas que en los casos anteriores. Además, el dataset está desbalanceado, con multiples clases desequilibradas, planteando no solo el desafío de las diversas fronteras de decisión que se deben encontrar, sino también el problema de posibles ambigüedades entre clases. Como vimos en el capítulo anterior, el desafío de procesar información genética es significativo considerando la alta correlación entre genes, y la gran cantidad de información redundante.
 
-Finalmente, el dataset *GCM* fue compilado en Ramaswamy [-@ramaswamyMulticlassCancerDiagnosis2001] y contiene los perfiles de expresión de muestras de tumores que representan 14 clases comunes de cáncer humano. El dataset está compuesto por 190 muestras y 16063 atributos (biomarcadores), distribuidos en clases desequilibradas. Los datos están divididos en un conjunto de entrenamiento y un conjunto de testeo.
+Finalmente, el dataset *GCM* fue compilado en [@ramaswamyMulticlassCancerDiagnosis2001] y contiene los perfiles de expresión de muestras de tumores que representan 14 clases comunes de cáncer humano. El dataset está compuesto por 190 muestras y 16063 atributos (biomarcadores), distribuidos en clases desequilibradas. Los datos están divididos en un conjunto de entrenamiento y un conjunto de testeo. En GCM, como en el caso de *ALL Leukemia*, nos encontramos en un escenario de alta dimensionalidad y escasez muestral. El número de observaciones es significativamente menor que el de características, y las dimensiones del problema son significativamente más altas que en todos los casos anteriores. 
 
-En GCM, como en el caso de *All Leukemia*, nos encontramos en un escenario de alta dimensionalidad y escasez muestral. El número de observaciones es significativamente menor que el de características, y las dimensiones del problema son significativamente más altas que en todos los casos anteriores. Además, el dataset está desbalanceado, eventualmente contiene abundante información ruidosa y redundante.
-
-Entendemos que esta variedad de datasets cubre un amplio espectro de problemas de aprendizaje, y que los resultados obtenidos en cada uno de ellos nos permitirán evaluar el desempeño de nuestros algoritmos en contextos distintos.
+Entendemos que esta variedad de datasets cubre un amplio espectro de problemas de aprendizaje, y que los resultados obtenidos en cada uno de ellos nos permitirán evaluar el desempeño de nuestros algoritmos en contextos distintos. Cabe aclarar que las particiones originales de los datasets fueron concatenadas en un solo conjunto de datos, y luego se dividió en conjuntos de entrenamiento y testeo en proporción 80/20. 
 
 ## El desempeño de algoritmos clásicos
 
@@ -67,55 +65,54 @@ En *clasificación binaria*, la AUC ofrece un panorama amplio del desempeño del
 
 La métrica F1 se define como la media armónica entre la Precisión (exactitud) y el Recall (sensibilidad):  F1 = 2 × (Precisión × Recall) / (Precisión + Recall).  La Precisión indica qué proporción de las predicciones positivas son realmente positivas, mientras que el Recall mide la proporción de positivos correctamente identificados respecto de todos los positivos reales. La F1 combina ambas, penalizando los modelos que desequilibran excesivamente la Precisión y el Recall. En problemas multiclase (por ejemplo, en GCM con 14 clases), la F1 puede calcularse por clase y luego promediarse (macro-F1) para evaluar la capacidad de cada modelo de reconocer de forma equilibrada todas las clases, incluso cuando existe desbalance.
 
-En *clasificación multiclase*, la F1 proporciona una forma de resumir la Precisión y el Recall cuando hay varias clases involucradas y potencialmente desbalanceadas. La F1 balancea correctamente los falsos positivos y los falsos negativos para cada clase antes de promediar, lo que resulta más informativo para problemas con muchas clases desiguales (como GCM).
-
-Las particiones originales de los datasets fueron concatenadas en un solo conjunto de datos, y luego se dividió en conjuntos de entrenamiento y testeo en proporción 80/20. 
+En *clasificación multiclase*, la macro-F1 proporciona una forma de resumir la Precisión y el Recall cuando hay varias clases involucradas y potencialmente desbalanceadas. La macro-F1 balancea correctamente los falsos positivos y los falsos negativos para cada clase antes de promediar, lo que resulta más informativo para problemas con muchas clases desiguales (como GCM).
 
 ## Resultados obtenidos
 
-En la siguiente tabla resumimos los resultados en el dataset de testeo para cada modelo y dataset, con las métricas AUC y F1 score.  
+Las métricas presentadas en la Tabla 2.1, y el gráfico de la Figura 2.1, evidencian que los resultados de los modelos clásicos varían ampliamente según las características de cada dataset. En particular, los conjuntos de datos **Leukemia** y **Gisette** muestran, en términos generales, un desempeño sólido para la mayoría de los algoritmos analizados. La **AUC** alcanzada por varios modelos en *Leukemia* (en algunos casos 1.00) ilustra la capacidad de separar correctamente los casos, a pesar de tratarse de un problema con alta dimensionalidad y desbalance. Asimismo, *Gisette* se beneficia del hecho de contar con más observaciones que *features*, lo que facilita la labor de los clasificadores (algunos, como Gradient Boosting, alcanzan AUC = 1.00).
 
+En contraste, **Madelon** y, muy especialmente, **GCM**, exhiben una dificultad sustancialmente mayor para casi todas las familias de modelos clásicos. En *Madelon*, la presencia de ruido y características irrelevantes afecta la capacidad de generalización, quedando reflejado en valores de AUC relativamente bajos (en general por debajo de 0.70). Esta situación concuerda con la naturaleza artificial de *Madelon*, donde únicamente un subconjunto pequeño de atributos tiene poder predictivo y los modelos se enfrentan a espacios de búsqueda con muchos distractores. Este resultado subraya la relevancia de algoritmos que incorporen estrategias que mitiguen el impacto del ruido en el aprendizaje o mecanismos de selección de características que permitan descartar las irrelevantes.
 
-| Modelo           | Leukemia Test    | Madelon Test   | Gisette Test      | GCM Test       |
-|------------------|------------------|----------------|-------------------|----------------|
-| LDA              | 0.85            | 0.60           | 0.96              | -              |
-| QDA              | 0.50            | 0.66           | 0.70              | -              |
-| Ridge            | 0.99            | 0.60           | 0.97              | -              |
-| SGD              | 0.98            | 0.64           | 0.99              | 0.71           |
-|------------------|------------------|----------------|-------------------|----------------|
-| AdaBoost         | 0.91            | 0.84           | 0.99              | -              |
-| Bagging          | **1.00**        | **0.91**       | -                 | -              |
-| DTC              | 0.72            | 0.64           | 0.92              | 0.53           |
-| ETC              | 0.54            | 0.57           | 0.94              | 0.48           |
-| Ext.Trees.Ens.   | **1.00**        | 0.71           | 0.99              | 0.57           |
-| Gradient Boost.  | 0.99            | 0.82           | **1.00**          | 0.58           |
-| Random Forest    | **1.00**        | 0.78           | 0.99              | 0.62           |
-|------------------|------------------|----------------|-------------------|----------------|
-| LSVC             | 0.99            | 0.62           | 0.99              | 0.62           |
-| NuSVC            | **1.00**        | 0.61           | 0.99              | 0.58           |
-| SVC              | **1.00**        | 0.61           | 0.99              | 0.58           |
-|------------------|------------------|----------------|-------------------|----------------|
-| BNB              | 0.89            | 0.63           | 0.94              | -              |
-| GNB              | 0.91            | 0.65           | 0.85              | -              |
-|------------------|------------------|----------------|-------------------|----------------|
-| KNN              | 0.86            | 0.65           | 0.99              | -              |
-|------------------|------------------|----------------|-------------------|----------------|
-| MLP              | 0.96            | 0.58           | 0.99              | **0.68**       |
+> **Tab.2.1**: Resultados en el dataset de testeo
 
-
-El gráfico completo de resultados en las particiones de entrenamiento y testeo puede verse en la siguiente figura:  
+| Modelo               | Leukemia      | Madelon       | Gisette       | GCM           |
+|:---------------------|:-------------:|:-------------:|:-------------:|:-------------:|
+| **Modelos Lineales** |               |               |               |               |
+| LDA                  | 0.85          | 0.60          | 0.96          | -             |
+| QDA                  | 0.50          | 0.66          | 0.70          | -             |
+| Ridge                | 0.99          | 0.60          | 0.97          | -             |
+| SGD                  | 0.98          | 0.64          | 0.99          | 0.71          |
+| **Árboles**          |               |               |               |               |
+| AdaBoost             | 0.91          | 0.84          | 0.99          | -             |
+| Bagging              | **1.00**      | **0.91**      | -             | -             |
+| DTC                  | 0.72          | 0.64          | 0.92          | 0.53          |
+| ETC                  | 0.54          | 0.57          | 0.94          | 0.48          |
+| Ext.Trees.Ens.       | **1.00**      | 0.71          | 0.99          | 0.57          |
+| Gradient Boost.      | 0.99          | 0.82          | **1.00**      | 0.58          |
+| Random Forest        | **1.00**      | 0.78          | 0.99          | 0.62          |
+| **SVM**              |               |               |               |               |
+| LSVC                 | 0.99          | 0.62          | 0.99          | 0.62          |
+| NuSVC                | **1.00**      | 0.61          | 0.99          | 0.58          |
+| SVC                  | **1.00**      | 0.61          | 0.99          | 0.58          |
+| **Naive Bayes**      |               |               |               |               |
+| BNB                  | 0.89          | 0.63          | 0.94          | -             |
+| GNB                  | 0.91          | 0.65          | 0.85          | -             |
+| **KNN**              |               |               |               |               |
+| KNN                  | 0.86          | 0.65          | 0.99          | -             |
+| **Redes Neuronales** |               |               |               |               |
+| MLP                  | 0.96          | 0.58          | 0.99          | **0.68**      |
 
 ![](model_performance_heatmap_grouped.png)
 
 > **Figura 2.1.**: *Desempeño de algoritmos clásicos*
 
-Las métricas presentadas evidencian que los resultados de los modelos clásicos varían ampliamente según las características de cada dataset. En particular, los conjuntos de datos **Leukemia** y **Gisette** muestran, en términos generales, un desempeño sólido para la mayoría de los algoritmos analizados. La **AUC** alcanzada por varios modelos en *Leukemia* (en algunos casos 1.00) ilustra la capacidad de separar correctamente los casos, a pesar de tratarse de un problema con alta dimensionalidad y desbalance. Asimismo, *Gisette* se beneficia del hecho de contar con más observaciones que *features*, lo que facilita la labor de los clasificadores (algunos, como Gradient Boosting, alcanzan AUC = 1.00).
+El caso de **GCM** es aún más crítico, como se puede apreciar en la Tabla 2.2. Se trata de un problema multiclase severamente desbalanceado y con una dimensionalidad desproporcionadamente alta en comparación con el número de muestras disponibles. Dichas condiciones propician que todos los modelos clásicos evidencien dificultades para capturar las fronteras de decisión y generalizar correctamente. El hecho de que el **MLP** sea, en este caso, el método de mayor desempeño (si bien con un F1 todavía moderado) puede atribuirse a la flexibilidad de las redes neuronales y su capacidad de aproximar funciones complejas, a pesar del reducido número de muestras de entrenamiento. No obstante, la mayoría de clasificadores enfrenta limitaciones para generalizar en este escenario de desequilibrio tan marcado, reforzando la hipótesis central de la tesis sobre la importancia de enfoques generativos para rebalancear la asimetría entre clases y mejorar la clasificación.
 
-En contraste, **Madelon** y, muy especialmente, **GCM**, exhiben una dificultad sustancialmente mayor para casi todas las familias de modelos clásicos. En *Madelon*, la presencia de ruido y características irrelevantes afecta la capacidad de generalización, quedando reflejado en valores de AUC relativamente bajos (en general por debajo de 0.70). Esta situación concuerda con la naturaleza artificial de *Madelon*, donde únicamente un subconjunto pequeño de atributos tiene poder predictivo y los modelos se enfrentan a espacios de búsqueda con muchos distractores. Este resultado subraya la relevancia de algoritmos que incorporen estrategias que mitiguen el impacto del ruido en el aprendizaje o mecanismos de selección de características que permitan descartar las irrelevantes.
+Obsérvese que ciertas clases con muy pocas muestras (por ejemplo, *Breast* o *Prostate*) presentan métricas nulas, mientras que otras con más muestras, como *Leukemia* o *Lymphoma*, muestran resultados más consistentes. La presencia de clases con tan baja representatividad hace que el modelo no cuente con suficiente evidencia estadística para aprender patrones característicos, conduciendo a predicciones erróneas (o directamente inexistentes) para dichas clases. Como anticipamos en el capítulo anterior, en un escenario multiclase desbalanceado, puede ser común que las clases minoritarias obtengan poco o ningún peso en la función de pérdida, lo que lleva al modelo a ignorarlas o predecir muy pocas (o ninguna) instancias de dichas clases. 
 
-El caso de **GCM** es aún más crítico. Se trata de un problema multiclase severamente desbalanceado y con una dimensionalidad desproporcionadamente alta en comparación con el número de muestras disponibles. Dichas condiciones propician que todos los modelos clásicos evidencien dificultades para capturar las fronteras de decisión y generalizar correctamente. El hecho de que el **MLP** sea, en este caso, el método de mayor desempeño (si bien con un F1 todavía moderado) puede atribuirse a la flexibilidad de las redes neuronales y su capacidad de aproximar funciones complejas, a pesar del reducido número de muestras de entrenamiento. No obstante, la mayoría de clasificadores enfrenta limitaciones para generalizar en este escenario de desequilibrio tan marcado, reforzando la hipótesis central de la tesis sobre la importancia de enfoques generativos para rebalancear la asimetría entre clases y mejorar la clasificación.
+Los resultados que el MLP obtiene por clase se muestran en la Tabla 2.2:
 
-Los resultados que el MLP obtiene por clase se muestran en la siguiente tabla:
+> **Tab.2.2**: *Resultados por clase en GCM*
 
 | **Class**        | **Precision** | **Recall** | **F1-Score** | **Support** |
 |------------------|--------------:|-----------:|------------:|------------:|
@@ -138,8 +135,6 @@ Los resultados que el MLP obtiene por clase se muestran en la siguiente tabla:
 | **Exactitud**[^metricas]     |              |            |       0.70  |          46 |
 
 [^metricas]: Remitimos al lector al punto al punto 3.7 para una explicación detallada de las métricas presentadas aquí y a lo largo de nuestros experimentos.
-
-Obsérvese que ciertas clases con muy pocas muestras (por ejemplo, *Breast* o *Prostate*) presentan métricas nulas, mientras que otras con más muestras, como *Leukemia* o *Lymphoma*, muestran resultados más consistentes. La presencia de clases con tan baja representatividad hace que el modelo no cuente con suficiente evidencia estadística para aprender patrones característicos, conduciendo a predicciones erróneas (o directamente inexistentes) para dichas clases. Como anticipamos en el capítulo anterior, en un escenario multiclase desbalanceado, puede ser común que las clases minoritarias obtengan poco o ningún peso en la función de pérdida, lo que lleva al modelo a ignorarlas o predecir muy pocas (o ninguna) instancias de dichas clases. 
 
 En consecuencia, en problemas donde la alta dimensionalidad y bajo número de muestras se combina con múltiples clases desequilibradas, aun los modelos con capacidad de generalización elevada (por ejemplo, redes neuronales) se ven limitados. La disparidad de resultados por clase que hemos reportado (desde métricas perfectas hasta valores nulos) ilustra la necesidad de una estrategia que aborde el desbalance de manera explícita, ya sea mediante incremento sintético de datos, la implementación de funciones de pérdida adaptativas (que penalicen más los errores en las clases minoritarias), o ambos. 
 

@@ -219,7 +219,7 @@ Finalmente, la salida $\hat{x}$ es una aproximación reconstruida de la entrada 
 
 ### Modelo AVC para datos multiclase
 
-Para abordar los dataset GCM y All Leukemia, que contiene multiples clases con distribuciones desiguales, se creó un AV Condicional (AVC) que combina la capacidad de generación de un AV tradicional con el condicionamiento explícito en las etiquetas de clase. El AVC propuesto permitió una modelización más precisa de los datos, al incorporar información de clase en el proceso de codificación y decodificación.
+Para abordar los dataset GCM y ALL Leukemia, que contiene multiples clases con distribuciones desiguales, se creó un AV Condicional (AVC) que combina la capacidad de generación de un AV tradicional con el condicionamiento explícito en las etiquetas de clase. El AVC propuesto permitió una modelización más precisa de los datos, al incorporar información de clase en el proceso de codificación y decodificación.
 
 En escenarios donde los datasets están desbalanceados, los modelos generativos pueden tender a favorecer las clases mayoritarias, ignorando las minoritarias. Para abordar el desbalance de clases que presenta GCM, se implementó una estrategia de ponderación de clases dentro de la función de pérdida, penalizando de manera diferenciada los errores de reconstrucción en función de la clase, buscando mejorar así la capacidad del modelo para representar adecuadamente las clases minoritarias.
 
