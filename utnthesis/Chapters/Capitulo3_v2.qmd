@@ -4,7 +4,7 @@ En este capítulo presentamos la arquitectura del Autocodificador Variacional (A
 
 ## Modelos generativos
 
-Los modelos generativos (MG) son un amplio conjunto de algoritmos de aprendizaje automático que buscan modelar la distribución de probabilidad de un conjunto de datos $p_\theta(x)$. A diferencia de los modelos discriminantes (MD), cuyo objetivo es aprender un predictor a partir de los datos, en los modelos generativos el objetivo es *resolver un problema más general vinculado con el aprendizaje de la distribución de probabilidad conjunta de todas las variables*. Así, siguiendo a Kingma, podemos decir que *un modelo generativo simula la forma en que los datos son generados en el mundo real* [@kingmaIntroductionVariationalAutoencoders2019]. Dada estas propiedades, estos modelos permiten crear nuevos datos que se asemejan a los originales, y se aplican en tareas de generación de datos sintéticos, imputación de datos faltantes, reducción de dimensionalidad y selección de características, entre otros.
+Los modelos generativos (MG) son un amplio conjunto de algoritmos de aprendizaje automático que buscan modelar la distribución de probabilidad de un conjunto de datos $p_\theta(x)$. A diferencia de los modelos discriminantes (MD), cuyo objetivo es aprender un predictor a partir de los datos, en los modelos generativos el objetivo es *resolver un problema más general vinculado con el aprendizaje de la distribución de probabilidad conjunta de todas las variables*. Así, siguiendo a Kingma, podemos decir que *un modelo generativo simula la forma en que los datos son generados en el mundo real* [@kingmaIntroductionVariationalAutoencoders2019]. Considerando estas propiedades, los modelos generativos permiten crear nuevos datos que se asemejan a los originales, y se aplican en tareas de generación de datos sintéticos, imputación de datos faltantes, reducción de dimensionalidad y selección de características, entre otros.
 
 Los modelos generativos pueden tener como *inputs* diferentes tipos de datos, como imágenes, textos, audios, información tabular, etc. Por ejemplo, las imágenes son un tipo de dato para los cuales los MG han demostrado gran efectividad. En este caso, cada dato de entrada $x$ es una imagen que puede estar representada por un vector de miles de elementos  que corresponden a los valores de píxeles. El objetivo de un modelo generativo es aprender las dependencias [@doerschTutorialVariationalAutoencoders2021]  entre los píxeles (e.g. pixeles vecinos tienden a tener valores similares) y poder generar nuevas imágenes que se asemejen a las imágenes originales.
 
@@ -18,11 +18,13 @@ Los autocodificadores se componen de dos partes: un *codificador* y un *decodifi
 
 ![](autocodificadores.png)
 
-> **Figura 3.1.**: *Ejemplo esquemático de un autocodificador*
+\begin{center}
+Figura 3.1 Ejemplo esquemático de un autocodificador
+\end{center}
 
 El esquema anterior muestra un autocodificador que transforma un patrón $x$ en un vector denso $z$, con dimensiones menores a las originales. Este vector es usado luego por el decodificador para reconstruir el patrón original, dando lugar a un patrón reconstruido $x'$.
 
-En el proceso de aprendizaje de un autocodificador, la red modela la distribución de probabilidad de los datos de entrada $x$ y aprende a mapearlos a un espacio latente $z$. Para ello, se busca minimizar la diferencia entre la observación original $x_i$ y la reconstrucción $\hat{x_i}$, diferencia que se denomina *error de reconstrucción*. Esta optimización se realiza a través de una *función de pérdida* que se define como la diferencia entre $x_i$ y $\hat{x_i}$, que permite la optimización simultánea del codificador y decodificador.
+En el proceso de aprendizaje de un autocodificador, la red modela la distribución de probabilidad de los datos de entrada $x$ y aprende a mapearlos a un espacio latente $z$. Para ello, se busca minimizar la diferencia entre la observación original $x_i$ y la reconstrucción $\hat{x_i}$, diferencia que se denomina *error de reconstrucción*. Esta optimización se realiza a través de una *función de pérdida*, que permite la optimización simultánea del codificador y decodificador.
 
 Formalmente, podemos establecer estas definiciones [@delatorreAutocodificadoresVariacionalesVAE2023]: 
 
@@ -42,13 +44,15 @@ donde $L(\theta, \phi)$ representa la función de pérdida que queremos minimiza
 
 En el proceso de aprendizaje antes descripto, la optimización no está sujeta a otra restricción mas que  minimizar la diferencia entre la observación original y la reconstrucción, dando lugar a espacios latentes generalmente discontinuos. Esto sucede porque la red puede aprender a representar los datos de entrada de manera eficiente sin necesidad de aprender una representación continua. En la arquitectura del autocodificador no hay determinantes para que dos puntos cercanos en el espacio de características se mapeen a puntos cercanos en el espacio latente. 
 
-Esta discontinuidad en el espacio latente hace posible que ciertas regiones de este espacio no tengan  relación significativa con el espacio de características. Durante el entrenamiento el modelo simplemente no ha tenido que reconstruir datos cuyas distribuciones coincidan con estas regiones. Esto es un problema en la generación de datos, ya que la red podrá generar representaciones alejadas de los datos originales. Regularmente lo que se busca en los MG, no es simplemente una generación de datos completemante igual o totalmente distintos a los orginales, sino cierta situación intermedia donde los nuevos datos introducen variaciones en características específicas. 
-
 ![](espacio_latente_discontinuo.png)
 
-> **Figura 3.2.**: *Discontinuidad del espacio latente*
+\begin{center}
+Figura 3.2 Discontinuidad del espacio latente
+\end{center}
 
-Un MG está conformado por dos componentes principales, un codificador y un decodificador. El vector de entrada continuo se somete a una transformación no lineal en el codificador, obteniendo así la representación latente en un espacio de menor dimensión. Esta transformación comprime la información original para capturar sus características más relevantes, mientras que el decodificador se encarga de proyectar la representación resultante de nuevo al espacio de características, generando una salida que se aproxima a la muestra inicial. Sin embargo, ciertas regiones de dicho espacio pueden quedar sin representar, y al muestrear en esas zonas, el modelo puede producir instancias muy alejadas de las distribuciones originales, como figuras que no 'encajan' entre aquellas que aparecen en el espacio de características, tal como se ilustra en la **Figura 3.2.**. Este fenómeno está directamente relacionado con la discontinuidad del espacio latente, y pone de manifiesto la necesidad de enfoques que incorporen regularizaciones o mecanismos adicionales para lograr una generación más coherente.
+Esta discontinuidad en el espacio latente hace posible que ciertas regiones de este espacio no tengan relación significativa con el espacio de características. Durante el entrenamiento el modelo simplemente no ha tenido que reconstruir datos cuyas distribuciones coincidan con estas regiones. Esto es un problema en la generación de datos, ya que la red podrá generar representaciones alejadas de los datos originales. Regularmente lo que se busca en los MG, no es simplemente una generación de datos completemante igual o totalmente distintos a los orginales, sino cierta situación intermedia donde los nuevos datos introducen variaciones en características específicas. 
+
+Un MG está conformado por dos componentes principales, un codificador y un decodificador. El vector de entrada continuo se somete a una transformación no lineal en el codificador, obteniendo así la representación latente en un espacio de menor dimensión. Esta transformación comprime la información original para capturar sus características más relevantes, mientras que el decodificador se encarga de proyectar la representación resultante de nuevo al espacio de características, generando una salida que se aproxima a la muestra inicial. Sin embargo, ciertas regiones de dicho espacio pueden quedar sin representar, y al muestrear en esas zonas, el modelo puede producir instancias muy alejadas de las distribuciones originales, como figuras que no 'encajan' entre aquellas que aparecen en el espacio de características, tal como se ilustra en la **Figura 3.2**. Este fenómeno está directamente relacionado con la discontinuidad del espacio latente, y pone de manifiesto la necesidad de enfoques que incorporen regularizaciones o mecanismos adicionales para lograr una generación más coherente.
 
 ## Autocodificadores Variacionales
 
@@ -59,17 +63,19 @@ Un MG está conformado por dos componentes principales, un codificador y un deco
 
 Los Autocodificadores Variacionales (AV) buscan resolver los problemas de discontinuidad y falta de regularidad en el espacio latente de los Autocodificadores. Comparten con éstos la arquitectura *codificador-decodificador*, pero introducen importantes modificaciones en su diseño para crear un espacio latente continuo. 
 
-Estos modelos, a diferencia de los autocodificadores que realizan transformaciones determinísticas de los datos de entrada (codificándolos como vectores *n*-dimensionales), buscan modelar la distribución de probabilidad de dichos datos aproximando la distribución *a posteriori* de las variables latentes $p_\theta(z|x)$. Para ello, la codificación se produce mediante la generación de dos vectores ($\mu$ y $\sigma$)  que conforman el espacio latente, a partir del cual se toman las muestras para la generación.
+Estos modelos, a diferencia de los autocodificadores que realizan transformaciones determinísticas de los datos de entrada (codificándolos como vectores *n*-dimensionales), buscan modelar la distribución de probabilidad de dichos datos aproximando la distribución *a posteriori* de las variables latentes $p_\theta(z|x)$. Para ello, la codificación se produce mediante la generación de dos vectores $\mu$ y $\sigma$ (*vector de medias* y *vector de desvíos estándar*) que conforman el espacio latente, a partir del cual se toman las muestras para la generación.
 
-La red codificadora, también llamada *red de reconocimiento*, mapea los datos de entrada $x$ a los vectores $\mu$ de medias y $\sigma$ de desvíos estándar, que parametrizan una distribución de probabilidad en el espacio latente. Generalmente, esta distribución es una distribución  simple, como la distribución normal multivariada. La red decodificadora, también llamada *red generativa*, toma muestras de esta distribución para generar un vector, y lo transforma según la distribución de probabilidad preexistente del espacio de características. De esta manera, se generan nuevas instancias que respetan la distribución de probabilidad de los datos originales. Estas transformaciones implican que, incluso para el mismo dato observado (donde los parámetros de $z$ son iguales), el dato de salida podrá ser diferente debido al proceso estocástico de reconstrucción.
+La red codificadora, también llamada *red de reconocimiento*, mapea los datos de entrada $x$ a los vectores $\mu$ y $\sigma$, que parametrizan una distribución de probabilidad en el espacio latente. Generalmente, esta distribución es una distribución  simple, como la distribución normal multivariada. La red decodificadora, también llamada *red generativa*, toma muestras de esta distribución para generar un vector, y lo transforma según la distribución de probabilidad preexistente del espacio de características. De esta manera, se generan nuevas instancias que respetan la distribución de probabilidad de los datos originales. Estas transformaciones implican que, incluso para el mismo dato observado (donde los parámetros de $z$ son iguales), el dato de salida podrá ser diferente debido al proceso estocástico de reconstrucción.
 
 ![](autocodificadores_variacionales.png)
 
-> **Figura 3.3.**: *Autocoficadores Variacionales*
+\begin{center}
+Figura 3.3 Autocoficadores Variacionales
+\end{center}
 
 Una forma de entender esta arquitectura sería relacionar los vectores que componen $z$ como 'referecias', donde el vector de medias controla el *centro* en torno al cual se distribuirán los valores codificados de los datos de entrada, mientras que el vector de los desvíos traza el *área* que pueden asumir dichos valores en torno al *centro*. 
 
-Para indagar en estas intuiciones, veamos la solución que proponen los AV detenidamente, utilizando un enfoque formal. Así, dado un conjunto de datos de entrada $\mathbf{X} = \{x_1, x_2, ..., x_N\}$, donde $x_i \in \mathbb{R}^m$, se asume que cada muestra es generada por un mismo proceso o sistema subyacente cuya distribución de probabilidad se desconoce. El modelo buscado procura aprender $p_\theta(x)$, donde $\theta$ son los parámetros de la función. Por las ventajas que ofrece el logaritmo[^ventajaslogaritmo] para el cálculo de las distribuciones de probabilidad tendremos la siguiente expresión: $\log p_\theta(x) = \sum_{x_i \in x} \log p_\theta(x_i)$.[^flogverosimilitud]
+Para indagar en estas intuiciones, veamos la solución que proponen los AV detenidamente, utilizando un enfoque formal. Así, dado un conjunto de datos de entrada $\mathbf{X} = \{x_1, x_2, ..., x_N\}$, donde $x_i \in \mathbb{R}^m$, se asume que cada muestra es generada por un mismo proceso o sistema subyacente cuya distribución de probabilidad se desconoce. El modelo buscado procura aprender $p_\theta(x)$, donde $\theta$ son los parámetros de la función. Por las ventajas que ofrece el logaritmo[^ventajaslogaritmo] para el cálculo de las distribuciones de probabilidad tendremos la siguiente expresión: $\log p_\theta(x) = \sum_{x_i \in x} \log p_\theta(x_i)$ [^flogverosimilitud].
 
 [^ventajaslogaritmo]: El logaritmo convierte la probabilidad conjunta (que se calcula como el producto de las probabilidades condicionales) en una suma de logaritmos, facilitando el cálculo y evitando problemas de precisión numérica: $\log(ab) = \log(a)+\log(b)$. 
 
@@ -85,9 +91,11 @@ En el contexto de los AV, el objetivo es modelar la distribución de probabilida
 
 [^apriori]: La expresión *a priori* alude a que no está condicionada por ningun dato observado.
 
-Para determinar la distribución marginal respecto de los datos observados, es preciso integrar sobre todos los elementos de $z$, dando como resultado la siguiente función: $p_\theta(x) = \int p_\theta(x,z)dz$ [^zdiferenciacion]. 
+Para determinar la distribución marginal respecto de los datos observados, es preciso integrar sobre todos los elementos de $z$, dando como resultado la siguiente función: $p_\theta(x) = \int p_\theta(x,z)dz$. 
 
-[^zdiferenciacion]: Aquí $dz$ es el diferencial de $z$, por lo que la expresión indica la integración sobre todas las posibles configuraciones de la variable latente.
+<!-- 
+Aquí $dz$ es el diferencial de $z$, por lo que la expresión indica la integración sobre todas las posibles configuraciones de la variable latente. 
+-->
 
 Esta distribución marginal puede ser extremadamente compleja, y contener un número indeterminable de dependencias [@kingmaIntroductionVariationalAutoencoders2019], volviendo el calculo de la verosimilitud de los datos observados intratable. Esta intratabilidad de $p_\theta(x)$ está determinada por la intratabilidad de la distribución *a posteriori* $p_\theta(z|x)$, cuya dimensionalidad y multi-modalidad pueden hacer difícil cualquier solución analítica o numérica eficiente. Dicho obstáculo impide la diferenciación y por lo tanto la optimización de los parámetros del modelo. 
 
@@ -124,18 +132,16 @@ https://chatgpt.com/share/be24e1ef-14a3-40e4-a4c1-57ab925daed3
 
 donde:
 
-- $\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)]$ es el valor esperado (*esperanza*[^esperanza]) de la log-verosimilitud bajo la aproximación variacional, y determina la precision de la reconstrucción de los datos de entrada (un valor alto de esta esperanza indica que el modelo es capaz de reconstruir los datos de entrada con alta precisión a partir de los parámetros generados por $q_\phi(z|x)$).
+- $\mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)]$ es el valor esperado (*esperanza*) de la log-verosimilitud bajo la aproximación variacional, y determina la precision de la reconstrucción de los datos de entrada (un valor alto de esta esperanza indica que el modelo es capaz de reconstruir los datos de entrada con alta precisión a partir de los parámetros generados por $q_\phi(z|x)$).
 - $D_{\text{KL}}(q_\phi(z|x) \| p_\theta(z))$ es la divergencia de Kullback-Leibler entre la distribución $q_\phi(z|x)$ y la distribución *a priori* de las variables latentes  $p_\theta(z)$, y determina la regularización del espacio latente.
 
 <!---
 https://www.countbayesie.com/blog/2017/5/9/kullback-leibler-divergence-explained
 -->
-  
-[^esperanza]:La esperanza es un promedio ponderado de todos los posibles valores que puede tomar una variable aleatoria, donde los pesos son las probabilidades de esos valores. En un AV, donde consideramos una distribución aproximada $q_\phi(z|x)$ para el espacio latente, la expresión citada es la esperanza de la log-verosimilitud bajo esta distribución.Aunque teóricamente esto implica un promedio sobre todas las posibles muestras $z$  de la distribución $q_\phi(z|x)$, en la práctica, esta esperanza se estima utilizando una única muestra durante el entrenamiento por razones de  eficiencia computacional. Esta única muestra permite calcular directamente $\log p_\theta (x_i|z_i)$, proporcionando una aproximación a la esperanza teórica y determinando la precisión de la reconstrucción de los datos de entrada.
+  <!-- 
+[^esperanza]:La esperanza es un promedio ponderado de todos los posibles valores que puede tomar una variable aleatoria, donde los pesos son las probabilidades de esos valores. En un AV, donde consideramos una distribución aproximada $q_\phi(z|x)$ para el espacio latente, la expresión citada es la esperanza de la log-verosimilitud bajo esta distribución.Aunque teóricamente esto implica un promedio sobre todas las posibles muestras $z$  de la distribución $q_\phi(z|x)$, en la práctica, esta esperanza se estima utilizando una única muestra durante el entrenamiento por razones de  eficiencia computacional. Esta única muestra permite calcular directamente $\log p_\theta (x_i|z_i)$, proporcionando una aproximación a la esperanza teórica y determinando la precisión de la reconstrucción de los datos de entrada. -->
 
-Maximizando esta cota inferior (*ELBO*), se optimizan simultáneamente los parámetros $\theta$ del modelo y los parámetros $\phi$ de la distribución empleada en la aproximación, permitiendo una inferencia eficiente y escalable en modelos con $z$ de alta dimensionalidad [^cambiosignoencodigooptimizacion].
-
-[^cambiosignoencodigooptimizacion]:En la teoría, cuando derivamos el objetivo de un AV, estamos maximizando la cota inferior variacional (ELBO), para que la aproximación sea lo más cercana posible a la verdadera distribución de los datos. LLevado el problema a una implementación práctica generalmente se emplean optimizadores (SGD, Adam, etc.) que minimizan una función de pérdida. Para convertir el problema de maximización del ELBO en un problema de minimización, simplemente negamos el ELBO, resultando que los términos de la ecuación se reescriben como suma de cantidades positivas. El error o pérdida de reconstrucción se mide, según los casos, mediante MSE o entropía cruzada. 
+Maximizando esta cota inferior (*ELBO*), se optimizan simultáneamente los parámetros $\theta$ del modelo y los parámetros $\phi$ de la distribución empleada en la aproximación, permitiendo una inferencia eficiente y escalable en modelos con $z$ de alta dimensionalidad. En la teoría, cuando derivamos el objetivo de un AV, estamos maximizando la cota inferior variacional (ELBO), para que la aproximación sea lo más cercana posible a la verdadera distribución de los datos. LLevado el problema a una implementación práctica generalmente se emplean optimizadores (SGD, Adam, etc.) que minimizan una función de pérdida. Para convertir el problema de maximización del ELBO en un problema de minimización, simplemente negamos el ELBO, resultando que los términos de la ecuación se reescriben como suma de cantidades positivas. El error o pérdida de reconstrucción se mide, según los casos, mediante MSE o entropía cruzada. 
 
 El objetivo de aprendizaje del AV se da entonces por:
 
@@ -143,7 +149,7 @@ El objetivo de aprendizaje del AV se da entonces por:
 
 Como puede apreciearse en la ecuación anterior la función de pérdida del AV se compone de dos términos: el primero es la esperanza de la log-verosimilitud bajo la aproximación variacional y el segundo es la divergencia de Kullback-Leibler relacionada a la reconstrucción de los datos y la regularización del espacio latente. Existe entre ambos términos una relación de compromiso que permite al AV aprender una representación adecuada de los datos de entrada y, al mismo tiempo, un espacio latente continuo y regularizado. 
 
-En términos prácticos, la divergencia de Kullback-Leibler puede interpretarse como un factor que equilibra creatividad y precisión en el modelo. Por un lado, cuando esta divergencia es grande (DKL >> 1), el espacio latente tiende a estar más regularizado y la distribución de probabilidad de los datos generados se vuelve más "suave", pero el modelo puede terminar sobreajustándose a las muestras originales y perder capacidad de generalización. Por otro lado, si la divergencia es muy pequeña (DKL << 1), el espacio latente queda menos regularizado y el modelo intenta reproducir con mayor fidelidad la distribución real de los datos de entrada, aunque a costa de generar muestras más ruidosas y posiblemente descuidar detalles esenciales. De esta manera, la elección del valor de DKL refleja el compromiso entre capturar información detallada de los datos y mantener una representación latente estable y bien estructurada para la generación.
+En términos prácticos, la divergencia de Kullback-Leibler puede interpretarse como un factor que equilibra creatividad y precisión en el modelo. Por un lado, cuando esta divergencia es grande ($D_\text{KL} >> 1$), el espacio latente tiende a estar más regularizado y la distribución de probabilidad de los datos generados se vuelve más "suave", pero el modelo puede terminar sobreajustándose a las muestras originales y perder capacidad de generalización. Por otro lado, si la divergencia es muy pequeña ($D_\text{KL} << 1$), el espacio latente queda menos regularizado y el modelo intenta reproducir con mayor fidelidad la distribución real de los datos de entrada, aunque a costa de generar muestras más ruidosas y posiblemente descuidar detalles esenciales. De esta manera, el  valor de $D_\text{KL}$ refleja el compromiso entre capturar información detallada de los datos y mantener una representación latente estable y bien estructurada para la generación.
 
 <!---
 Girin, Dynamical Variational Autocodificadors: A Comprehensive Review
@@ -151,13 +157,13 @@ Girin, Dynamical Variational Autocodificadors: A Comprehensive Review
 
 ## Presentación de nuestros modelos de AV y AVC
 
-Luego del análisis precedente exponemos a continuación los modelos de AV y AVC que desarrollamos para la generación de datos sintéticos. El desarrollo de dichos modelos se cumplió en dos etapas: en la primera se centró el esfuerzo en el diseño y validación de las arquitecturas más apropiadas para los problemas abordados, mientras que en la segunda se enfocó en su optimización para la generación. A continuación describiremos brevemente este proceso y la configuración final de los modelos elegidos para los experimentos de aumentación. 
+Luego del análisis precedente exponemos a continuación los modelos de AV y AV Condicional (AVC) que desarrollamos para la generación de datos sintéticos. El desarrollo de dichos modelos se cumplió en dos etapas: en la primera se centró el esfuerzo en el diseño y validación de las arquitecturas más apropiadas para los problemas abordados, mientras que en la segunda se enfocó en su optimización. A continuación describiremos brevemente este proceso y la configuración final de los modelos elegidos para los experimentos de aumentación. 
 
 La primera etapa comenzó con la creación de una versión exploratoria de los modelos AV y AVC, con la finalidad de establecer una base sobre la cual iterar en mejoras sucesivas. Se optó por redes de 2 capas en el codificador y en el decodificador en ambos casos, siguiendo la estructura descripta precedentemente. 
 
 El codificador incluyó dos capas lineales, cada una seguida de una activación ReLU, un diseño que sigue la lógica de la transformación no lineal en un espacio de menor dimensión para luego reconstruir la observación original a partir del espacio latente. Como se discutió en la primera parte, el codificador genera dos vectores, uno para la media y otro para la varianza logarítmica de la distribución latente, componentes críticos para el proceso de reparametrización que permite al modelo generar nuevas muestras en el espacio latente. El decodificador, encargado de reconstruir los datos originales a partir del espacio latente, fue diseñado con una estructura simétrica a la del codificador, utilizando nuevamente activaciones ReLU.
 
-La función de pérdida de ambos modelos combinó la *divergencia Kullback-Leibler* (DKL) y el *error cuadrático medio* (MSE). La DKL se utilizó para medir la diferencia entre la distribución aprendida por el modelo y una distribución normal estándar. El MSE y MSE balanceado para los problemas multiclases se emplearon para evaluar el error de reconstrucción, es decir, qué tan bien el modelo era capaz de replicar los datos de entrada a partir del espacio latente. 
+La función de pérdida de ambos modelos combinó la *divergencia Kullback-Leibler* y el *error cuadrático medio*. La $D_{KL}$ se utilizó para medir la diferencia entre la distribución aprendida por el modelo y una distribución normal estándar. El MSE y MSE balanceado para los problemas multiclases se emplearon para evaluar el error de reconstrucción, es decir, qué tan bien el modelo era capaz de replicar los datos de entrada a partir del espacio latente. 
 
 Cabe acalarar que, en escenarios orientados a la generación, consideramos particularmente apropiado emplear MSE para la función de reconstrucción, ya que permite aproximar cada dimensión de la muestra de manera continua. Métricas orientadas a la clasificación, como por ejemplo la entropía cruzada, penalizan con fuerza cuando la clase verdadera difiere de la predicha, mientras que la MSE interpreta la diferencia entre la muestra real y la reconstruida como una distancia. Entendemos que esta característica beneficia el proceso de entrenamiento porque se ajusta a la naturaleza continua de los datos generados y mantiene una penalización homogénea en cada dimensión.
 
@@ -183,14 +189,14 @@ $h_3 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_3}h_2 + b_3)),$
 
 donde:
 
-- $\mathbf{W_1}$ es una matriz de pesos que transforma el vector de entrada $x$ al espacio de características de dimensión $|h_1|$.   
-- $\mathbf{W_2}$ transforma $h_1$ a un espacio de características de dimensión $|h_2|$.   
-- $\mathbf{W_3}$ transforma $h_2$ a un espacio de características de dimensión $|h_3|$.    
-- $\mathbf{b_1}$, $\mathbf{b_2}$, y $\mathbf{b_3}$ son los sesgos correspondientes a cada capa.
+\begin{itemize}
+\item $\mathbf{W_1}$ es una matriz de pesos que transforma el vector de entrada $x$ al espacio de características de dimensión $|h_1|$.
+\item $\mathbf{W_2}$ transforma $h_1$ a un espacio de características de dimensión $|h_2|$.
+\item $\mathbf{W_3}$ transforma $h_2$ a un espacio de características de dimensión $|h_3|$.
+\item $\mathbf{b_1}$, $\mathbf{b_2}$, y $\mathbf{b_3}$ son los sesgos correspondientes a cada capa.
+\end{itemize}
 
 Después de las tres capas, se generan los vectores latentes $\mu$ y $\log(\sigma^2)$ mediante dos capas lineales independientes que no aplican normalización por lotes.
-<!-- 
-En la práctica, la salida de la red para $\log(\sigma^2)$  no se obtiene mediante la operación de logaritmo de una varianza preexistente, sino que la red aprende directamente un valor que interpretamos como $\log(\sigma^2)$. -->
 
 **Reparametrización**
 
@@ -210,16 +216,18 @@ $\hat{x} = \text{BatchNorm}(\mathbf{W_6}h_5 + b_6),$
 
 donde:
 
-- $\mathbf{W_4}$ transforma el vector latente $z$ al espacio de características de dimensión $|h_4|$.     
-- $\mathbf{W_5}$ transforma $h_4$ al espacio de características de dimensión $|h_5|$.   
-- $\mathbf{W_6}$ transforma $h_5$ de regreso al espacio de la dimensión original de la entrada $|D_{in}|$.   
-- $\mathbf{b_4}$, $\mathbf{b_5}$, y $\mathbf{b_6}$ son los sesgos correspondientes a cada capa.
+\begin{itemize}
+\item $\mathbf{W_4}$ transforma el vector latente $z$ al espacio de características de dimensión $|h_4|$.     
+\item $\mathbf{W_5}$ transforma $h_4$ al espacio de características de dimensión $|h_5|$.   
+\item $\mathbf{W_6}$ transforma $h_5$ de regreso al espacio de la dimensión original de la entrada $|D_{in}|$.   
+\item $\mathbf{b_4}$, $\mathbf{b_5}$, y $\mathbf{b_6}$ son los sesgos correspondientes a cada capa.
+\end{itemize}
 
 Finalmente, la salida $\hat{x}$ es una aproximación reconstruida de la entrada original $x$.
 
 ### Modelo AVC para datos multiclase
 
-Para abordar los dataset GCM y ALL Leukemia, que contiene multiples clases con distribuciones desiguales, se creó un AV Condicional (AVC) que combina la capacidad de generación de un AV tradicional con el condicionamiento explícito en las etiquetas de clase. El AVC propuesto permitió una modelización más precisa de los datos, al incorporar información de clase en el proceso de codificación y decodificación.
+Para abordar los dataset GCM y ALL Leukemia, que contienen multiples clases con distribuciones desiguales, se creó un AVC que combina la capacidad de generación de un AV tradicional con el condicionamiento explícito en las etiquetas de clase. El AVC propuesto permitió una modelización más precisa de los datos, al incorporar información de clase en el proceso de codificación y decodificación.
 
 En escenarios donde los datasets están desbalanceados, los modelos generativos pueden tender a favorecer las clases mayoritarias, ignorando las minoritarias. Para abordar el desbalance de clases que presenta GCM, se implementó una estrategia de ponderación de clases dentro de la función de pérdida, penalizando de manera diferenciada los errores de reconstrucción en función de la clase, buscando mejorar así la capacidad del modelo para representar adecuadamente las clases minoritarias.
 
@@ -237,11 +245,13 @@ $h_3 = \text{ReLU}(\text{BatchNorm}(\mathbf{W_3}h_2 + b_3)),$
 
 donde:
 
-- $[x, y]$ es la concatenación del vector de entrada $x$ con las etiquetas $y$.
-- $\mathbf{W_1}$ es una matriz de pesos que transforma el vector combinado $[x, y]$ al espacio de características de dimensión $|h_1|$.
-- $\mathbf{W_2}$ transforma $h_1$ a un espacio de características de dimensión $|h_2|$.
-- $\mathbf{W_3}$ transforma $h_2$ a un espacio de características de dimensión $|h_3|$.  
-- $\mathbf{b_1}$, $\mathbf{b_2}$, y $\mathbf{b_3}$ son los sesgos correspondientes a cada capa.
+\begin{itemize}
+\item $[x, y]$ es la concatenación del vector de entrada $x$ con las etiquetas $y$.
+\item $\mathbf{W_1}$ es una matriz de pesos que transforma el vector combinado $[x, y]$ al espacio de características de dimensión $|h_1|$.
+\item $\mathbf{W_2}$ transforma $h_1$ a un espacio de características de dimensión $|h_2|$.
+\item $\mathbf{W_3}$ transforma $h_2$ a un espacio de características de dimensión $|h_3|$.  
+\item $\mathbf{b_1}$, $\mathbf{b_2}$, y $\mathbf{b_3}$ son los sesgos correspondientes a cada capa.
+\end{itemize}
 
 Al igual que en el AVC, se generan los vectores latentes $\mu$ y $\log(\sigma^2)$ mediante dos capas lineales independientes.
 
@@ -263,25 +273,27 @@ $\hat{x} = \text{BatchNorm}(\mathbf{W_6}h_5 + b_6),$
 
 donde:
 
-- $[z, y]$ es la concatenación del vector latente $z$ con las etiquetas $y$.
-- $\mathbf{W_4}$ transforma el vector combinado $[z, y]$ al espacio de características de dimensión $|h_4|$ + longitud de las categorías.
-- $\mathbf{W_5}$ transforma $h_4$ al espacio de características de dimensión $|h_5|$.
-- $\mathbf{W_6}$ transforma $h_5$ de regreso al espacio de la dimensión original de la entrada $|D_{in}|$.  
-- $\mathbf{b_4}$, $\mathbf{b_5}$, y $\mathbf{b_6}$ son los sesgos correspondientes a cada capa.
+\begin{itemize}
+\item $[z, y]$ es la concatenación del vector latente $z$ con las etiquetas $y$.
+\item $\mathbf{W_4}$ transforma el vector combinado $[z, y]$ al espacio de características de dimensión $|h_4|$ + longitud de las categorías.
+\item $\mathbf{W_5}$ transforma $h_4$ al espacio de características de dimensión $|h_5|$.
+\item $\mathbf{W_6}$ transforma $h_5$ de regreso al espacio de la dimensión original de la entrada $|D_{in}|$.  
+\item $\mathbf{b_4}$, $\mathbf{b_5}$, y $\mathbf{b_6}$ son los sesgos correspondientes a cada capa.
+\end{itemize}
 
 Finalmente, la salida $\hat{x}$ es una aproximación reconstruida de la entrada original $x$, condicionada por las etiquetas $y$.
 
 Elementos distintivos respecto a la arquitectura anterior:
 
 - Incorporación de etiquetas: Tanto en el codificador como en el decodificador, se concatenan las etiquetas $y$ con las entradas y el vector latente, respectivamente.
-- Dimensiones ajustadas: Se han ajustado las dimensiones de las capas para acomodar las etiquetas, reflejadas en las matrices de pesos y las normalizaciones por lotes.
+- Dimensiones ajustadas: Se han ajustado las dimensiones de las capas para incorporar las etiquetas, reflejadas en las matrices de pesos y las normalizaciones por lotes.
 - Capas adicionales en la fase de decodificación: Se añaden capas y ajustes para manejar las etiquetas adicionales en el proceso de decodificación.
 
 ## Parametrización de los modelos AV y AVC
 
 La búsqueda y ajuste de hiperparámetros para los modelos de AV y AVC ha sido un proceso crucial para optimizar la generación de datos sintéticos. Asumíamos que este proceso era determinante para favorecer la estrategia de selección de características mediante el AG, por esa razón analizamos distintas opciones para la configuración de los modelos.
 
-Iniciamos esta tarea realizando una búsqueda de hiperparámetros, ajustando aspectos clave como el tamaño de las dimensiones latentes, la tasa de aprendizaje, y el número de neuronas en las diferentes capas. Se utilizaron tanto Grid Search como Optimización Bayesiana (BO). Cada una de estas técnicas tiene sus fortalezas, y la elección entre ellas depende en gran medida del objetivo de la búsqueda. Grid Search, por ejemplo, permite un control total sobre el espacio de búsqueda, lo que es útil para responder preguntas específicas, como la configuración óptima de la dimensión latente. Sin embargo, la BO demostró ser particularmente eficiente en la exploración de un espacio de hiperparámetros más amplio y menos definido, logrando un equilibrio entre la exploración y la explotación que resultó especialmente útil en nuestra investigación dado el tamaño del espacio de búsqueda.
+Iniciamos esta tarea realizando una búsqueda de hiperparámetros, ajustando aspectos clave como el tamaño de las dimensiones latentes, la tasa de aprendizaje, y el número de neuronas en las diferentes capas. Se utilizaron tanto Grid Search (Bergstra and Bengio, 2012) como Optimización Bayesiana (Snoek et all, 2012). Cada una de estas técnicas tiene sus fortalezas, y la elección entre ellas depende en gran medida del objetivo de la búsqueda. Grid Search, por ejemplo, permite un control total sobre el espacio de búsqueda, lo que es útil para responder preguntas específicas, como la configuración óptima de la dimensión latente. Sin embargo, la BO demostró ser particularmente eficiente en la exploración de un espacio de hiperparámetros más amplio y menos definido, logrando un equilibrio entre la exploración y la explotación que resultó especialmente útil en nuestra investigación dado el tamaño del espacio de búsqueda.
 
 También exploramos técnicas para evitar el sobreajuste, como un mecanismo de paciencia para detener el entrenamiento si no se observaba mejora durante 10 épocas consecutivas en datos de validación. Además, se experimentó con el uso de dropout como técnica de regularización; se probaron tasas de dropout en un rango de 0.05 a 0.5 en distintas configuraciones de AVC, tanto con arquitecturas pequeñas (100-500 neuronas por capa) como grandes (1000-7000 neuronas por capa). Testeamos distintas métricas de pérdida, como L1 en lugar de MSE para evaluar si la L1_loss podría ofrecer mejoras.
 
@@ -299,27 +311,31 @@ Además, se emplearon otras métricas para completar nuestro análisis, a saber:
 
 ## Resultados obtenidos en los experimentos
 
-Los resultados obtenidos en nuestros experimentos revelaron que un Perceptron Multicapa (MLP) entrenado con datos sintéticos generados por un AV/AVC puede igualar o incluso superar en ciertos casos el rendimiento de un MLP entrenado con datos reales. En la siguiente figura se muestran los resultados obtenidos en los experimentos realizados para los cuatro conjuntos de datos estudiados, donde comparamos datos sintéticos con datos reales: en azul se indican los resultados en los datos de testeo para el entrenamiento con datos reales, y en rojo los resultados de entrenar con datos sintéticos.  
+Los resultados obtenidos en nuestros experimentos revelaron que un Perceptron Multicapa (MLP) entrenado con datos sintéticos generados por un AV/AVC puede igualar o incluso superar en ciertos casos el rendimiento de un MLP entrenado con datos reales. En la Figura 3.4 se muestran los resultados obtenidos en los experimentos realizados para los cuatro conjuntos de datos estudiados, donde comparamos datos sintéticos con datos reales: en azul se indican los resultados en los datos de testeo para el entrenamiento con datos reales, y en rojo los resultados de entrenar con datos sintéticos.  
 
 ![](grafico_MLP-reales-vs-sintenticos.png)
 
-> **Figura 3.4.**: *MLP con datos sintéticos vs MLP con datos reales*
+\begin{center}
+Figura 3.4 Comparación de la exactitud de MLP entrenado con datos sintéticos vs MLP entrenado con datos reales
+\end{center}
 
 
 Estos resultados son particularmente relevantes ya que sugieren que, bajo ciertas condiciones, los datos sintéticos pueden ser tan útiles como los datos reales para el entrenamiento de modelos predictivos. Como se aprecia en el gráfico, este fenómeno se observó de manera consistente en tres de los cuatro conjuntos de datos de nuestro estudio: Leukemia, Madelon y GCM, donde la precisión y la exactitud del modelo entrenado con datos sintéticos alcanzaron o superaron las métricas obtenidas con los datos originales. En el caso del dataset Gisette, el modelo entrenado con datos sintéticos estuvo muy cerca de igualar el rendimiento del modelo entrenado con datos reales.
 
 Veamos a continuación los resultados particulares de cada conjunto de datos.
 
-> Tab.3.1 Resultados en **Leukemia**
+\begin{center}
+Tab.3.1 Resultados en Leukemia
+\end{center}
 
 | Modelo                         | Clase | Precisión | Recall | F1 Score | Soporte |
-|--------------------------------|-------|-----------|--------|----------|---------|
+|:-------------------------------|:------|:----------|:-------|:---------|:--------|
 |   MLP con datos reales         | 0     | 0.76      | 1.00   | 0.87     | 13      |
 |                                | 1     | 1.00      | 0.56   | 0.71     | 9       |
 |   Exactitud                    |       |           |        | 0.81     | 22      |
 |   Promedio Macro               |       | 0.88      | 0.78   | 0.79     | 22      |
 |   Promedio Ponderado           |       | 0.86      | 0.82   | 0.80     | 22      |
-|--------------------------------|-------|-----------|--------|----------|---------|
+|-------------------------------|-------|-----------|--------|----------|---------|
 |   MLP con datos sintéticos     | 0     | 0.93      | 1.00   | 0.96     | 13      |
 |                                | 1     | 1.00      | 0.89   | 0.94     | 9       |
 |   Exactitud                    |       |           |        | **0.95** | 22      |
@@ -334,16 +350,18 @@ Para la clase 1, mientras que ambos modelos alcanzan una precisión perfecta de 
 
 En términos generales, estas mejoras se reflejan en un incremento de la exactitud global del modelo, que pasa de 0.81 a 0.95, y en mejoras consistentes en los promedios macro y ponderado de todas las métricas. Estos resultados sugieren que el uso de datos sintéticos no solo mejora el rendimiento general del modelo, sino que también contribuye a un aprendizaje más equilibrado entre las clases.
 
-> Tab.3.2 Resultados en **Madelon**
+\begin{center}
+Tab.3.2 Resultados en Madelon
+\end{center}
 
 | Modelo                       | Clase | Precisión | Recall | F1 Score | Soporte |
-|------------------------------|-------|-----------|--------|----------|---------|
+|:-------------------------------|:------|:----------|:-------|:---------|:--------|
 |   MLP con datos reales       | 0     | 0.56      | 0.55   | 0.55     | 396     |
 |                              | 1     | 0.54      | 0.55   | 0.55     | 384     |
 |   Exactitud                  |       |           |        | 0.55     | 780     |
 |   Promedio Macro             |       | 0.55      | 0.55   | 0.55     | 780     |
 |   Promedio Ponderado         |       | 0.55      | 0.55   | 0.55     | 780     |
-|------------------------------|-------|-----------|--------|----------|---------|
+|-------------------------------|-------|-----------|--------|----------|---------|
 |   MLP con datos sintéticos   | 0     | 0.56      | 0.72   | 0.63     | 396     |
 |                              | 1     | 0.59      | 0.42   | 0.49     | 384     |
 |   Exactitud                  |       |           |        | **0.57** | 780     |
@@ -360,21 +378,23 @@ A pesar de este comportamiento dispar entre clases, el modelo entrenado con dato
 
 La Tabla 3.3 presenta los resultados para el conjunto de datos Gisette, un problema de clasificación binaria con un conjunto de prueba balanceado de 1800 muestras (904 de clase 0 y 896 de clase 1). Este dataset destaca por el alto rendimiento alcanzado por ambos modelos.
 
-> Tab.3.3 Resultados en **Gisette**
+\begin{center}
+Tab.3.3 Resultados en Gisette
+\end{center}
 
-| Modelo                       | Clase | Precisión | Recall | F1 Score | Soporte |
-|------------------------------|-------|-----------|--------|----------|---------|
-|   MLP con datos reales       | 0     | 0.98      | 0.98   | 0.98     | 904     |
-|                              | 1     | 0.98      | 0.98   | 0.98     | 896     |
-|   Exactitud                  |       |           |        | **0.97** | 1800    |
-|   Promedio Macro             |       | 0.98      | 0.98   | 0.98     | 1800    |
-|   Promedio Ponderado         |       | 0.98      | 0.98   | 0.98     | 1800    |
-|------------------------------|-------|-----------|--------|----------|---------|
-|   MLP con datos sintéticos   | 0     | 0.95      | 0.97   | 0.96     | 904     |
-|                              | 1     | 0.97      | 0.95   | 0.96     | 896     |
-|   Exactitud                  |       |           |        | 0.95     | 1800    |
-|   Promedio Macro             |       | 0.96      | 0.96   | 0.96     | 1800    |
-|   Promedio Ponderado         |       | 0.96      | 0.96   | 0.96     | 1800    |
+| Modelo                         | Clase | Precisión | Recall | F1 Score | Soporte |
+|:-------------------------------|:------|:----------|:-------|:---------|:--------|
+|   MLP con datos reales         | 0     | 0.98      | 0.98   | 0.98     | 904     |
+|                                | 1     | 0.98      | 0.98   | 0.98     | 896     |
+|   Exactitud                    |       |           |        | **0.97** | 1800    |
+|   Promedio Macro               |       | 0.98      | 0.98   | 0.98     | 1800    |
+|   Promedio Ponderado           |       | 0.98      | 0.98   | 0.98     | 1800    |
+|-------------------------------|-------|-----------|--------|----------|---------|
+|   MLP con datos sintéticos     | 0     | 0.95      | 0.97   | 0.96     | 904     |
+|                                | 1     | 0.97      | 0.95   | 0.96     | 896     |
+|   Exactitud                    |       |           |        | 0.95     | 1800    |
+|   Promedio Macro               |       | 0.96      | 0.96   | 0.96     | 1800    |
+|   Promedio Ponderado           |       | 0.96      | 0.96   | 0.96     | 1800    |
 
 El modelo entrenado con datos reales muestra un rendimiento excepcional y consistente, alcanzando una precisión y recall de 0.98 para ambas clases. Esto resulta en un F1 Score de 0.98 y una exactitud global del 97%, indicando un comportamiento casi perfecto en la clasificación.
 
@@ -391,18 +411,13 @@ El análisis por grupos de clases revela patrones distintivos:
    - La clase 6 muestra una mejora notable, pasando de un F1 Score de 0.80 a 0.89
    - La clase 12 duplica su F1 Score de 0.40 a 0.86
 
-2. Clases con deterioro notable:
-   - La clase 7 sufre una degradación importante, cayendo de un F1 Score de 0.60 a 0.14
-   - La clase 3 muestra un deterioro significativo, reduciendo su F1 Score de 0.50 a 0.29
 
-3. Casos especiales:
-   - La clase 1, con solo una muestra, mantiene un rendimiento nulo (F1 Score = 0) en ambos modelos
-   - La clase 0 muestra un comportamiento mixto: aumenta su precisión a 1.00 pero mantiene un recall bajo (0.25)
-
-> Tab.3.4 Resultados en **GCM**
+\begin{center}
+Tab.3.4 Resultados en GCM
+\end{center}
 
 | Modelo                       | Clase | Precisión | Recall | F1 Score | Soporte |
-|------------------------------|-------|-----------|--------|----------|---------|
+|:-------------------------------|:------|:----------|:-------|:---------|:--------|
 |   MLP con datos reales       | 0     | 0.14      | 0.25   | 0.18     | 4       |
 |                              | 1     | 0.00      | 0.00   | 0.00     | 1       |
 |                              | 2     | 1.00      | 1.00   | 1.00     | 3       |
@@ -420,7 +435,7 @@ El análisis por grupos de clases revela patrones distintivos:
 |   Exactitud                  |       |           |        | **0.54** | 57      |
 |   Promedio Macro             |       | 0.67      | 0.51   | 0.51     | 57      |
 |   Promedio Ponderado         |       | 0.74      | 0.54   | 0.56     | 57      |
-|------------------------------|-------|-----------|--------|----------|---------|
+|-------------------------------|-------|-----------|--------|----------|---------|
 |   MLP con datos sintéticos   | 0     | 1.00      | 0.25   | 0.40     | 4       |
 |                              | 1     | 0.00      | 0.00   | 0.00     | 1       |
 |                              | 2     | 1.00      | 0.67   | 0.80     | 3       |
@@ -438,6 +453,15 @@ El análisis por grupos de clases revela patrones distintivos:
 |   Exactitud                  |       |           |        | **0.54** | 57      |
 |   Promedio Macro             |       | 0.64      | 0.50   | 0.50     | 57      |
 |   Promedio Ponderado         |       | 0.70      | 0.54   | 0.55     | 57      |
+
+
+2. Clases con deterioro notable:
+   - La clase 7 sufre una degradación importante, cayendo de un F1 Score de 0.60 a 0.14
+   - La clase 3 muestra un deterioro significativo, reduciendo su F1 Score de 0.50 a 0.29
+
+3. Casos especiales:
+   - La clase 1, con solo una muestra, mantiene un rendimiento nulo (F1 Score = 0) en ambos modelos
+   - La clase 0 muestra un comportamiento mixto: aumenta su precisión a 1.00 pero mantiene un recall bajo (0.25)
 
 
 Un aspecto llamativo es el aumento general en la precisión con datos sintéticos: varias clases alcanzan precisión perfecta (1.00). Este patrón sugiere que el modelo con datos sintéticos es más conservador en sus predicciones, prefiriendo la precisión sobre la sensibilidad.
@@ -458,15 +482,17 @@ Otra observación relevante asociada con la generación sintética de datos se v
 
 ![](n_samples_accuracy_comparison.png)
 
-> **Figura 3.5.**: *Exactitud según cantidad de muestras sintéticas*
+\begin{center}
+Figura 3.5 Exactitud MLP según cantidad de muestras sintéticas empleadas en el entrenamiento. Se muestran 4 diferentes experimentos con 190, 400, 3000 y 6000 muestras sintéticas.
+\end{center}
 
-Esto sugiere la existencia de un umbral en la cantidad de datos sintéticos que, una vez superado, introduce ruido en el modelo en lugar de aportar valor. Este ruido puede estar relacionado con el solapamiento de las fronteras de decisión en las muestras generadas, lo que aumenta el error y disminuye la precisión del modelo.
+Esto sugiere la existencia de un umbral en la cantidad de datos sintéticos que, una vez superado, empieza a producirse un sobreajuste. Este sobreajuste aumenta el error y disminuye la precisión del modelo.
 
 Finalmente, otros emergentes que podemos destacar son los siguientes:
 
-- La implementación de un término de paciencia tuvo un impacto positivo en la calidad de los modelos, particularmente en el caso del AVC,  
-- Para el caso del AVC, el uso de L1_loss no proporciona un beneficio claro sobre el MSE para la tarea de generación de datos sintéticos, y   
-- El dropout no aporta beneficios en configuraciones ya optimizadas del AVC para este tipo de tareas.    
+- la implementación de un término de paciencia tuvo un impacto positivo en la calidad de los modelos, particularmente en el caso del AVC,  
+- para el caso del AVC, el uso de L1_loss no proporciona un beneficio claro sobre el MSE para la tarea de generación de datos sintéticos, y   
+- el dropout no aporta beneficios en configuraciones ya optimizadas del AVC para este tipo de tareas.    
 
 Estos resultados llevaron a una reflexión sobre la falta de impacto positivo de ciertos ajustes, como la introducción de L1_loss y dropout. Es probable que la estabilidad y el buen rendimiento de las configuraciones ya validadas de AV y AVC, alcanzados a través de numerosos experimentos, limiten el potencial de mejora adicional mediante estos métodos. 
 
