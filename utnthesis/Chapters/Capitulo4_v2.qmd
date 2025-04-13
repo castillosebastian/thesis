@@ -264,7 +264,7 @@ El enfoque experimental adoptado fue comparativo, contrastando el desempeño de 
 
 Los experimentos se diseñaron para comparar el rendimiento de los AG aplicados a los datos originales y a un conjunto de datos aumentado con muestras sintéticas. El objetivo de esta comparación era evaluar el impacto de la aumentación de datos en el proceso de selección de características. Para ello, se utilizaron los siguientes criterios de evaluación: *exactitud en la clasificación*, *número de características seleccionadas* y *estabilidad de la selección de características*. Con el fin de asegurar la comparabilidad de los resultados, siempre se empleó la partición original de testeo para evaluar la exactitud del algoritmo.
 
-Se llevaron a cabo experimentos utilizando el modelo de AG descrito previamente, adoptando una representación binaria para las características. La función de aptitud se basó en un clasificador de perceptrón multicapa (MLP), que evaluaba la exactitud de la clasificación y penalizaba el número de características seleccionadas. El objetivo del AG era identificar un subconjunto óptimo de características que maximizara la exactitud y minimizara la dimensionalidad del espacio de características.
+Se llevaron a cabo experimentos utilizando el modelo de AG descrito previamente, adoptando una representación binaria para las características. Para encontrar la configuración más apropiada del AG para cada conjunto de datos se realizaron experimentos exploratorios a partir de los cuales se obtuvieron los parámetros del algoritmo. La función de aptitud se basó en un clasificador de perceptrón multicapa (MLP), que evaluaba la exactitud de la clasificación y penalizaba el número de características seleccionadas, ambos componentes con igual ponderación (α = 0.5). El objetivo del AG era identificar un subconjunto óptimo de características que maximizara la exactitud y minimizara la dimensionalidad del espacio de características.
 
 El aspecto innovador de este enfoque está en el uso de un AV para enriquecer el proceso evolutivo del AG. El AV, según vimos en el Capítulo 3, fue optimizado para generar muestras sintéticas que preservaran la estructura subyacente de los datos originales, y permitiera al AG explorar un espacio aumentado de características. La hipóstesis que se buscó validar en el presente trabajo fue que: aumentar sintéticamente el número de muestras disponibles permitiría al AG identificar un subconjunto más relevante de características, que se traduciría en una mejora en la exactitud y la eficiencia de la selección.
 
@@ -274,7 +274,7 @@ El aspecto innovador de este enfoque está en el uso de un AV para enriquecer el
 Figura 4.6. Comparación de experimentos
 \end{center}
 
-Hemos elegido el gráfico de cajas para representar la comparación entre experimentos realizados con datos originales y aquellos donde se utilizaron datos aumentados. Así, en las figuras de la presente sección cada punto representado un experimento e indica la exactitud promedio lograda y cantidad promedio de características seleccionadas en la población al finalizar el proceso evolutivo.
+Para comunicar los resultados de nuestra investigación hemos elegido el gráfico de cajas para representar los resultados y permitir la comparación entre experimentos realizados con datos originales y aquellos donde se utilizaron datos aumentados. Esta elección ofrece varias ventajas: facilita la visualización de la distribución completa de los resultados, permite identificar claramente la mediana y los cuartiles de cada grupo experimental, y proporciona una representación visual de la variabilidad en los resultados, ayudando a evaluar la estabilidad de las soluciones encontradas. Así, en las figuras de la presente sección cada punto en el gráfico de cajas representa un experimento e indica la exactitud promedio lograda y cantidad promedio de características seleccionadas en la población al finalizar el proceso evolutivo.
 
 ## Leukemia
 
@@ -297,12 +297,12 @@ En un segundo grupo de experimentos exploratorios, se investigaron variaciones e
 
 En los experimentos realizados sobre el conjunto de datos *Leukemia*, los resultados mostraron leves diferencias en favor de la aumentación en lo que respecta a exactitud. En la Figura 4.7 cada punto representa la exactitud promedio de la población al finalizar el proceso evolutivo en un experimento (1 punto = 1 experimento). Aunque la diferencia no es significativa, sí se observa una mayor estabilidad (menor varianza) en los resultados del grupo con datos aumentados.
 
-Cabe aclarar que dada las distintas configuraciones de cromosoma empleadas en los experimentos, el gráfico referido a genes aparece marcadamente dividido en dos grupos: experimentos con genes de 100 características activas (abajo), y experimentos con alrededor de 700 características activas (arriba). Pese a constituir experimentos claramente diferentes, incluimos ambos en la misma representación pues no observamos diferencias relevantes en la cantidad de genes activos en los grupos con aumentación frente a los originales.
+Cabe aclarar que dada las distintas configuraciones de cromosoma empleadas en los experimentos, el gráfico referido a genes aparece marcadamente dividido en dos grupos: experimentos donde los genes de los individuos tenían 100 características activas (abajo), y experimentos con 700 características activas (arriba). Pese a constituir experimentos claramente diferentes, incluimos ambos en la misma representación pues no observamos diferencias relevantes en la cantidad de genes activos en los grupos con aumentación frente a los originales.
 
 ![](boxplot_leukemia_combined.png)
 
 \begin{center}
-Figura 4.7 Exactitud (izquierda) y número de características seleccionadas (derecha) en Leukemia. Datos aumentados (rosado) y datos originales (gris).
+Figura 4.7 Exactitud (izquierda) y número de características seleccionadas (derecha) en Leukemia. Datos aumentados (rosado) y datos originales (gris). Los resultados se evaluaron en datos de testeo sin aumentación.
 \end{center}
 
 Entendemos posible que, en conjuntos de datos donde los modelos alcanzan una exactitud alta (como sucede en este caso con *Leukemia*, pero también sucede con *Gisette*, que veremos en breve), la aumentación no produce diferencias sustanciales en la performance del AG.
@@ -322,47 +322,47 @@ Los resultados en *Gisette* fueron similares a los observados en *Leukemia*. La 
 ![](boxplot_gisette_combined.png)
 
 \begin{center}
-Figura 4.8. Exactitud (izquierda) y número de características seleccionadas (derecha) en Gisette. Datos aumentados (rosado) y datos originales (gris).
+Figura 4.8. Exactitud (izquierda) y número de características seleccionadas (derecha) en Gisette. Datos aumentados (rosado) y datos originales (gris).Los resultados se evaluaron en datos de testeo sin aumentación.
 \end{center}
 
-Este hallazgo parece sugerir que la aumentación de datos no produce diferencias significativas en la performance del AG en conjuntos de datos donde los modelos ya alcanzan una alta exactitud, y donde la cantidad de observaciones originales es suficiente para la aplicación de estrategias de selección. Sin embargo, la estabilidad de la selección de características sí parece sugerir una mejora con la aumentación, como se refleja en la menor desviación estándar y el rango intercuartílico (IQR):
+Al igual que en el caso anterior este hallazgo parece sugerir que la aumentación de datos no produce diferencias significativas en la performance del AG en conjuntos de datos donde los modelos ya alcanzan una alta exactitud, y donde la cantidad de observaciones originales es suficiente para la aplicación de estrategias de selección. Sin embargo, la estabilidad de la selección de características sí parece sugerir una mejora con la aumentación, como se refleja en la menor desviación estándar y el rango intercuartílico en la Tabla 4.2.
 
 
 |                    | Datos aumentados    | Datos originales    |
 |--------------------|---------------------|---------------------|
 |**Características seleccionadas (media)** | 424                 | 436                 |
 |**Desviación Estándar**                  | 17                  | 14                  |
-|**Rango Intercuartil (IQR)**             | 8                   | 21                  |
+|**Rango Intercuartil**                  | 8                   | 21                  |
 
 \begin{center}
 Tabla 4.2. Comparación de experimentos en Gisette
 \end{center}
 
-En efecto, en *Gisette* se observa una diferencia más importante en la estabilidad de la selección de características. En los experimentos con datos aumentados, el número promedio de características seleccionadas fue menor (424) en comparación con los datos originales (436), señalando que el AG fue más efectivo en el reconocimiento de un subconjunto relevantes. 
+En efecto, en *Gisette* se observa una diferencia más importante en la estabilidad de la selección de características. En los experimentos con datos aumentados, a lo largo de las diferentes corridas del algoritmo propuesto, el número promedio de características seleccionadas fue menor (424) en comparación con los datos originales (436), señalando que el AG fue más efectivo en el reconocimiento de un subconjunto relevantes. 
 
 ## Madelon
 
 El conjunto de datos *Madelon* es un caso especial donde solo cinco características son relevantes, y las otras quince son combinaciones lineales de estas, y el resto son datos aleatorios. Así, este conjunto representa un desafío interesante para evaluar la capacidad de los AG para identificar características útiles en un entorno donde la señal está oculta entre una gran cantidad de ruido.
 
-La metodología seguida en los experimentos con *Madelon* fue similar a la utilizada en *Leukemia* y *Gisette*. La configuración del AG fue la siguiente: la probabilidad de mutación se estableció en 0.002, la probabilidad de cruce en 0.75 y la proporción de genes activos en el cromosoma en 0.1. El número máximo de generaciones se estableció en 30.
+La metodología seguida en los experimentos con *Madelon* fue similar a la utilizada en *Leukemia* y *Gisette*: en todos los casos supuso una serie de experimentos exploratorios para determinar las mejores configuraciones de parámetros. En el caso que nos ocupa, dicha configuración del AG fue la siguiente: la probabilidad de mutación se estableció en 0.002, la probabilidad de cruce en 0.75 y la proporción de genes activos en el cromosoma en 0.1. El número máximo de generaciones se estableció en 30. 
 
-Se generaron 2000 muestras sintéticas para incrementar el número de observaciones disponibles y evaluar si esto mejoraba la capacidad del AG para encontrar las características relevantes. Como en los experimentos precedentes, se exploraron diferentes configuraciones de la proporción de genes activos en el cromosoma y se investigó cómo la aumentación de datos, en el contexto de un espacio de búsqueda complejo y ruidoso, afectaba la eficiencia de la selección de características.
+Se generaron 2000 muestras sintéticas para incrementar el número de observaciones disponibles y evaluar si esto mejoraba la capacidad del AG para encontrar las características relevantes. Como en los experimentos precedentes, se exploraron diferentes configuraciones de la proporción de genes activos en el cromosoma al momento de la inicialización, y se investigó cómo la aumentación de datos, en el contexto de un espacio de búsqueda complejo y ruidoso, afectaba la eficiencia de la selección de características.
 
 **Resultados**
 
-Los experimentos en Madelon mostraron resultados significativamente diferentes a Leukemia y Gisette. La exactitud media en los experimentos con datos aumentados fue de 0.83, lo que representa un aumento del 10.4% en comparación con la exactitud de los datos originales de 0.75. Esta diferencia es significativa, lo que indica que la aumentación de datos tuvo un impacto positivo en el desempeño del AG.
+Los experimentos en Madelon mostraron resultados significativamente diferentes a Leukemia y Gisette como puede apreciarse en la Figura 4.9. La exactitud media en los experimentos con datos aumentados fue de 0.83, lo que representa un aumento del 10.4% en comparación con la exactitud de los datos originales de 0.75. Esta diferencia es significativa, lo que indica que la aumentación de datos tuvo un impacto positivo en el desempeño del AG.
 
 ![](boxplot_madelon_combined.png)
 
 \begin{center}
-Figura 4.9. Exactitud (izquierda) y número de características seleccionadas (derecha) en Madelon. Datos aumentados (rosado) y datos originales (gris).
+Figura 4.9. Exactitud (izquierda) y número de características seleccionadas (derecha) en Madelon. Datos aumentados (rosado) y datos originales (gris).Los resultados se evaluaron en datos de testeo sin aumentación.
 \end{center}
 
 Estos resultados sugieren que la aumentación de datos puede ser especialmente efectiva en conjuntos de datos con características complejas y un alto nivel de ruido, como es el caso de Madelon. La generación de muestras sintéticas permitió al AG identificar mejor las características relevantes, lo que se tradujo en una mejora significativa en la exactitud del modelo.
 
 Por otro lado, el análisis de selección de características reveló que, en promedio, el número de características seleccionadas fue menor en los experimentos con datos aumentados (29) en comparación con los datos originales (35). Este hallazgo, también resalta el efecto positivo que produce la aumentación de datos en la selección de características.
 
-Finalmente, podemos destacar también que de los algoritmos clásicos evaluados (cuyo reporte hicimos en el Capítulo 2) solo 2 de los 18 logran superan los valores de exactitud obtenidos con el AG en los datos aumentados. Ambos modelos, AdaBoost y Bagging, lograron esos resultados luego de un proceso de optimización de hiperparámetros. El resto de los modelos clásicos oscila entre 0.5 y 0.7 de exactitud, lo que refuerza la idea de que la aumentación de datos puede ser una estrategia efectiva para mejorar el desempeño de los AG en conjuntos de datos complejos.
+Finalmente, podemos destacar también que de los clasificadores clásicos evaluados en el Capítulo 2, que no tuvieron el tratamiento que aquí estamos analizando (aumentación + selección de características), solo 2 de los 18 logran valores de exactitud superiores a los que aquí estamos presentando. Ambos modelos, AdaBoost y Bagging, lograron esos resultados luego de un proceso de optimización de hiperparámetros. El resto de los modelos clásicos oscila entre 0.5 y 0.7 de exactitud, lo que refuerza la idea de que la aumentación de datos y la selección de características puede ser una estrategia efectiva para mejorar los resultados de un clasificador en conjuntos de datos complejos.
 
 ## GCM
 
@@ -370,18 +370,16 @@ El conjunto de datos *GCM* consiste en 16063 atributos (biomarcadores), sobre 19
 
 El proceso de experimentación en GCM estuvo dividido en dos partes. En la primera parte, se realizaron experimentos exploratorios con diferentes configuraciones del AVC y el AG. El objetivo de esta etapa fue establecer una línea base para evaluar la efectividad de la aumentación de datos. En la segunda parte, se realizaron ajustes en la metodología, el modelo de AVC y el diseño de la integración AVC-AG. Esta vez, el objetivo era mejorar la calidad de los datos sintéticos y la eficiencia de la selección de características.
 
-Aunque se realizaron una gran cantidad de experimentos (algunos exploratorios y otros más específicos), nos centraremos en los resultados de la primera y segunda parte, que nos permitieron identificar los desafíos y oportunidades en la utilización de AV en conjuntos de datos complejos como GCM.
+Aunque se realizaron una gran cantidad de experimentos (algunos exploratorios y otros más específicos), nos centraremos en los resultados de la primera y segunda parte que se describen a continuación, que nos permitieron identificar los desafíos y oportunidades en la utilización de AV en conjuntos de datos complejos como GCM.
 
 La cantidad de muestras sintéticas generadas en los experimentos fue ajustada a lo largo de las pruebas, conforme se exploraban opciones de mejora. Ello dio lugar a la siguiente tabla de experimentos por cantidad de muestras sintetizadas, donde la primera fila representa la cantidad experimentos con las muestras originales (sin aumentación):
 
 | n_muestras        | cantidad_experimentos |
 |-------------------|-----------------------|
 | 133               | 20                    |
-| 3129              | 15                    |
-| 1322              | 4                     |
-| 1323              | 4                     |
-| 1304              | 2                     |
 | 254               | 2                     |
+| ~1300             | 10                    |
+| 3129              | 15                    |
 | 6106              | 1                     |
 
 \begin{center}
@@ -407,7 +405,7 @@ Los resultados, como anticipabamos, no fueron favorables. Como puede verse en la
 ![](boxplot_gcm_combined_part1.png)
 
 \begin{center}
-Figura 4.10 Exactitud (izquierda) y número de características seleccionadas (derecha) en GCM, primera etapa. Datos aumentados (rosado) y datos originales (gris).
+Figura 4.10 Exactitud (izquierda) y número de características seleccionadas (derecha) en GCM, primera etapa. Datos aumentados (rosado) y datos originales (gris). Los resultados se evaluaron en datos de testeo sin aumentación. 
 \end{center}
 
 Como resultado de esta primera etapa de experimentos se identificó una dificultad importante en la metodología utilizada. La calidad de los datos sintéticos generados por el AVC no contribuyó a mejorar la exactitud de la clasificación, consecuentemente el AG con datos aumentados no tiene mejores resultados que el AG con datos originales. Ante esta circunstancia se procedió a realizar un test de diagnóstico para evaluar la calidad de los datos sintéticos. Se generaron 3000 muestras, se entrenó y evaluó un MLP con estos datos. Los resultados en la partición sintética de testeo fueron los siguientes:
@@ -457,7 +455,7 @@ Como vimos, una de las limitaciones principales identificadas en los experimento
 
 Para verificar esta hipótesis, diseñamos un flujo de trabajo en tres etapas:
 
-1. **Selección inicial**: Primero identificamos un subespacio de características relevantes utilizando los resultados de experimentos previos con AG. Este era un paso crítico porque debía reducir el espacio del problema pero al mismo tiempo evitar pérdida de información relevante. Entonces, para lograr esos objectivos, seleccionamos las características que aparecían con mayor frecuencia en los cromosomas de experimentos previos, donde cada cromosoma representaba aproximadamente el 10% de las características totales (alrededor de 1600 genes por cromosoma).
+1. **Selección inicial**: Primero identificamos un subespacio de características relevantes utilizando los resultados de experimentos previos con AG. Este era un paso crítico porque debía reducir el espacio del problema pero al mismo tiempo evitar pérdida de información relevante. Entonces, para lograr esos objectivos, seleccionamos las 1600 características que aparecían con mayor frecuencia en los 590 cromosomas obtenidos de experimentos previos, donde cada cromosoma representaba aproximadamente el 10% de las características totales (16063).
 
 2. **Generación**: Este subconjunto preseleccionado de características se utilizó como entrada para el AVC, que ahora podía enfocarse en aprender y modelar un espacio de menor dimensionalidad. El modelo generativo entrenado con este subespacio produjo datos sintéticos potencialmente de mayor calidad.
 
@@ -465,7 +463,7 @@ Para verificar esta hipótesis, diseñamos un flujo de trabajo en tres etapas:
 
 Este enfoque secuencial de **"selección-generación-selección"** permitió concentrar el aprendizaje de los modelos en un subespacio de características más relevante, facilitando que el AVC capturara mejor las relaciones importantes entre variables y generara datos sintéticos más representativos de la distribución original.
 
-Respecto de la configuración de los experimentos se implementaron las siguientes modificaciones: se ajustó el total de muestras sintéticas generadas por el AVC a 3000. Se redujo la proporción de genes activos en el cromosoma a 0.05 y 0.025 respecto del espacio original de características (~750 y ~450 atributos respectivamente). Se mantuvo constante la probabilidad de cruce en 0.75, como también la probabilidad de mutación en 0.1 (~0.0006). El número máximo de generaciones se redujo a 15, considerando la reducción en la complejidad del problema.
+Respecto de la configuración de los experimentos se implementaron las siguientes modificaciones: se ajustó el total de muestras sintéticas generadas por el AVC a 3000. Se redujo la proporción de genes activos en el cromosoma a 0.05 y 0.025 respecto del espacio original de características (~750 y ~450 atributos respectivamente). Se mantuvo constante la probabilidad de cruce en 0.75, como también la probabilidad de mutación en 0.1 (~0.0006), en ambos casos siguiendo la configuración con mejores resultados en nuestros experimentos exploratorios. El número máximo de generaciones se redujo a 15, considerando la reducción en la complejidad del problema y luego de constatar que el algoritmo lograba convergencia dentro de esa cantidad de generaciones.
 
 Como resultado de todas estas modificaciones, se esperaba una mayor calidad de los datos sintéticos, lo que se traduciría en una mejora en la exactitud de la clasificación, y en la eficiencia de la selección de características.
 
@@ -478,20 +476,20 @@ A pesar del desafío que supone la clasificación de las 14 clases desbalancedad
 ![](boxplot_gcm_combined.png)
 
 \begin{center}
-Figura 4.11. Exactitud (izquierda) y número de características seleccionadas (derecha) en GCM, segunda etapa. Datos aumentados (rosado) y datos originales (gris).
+Figura 4.11. Exactitud (izquierda) y número de características seleccionadas (derecha) en GCM, segunda etapa. Datos aumentados (rosado) y datos originales (gris).Los resultados se evaluaron en datos de testeo sin aumentación.
 \end{center}
 
-Respecto de la selección de características, no se observa gran diferencia en el número de características seleccionadas entre los experimentos con datos originales y los datos aumentados. En efecto, el número de características promedio seleccionadas en los experimentos con aumentación y cromosomas de tamaño 0.05 y 0.025 fue de 453 y 784 respectivamente, en comparación con 461 y 781 en los experimentos con datos originales.
+Respecto a la cantidad de características seleccionadas, no se observa gran diferencia entre los experimentos con datos originales y los datos aumentados. En efecto, el número de características promedio seleccionadas en los experimentos con aumentación y cromosomas de tamaño 0.05 y 0.025 fue de 453 y 784 respectivamente, en comparación con 461 y 781 en los experimentos con datos originales.
 
-Para validar los resultados obtenidos, se realizó un grupo de experimentos adicionales donde se disminuyó la proporción de genes activos en el cromosoma a 0.015 y 0.003, lo que representó una selección de atributos en torno a ~200 y ~45. Los resultados de la Figura 4.10 mostraron que, pese a la importante reducción en el espacio de búsqueda, la exactitud se mantuvo en un nivel aceptable en ambos grupos. La mejor performance del grupo con datos aumentados tiene lugar en los experimentos con reducción más agregisiva del cromosomas, con un tamaño 0.003 (~45). 
-
-A continuación presentamos la serie completa de experimentos realizados en GCM, donde se puede observar la evolución de la exactitud en función dla proporción de genes activos en el cromosoma. 
+Para validar los resultados obtenidos, se realizó un grupo de experimentos adicionales donde se disminuyó la proporción de genes activos en el cromosoma a 0.015 y 0.003, lo que representó una selección de atributos en torno a ~200 y ~45. Los resultados de la Figura 4.12 mostraron que, pese a la importante reducción en el espacio de búsqueda, la exactitud se mantuvo en un nivel aceptable en ambos grupos. Los mejores resultados se obtuvieron con datos aumentados, a excepción del grupo de experimentos con un tamaño del cromosoma activo de ~200 características. 
 
 ![](boxplot_gcm_ngenes_accuracy.png)
 
 \begin{center}
-Figura 4.12. Experimentos con GCM variando el número de características seleccionadas. Datos aumentados (rosado) y datos originales (gris).
+Figura 4.12 Experimentos con GCM variando el número de características seleccionadas. Datos aumentados (rosado) y datos originales (gris).
 \end{center}
+
+A continuación presentamos la serie completa de experimentos realizados en GCM, donde se puede observar la evolución de la exactitud en función de la proporción de genes activos en el cromosoma. La Figura 4.12 muestra los cuatro grupos de experimentos con sus correspondientes resultados en términos de exactitud, tanto para datos aumentados (rosado) como datos sin aumentación (gris). Cada grupo de experimentos posee una distinta configuración de genes activos (promedio), que se inicia con ~45 en el primer grupo, hasta llegar a los ~750 en el último grupo.
 
 Finalmente, se realizó un experimento con 6000 muestras sintéticas, donde se observó una degradación de los resultados. Esto sugiere que la generación de un número excesivo de muestras sintéticas puede comprometer la calidad de los datos y afectar negativamente la exactitud de la clasificación.
 
@@ -503,26 +501,26 @@ Con el fin de validar el tratamiento dado a GCM, particularmente la estrategia d
 
 Siguiendo la metodología implementada en los 4 conjuntos de datos precedentes, se repitió el procedimiento de búsqueda de la mejor combinación de hiperparámetros para el AVC, con el fin de lograr la mejor reconstrucción de los datos originales. Por su parte, se mantuvo la configuración del modelo AVC utilizado en GCM, descripto en el Capítulo 3, consistentes en 3 capas en las redes de codificación y decodificación.
 
-Al igual que en GCM, se realizaron experimentos con datos originales y aumentados. Los experimentos con aumentación consistieron en la generación de 1000 muestras sintéticas creadas por un AVC entrenado en un subespacio de características relevantes, seleccionadas por un AG. Esta selección del subespacio se llevó a cabo extrayendo las características más frecuentes a lo largo de 3 experimentos de selección. Tanto para la generación como para la selección siempre se trabajó con las particiones de datos originales de entrenamiento y teteo. 
+Al igual que en GCM, se realizaron experimentos con datos originales y aumentados. Los experimentos con aumentación consistieron en la generación de 1000 muestras sintéticas creadas por un AVC entrenado en un subespacio de características relevantes, seleccionadas por un AG. Esta selección del subespacio se llevó a cabo extrayendo las características más frecuentes a lo largo de 3 experimentos de selección. Tanto para la generación como para la selección siempre se trabajó con las particiones de datos originales de entrenamiento y testeo. 
 
-Se probaron 3 escenarios de reducción de características, con un ratio de genes activos de 0.003, 0.015 y 0.025, dando como resultado un tamaño de cromosoma en torno a las 35, 180 y 300 variables. El algoritmo genético utilizado en esta oportunidad realizaba 15 generaciones.
+Se probaron 3 escenarios de reducción de características, con un ratio de genes activos de 0.003, 0.015 y 0.025, dando como resultado un tamaño de cromosoma en torno a las 35, 180 y 300 variables, respectivamente. El algoritmo genético utilizado en esta oportunidad realizaba 15 generaciones.
 
 Los resultados generales se pueden observar en la Figura 4.13.
 
 ![](boxplot_all_leukemia_ngenes_accuracy.png)
 
 \begin{center}
-Figura 4.13 Experimentos con ALL-Leukemia variando el número de características seleccionadas. Datos aumentados (rosado) y datos originales (gris).
+Figura 4.13 Experimentos con ALL-Leukemia variando el número de características seleccionadas. Datos aumentados (rosado) y datos originales (gris). Los resultados se evaluaron en datos de testeo sin aumentación.
 \end{center}
 
-Como puede advertirse, los experimentos muestran que la estrategia de encadenamiento de procesos de *selección-generación-selección* presenta una ligera mejora en la exactitud de clasificación en los casos de drástica reducción de características en torno a los 35 y 200 genes activos. No se evidencia diferencia significativa entre los experimentos con 300 genes activos. 
+Como puede advertirse en la Figura 4.13, los experimentos muestran que la estrategia de encadenamiento de procesos de *selección-generación-selección* presenta una ligera mejora en la exactitud de clasificación en los casos de drástica reducción de características en torno a los 35 y 200 genes activos. No se evidencia diferencia significativa entre los experimentos con 300 genes activos. 
 
 Respecto de la eficacia en la selección de características, no se observa una diferencia significativa entre los experimentos con datos originales y los datos aumentados como puede apreciarse en los siguientes gráficos.
 
 ![](boxplot_all_leukemia_35_med_combined.png)
 
 \begin{center}
-Figura 4.14. Resultados de All-Leukemia con 35 genes activos. Datos aumentados (rosado) y datos originales (gris).
+Figura 4.14. Resultados de All-Leukemia con 35 genes activos. Datos aumentados (rosado) y datos originales (gris). 
 \end{center}
 
 ![](boxplot_all_leukemia_180_med_combined.png)
@@ -535,7 +533,7 @@ En el caso del experimento con 35 genes activos (promedio) se advierte, pese a l
 
 ## Resumen de los resultados
 
-Los experimentos realizados en los cuatro conjuntos de datos (*Leukemia*, *Gisette*, *Madelon* y *GCM*) evidencian resultados positivos sobre el impacto de la aumentación de datos mediante Autocodificacadores Variacionales en la selección de características utilizando Algoritmos Genéticos. Dicha tendencia tiene confirmación en los resultados obtenidos en el dataset *All-Leukemia* como se puede apreciar en la Figura 4.13.
+Los experimentos realizados en los primeros cuatro conjuntos de datos (*Leukemia*, *Gisette*, *Madelon* y *GCM*) evidencian resultados positivos sobre el impacto de la aumentación de datos mediante Autocodificadores Variacionales en la selección de características utilizando Algoritmos Genéticos. Los resultados generales puede apreciarse en las Figuras 4.16 y 4.17, donde se presentan los valores obtenidos para exactitud y cantidad de genes activos luego del proceso evolutivo del AG. Esta tendencia positiva tiene confirmación en los resultados obtenidos en el quinto dataset *All-Leukemia*.
 
 ![](boxplot_resultados_precision.png)
 
@@ -551,7 +549,7 @@ Figura 4.17 Número de características seleccionadas en los 4 datasets.
  
 El uso de datos aumentados no siempre produjo mejoras en la exactitud de clasificación, pero sí marcó una diferencia relevante ante los casos más difíciles. En efecto, en problemas con métricas saturadas su aporte agrega un valor marginal, asociado a la estabilidad de los resultados, como se vió en *Leukemia* y *Gisette*. Ambos datasets representan desafíos donde los modelos ya alcanzan una alta performance procesando los datos en su estado original. Sin embargo, en dataset más complejos, donde el margen de mejora en las predicciones es mayor, como los casos de *Madelon*, *GCM* y *All-Leukemia*, la técnica de aumentación generó resultados positivos, particularmente en los dos primeros donde se observó un salto del 10% y 9% respectivamente en el resultado final. Este hallazgo sugiere que la aumentación de datos puede contribuir a generar modelos más consistentes a lo largo de múltiples generaciones, lo cual es particularmente relevante en escenarios de alta dimensionalidad, escasez muestral y ruido.
 
-En el caso del conjunto de datos *Madelon*, donde el problema de selección de características presenta una clara distinción entre señales relevantes y ruido, la aumentación de datos mostró una mejora significativa en la exactitud, incrementando la capacidad del AG para identificar las características correctas en un espacio de búsqueda extremadamente ruidoso. Este resultado resalta la utilidad de la aumentación en problemas donde la presencia de señales distractoras dificulta la tarea de selección.
+En el caso del conjunto de datos *Madelon*, donde el problema de selección de características presenta una clara distinción entre datos relevantes y ruido, la aumentación de datos mostró una mejora significativa en la exactitud, incrementando la capacidad del AG para identificar las características correctas en un espacio de búsqueda extremadamente ruidoso. Este resultado resalta la utilidad de la aumentación en problemas donde la presencia de señales distractoras dificulta la tarea de selección.
 
 Por otro lado, los experimentos con *GCM* ilustran las limitaciones de la aumentación en conjuntos de datos con una distribución de clases desbalanceada y de alta complejidad. Sin embargo los ajustes en la arquitectura del AVC y en la configuración experimental permitieron mejoras importantes, alcanzando una generación de datos sintéticos de mayor calidad y una selección de características más eficiente. Resultados que se validaron mediante los experimentos en *All-Leukemia*. En este sentido, la integración de estrategias más complejas, como la combinación de selección de características previa a la aumentación, demostró ser una vía prometedora para mejorar los resultados.
 
