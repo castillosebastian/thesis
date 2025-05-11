@@ -297,7 +297,7 @@ En un segundo grupo de experimentos exploratorios, se investigaron variaciones e
 
 En los experimentos realizados sobre el conjunto de datos *Leukemia*, los resultados mostraron leves diferencias en favor de la aumentación en lo que respecta a exactitud. En la Figura 4.7 cada punto representa la exactitud promedio de la población al finalizar el proceso evolutivo en un experimento (1 punto = 1 experimento). Aunque la diferencia no es significativa, sí se observa una mayor estabilidad (menor varianza) en los resultados del grupo con datos aumentados.
 
-Cabe aclarar que dada las distintas configuraciones de cromosoma empleadas en los experimentos, el gráfico referido a genes aparece marcadamente dividido en dos grupos: experimentos donde los genes de los individuos tenían 100 características activas (abajo), y experimentos con 700 características activas (arriba). Pese a constituir experimentos claramente diferentes, incluimos ambos en la misma representación pues no observamos diferencias relevantes en la cantidad de genes activos en los grupos con aumentación frente a los originales.
+Cabe aclarar que dada las distintas configuraciones de cromosoma empleadas en los experimentos, el gráfico referido a genes aparece marcadamente dividido en dos grupos: experimentos donde los genes de los individuos tenían < 100 características activas (abajo), y experimentos con ~700 características activas (arriba). Pese a constituir experimentos claramente diferentes, incluimos ambos en la misma representación pues no observamos diferencias relevantes en la cantidad de genes activos en los grupos con aumentación frente a los originales.
 
 ![](boxplot_leukemia_combined.png)
 
@@ -372,7 +372,6 @@ El proceso de experimentación en GCM estuvo dividido en dos partes. En la prime
 
 Aunque se realizaron una gran cantidad de experimentos (algunos exploratorios y otros más específicos), nos centraremos en los resultados de la primera y segunda parte que se describen a continuación, que nos permitieron identificar los desafíos y oportunidades en la utilización de AV en conjuntos de datos complejos como GCM.
 
-La cantidad de muestras sintéticas generadas en los experimentos fue ajustada a lo largo de las pruebas, conforme se exploraban opciones de mejora. Ello dio lugar a la siguiente tabla de experimentos por cantidad de muestras sintetizadas, donde la primera fila representa la cantidad experimentos con las muestras originales (sin aumentación):
 
 | n_muestras        | cantidad_experimentos |
 |-------------------|-----------------------|
@@ -385,6 +384,8 @@ La cantidad de muestras sintéticas generadas en los experimentos fue ajustada a
 \begin{center}
 Tabla 4.3. Cantidad de experimentos por cantidad de muestras sintéticas
 \end{center}
+
+La cantidad de muestras sintéticas generadas en los experimentos fue ajustada a lo largo de las pruebas, conforme se exploraban opciones de mejora. Ello dio lugar a los valores de la Tabla 4.3, donde detallamos cantidad de experimentos y la cantidad de muestras sintetizadas que se emplearon en cada uno. La primera fila representa la cantidad experimentos con las muestras originales (sin aumentación).
 
 ### Primera etapa de experimentación
 
