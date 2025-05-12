@@ -3,7 +3,7 @@ project:
   output-dir: output
 book:
   title: Generación de datos sintéticos para selección de características con algoritmos genéticos
-  date: Marzo, 2025
+  date: Mayo, 2025
   lang: es
   author:
     name: Claudio Sebastian Castillo
@@ -25,7 +25,7 @@ thesis:
     url: https://sinc.unl.edu.ar/
   degree-name: Maestría en Minería de Datos
   university: Universidad Tecnológica Nacional 
-  department: Seccional Paraná
+  department: Regional Paraná
   group: UTN     
   quotation:
     text: A mi corazón de 4/4; Morella, Sofía, Joquín y Manuel. A mi musa Verónica.    
