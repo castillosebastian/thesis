@@ -18,45 +18,42 @@ $endif$
 $endif$
 
 \vspace*{.06\textheight}
-{\scshape\LARGE \univname\par}\vspace{1cm} % University name
+%{\scshape\LARGE \univname\par}\vspace{1cm} % University name
 \textsc{\Large Tesis de Maestría}\\[0.5cm] % Thesis type
 
 \HRule \\[0.4cm] % Horizontal line
-{\huge \bfseries \ttitle\par}\vspace{0.4cm} % Thesis title
+% title should be capitalize
+{\bfseries \MakeUppercase{\ttitle}\par}\vspace{0.4cm} % Thesis title
 \HRule \\[1.5cm] % Horizontal line
  
-\begin{minipage}[t]{0.4\textwidth}
-\begin{flushleft} \large
-\emph{Autor:}\\
-$if(author.url)$
-\href{$author.url$}{\authorname} % Author name - remove the \href bracket to remove the link
-$else$
-\authorname
-$endif$
-\end{flushleft}
-\end{minipage}
-\begin{minipage}[t]{0.4\textwidth}
-\begin{flushright} \large
-\emph{Directores:} \\
-$if(thesis.supervisor.url)$%
-\href{$thesis.supervisor.url$}{\supname} % Supervisor name - remove the \href bracket to remove the link  
-$else$%
-\supname
-$endif$
-\end{flushright}
-\end{minipage}\\[3cm]
+\begin{center} \large
+\emph{Por: }\authorname
+\end{center}
+
+\vspace{1cm}
+
+\vfill
+
+\large \textit{Tesis presentada en cumplimiento parcial de los requerimientos para la obtención del grado académico de:
+MAGISTER EN MINERÍA DE DATOS}\\[0.3cm] % University requirement text
  
 \vfill
 
-\large \textit{Tesis presentada en cumplimiento de los requisitos \\ para el grado de \degreename}\\[0.3cm] % University requirement text
-\textit{en}\\[0.4cm]
-\groupname\\
-\deptname\\[1cm] % Research group name and department name
+
+\begin{center} \large
+\emph{Director: Dr.Matías Gerard}
+\emph{Co-Director: Dr.Leandro Vignolo} \\
+\end{center}
+
+\vspace{1cm}
  
-\vfill
 
 $if(book.date)$
+% align right
+\begin{flushright}
+\emph{Paraná, Argentina}
 {\large $book.date$}\\[1cm] % Date
+\end{flushright}
 $endif$
 
  
