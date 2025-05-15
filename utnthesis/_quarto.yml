@@ -47,4 +47,8 @@ format:
     urlcolor: red
     toclinkcolor: black
     toc-depth: 2
+    mainfont: "Times New Roman"
+    include-in-header:
+      text: |
+        \usepackage{mathptmx}
 
