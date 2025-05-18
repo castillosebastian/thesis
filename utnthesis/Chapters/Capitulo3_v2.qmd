@@ -145,7 +145,9 @@ Maximizando esta cota inferior (*ELBO*), se optimizan simultáneamente los pará
 
 El objetivo de aprendizaje del AV se da entonces por:
 
-> $\mathcal{L}_\theta,_\phi(x) = \max(\phi,\theta) \left( E_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)] - D_{\text{KL}}(q_\phi(z|x) \| p_\theta(z)) \right)$.
+\begin{equation}\label{eq:autocodificador_aprendizaje}
+\mathcal{L}_{\theta,\phi}(x) = \max_{\phi,\theta} \left( \mathbb{E}_{z \sim q_\phi(z|x)} [\log p_\theta (x|z)] - D_{\text{KL}}(q_\phi(z|x) \| p_\theta(z)) \right)
+\end{equation}
 
 Como puede apreciearse en la ecuación anterior la función de pérdida del AV se compone de dos términos: el primero es la esperanza de la log-verosimilitud bajo la aproximación variacional y el segundo es la divergencia de Kullback-Leibler relacionada a la reconstrucción de los datos y la regularización del espacio latente. Existe entre ambos términos una relación de compromiso que permite al AV aprender una representación adecuada de los datos de entrada y, al mismo tiempo, un espacio latente continuo y regularizado. 
 
