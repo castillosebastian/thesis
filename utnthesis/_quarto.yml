@@ -71,6 +71,6 @@ format:
     include-in-header:
       - custom-margins.tex
       - text: |
-          \usepackage{times}
+          \usepackage{newtxtext}  
           \usepackage[T1]{fontenc}
 

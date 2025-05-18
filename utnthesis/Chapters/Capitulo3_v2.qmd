@@ -204,7 +204,9 @@ Después de las tres capas, se generan los vectores latentes $\mu$ y $\log(\sigm
 
 El vector latente $z$ se obtiene mediante la técnica de reparametrización, donde se introduce ruido gaussiano para permitir la retropropagación del gradiente:
 
-$z = \mu + \sigma \times \epsilon$,
+\begin{equation}\label{eq:reparametrizacion}
+z = \mu + \sigma \times \epsilon,
+\end{equation}
 
 donde $\epsilon$ es una variable aleatoria con distribución normal estándar, y $\sigma$ se calcula a partir de $\log(\sigma^2)$.
 
@@ -259,11 +261,7 @@ Al igual que en el AVC, se generan los vectores latentes $\mu$ y $\log(\sigma^2)
 
 **Reparametrización**
 
-El vector latente $z$ se obtiene mediante la técnica de reparametrización, similar al AV tradicional:
-
-$z = \mu + \sigma \times \epsilon$,
-
-donde $\epsilon$ es una variable aleatoria con distribución normal estándar, y $\sigma$ se calcula a partir de $\log(\sigma^2)$.
+El vector latente $z$ se obtiene mediante la técnica de reparametrización, similar al AV tradicional, según la ecuación 3.3.
 
 **Decodificador**
 
