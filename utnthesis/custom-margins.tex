@@ -1,0 +1,26 @@
+% Redefine geometry settings for one-sided printing with specific margins
+\geometry{
+  paper=a4paper,
+  left=3.5cm,
+  right=2.5cm,
+  top=2.5cm,
+  bottom=2.5cm,
+  headheight=4ex,
+  includehead,
+  includefoot
+}
+
+% Force the document to be one-sided
+\makeatletter
+\if@twoside
+  \let\@twosidetrue\@twosidefalse
+\fi
+\makeatother
+
+% Force symmetric margins (important for one-sided documents)
+\makeatletter
+\let\reset@newl@bels\relax % To avoid issues with package compatibility
+\makeatother
+
+% No necesitamos establecer el estilo de página aquí
+% La línea \pagestyle{thesis} se ha eliminado 
