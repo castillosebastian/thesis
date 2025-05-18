@@ -338,19 +338,15 @@ KOMA-script documentation for details.}]{fancyhdr}
 		\vspace{\baselineskip}
 		{\chapteralign\parbox{.7\linewidth}{\chapteralign\normalsize\itshape\abstracttitlefont\@title}\par}% Thesis title
 		\bigskip\noindent\ignorespaces
-	}%
+	}
 	{}%end alt-abstract
 }{%
-	\DeclareDocumentEnvironment{abstract}{ O{\null\vfill} }{
+	\DeclareDocumentEnvironment{abstract}{ O{} }{
 		\checktoopen
 		\tttypeout{\abstractname}
 		#1%added to be able to have abstract more than one page long
 		\thispagestyle{plain}
 		\begin{center}
-			{\normalsize \MakeUppercase{\univname} \par}% University name in capitals
-			{\normalsize \facname \par}% Faculty name
-			{\normalsize \deptname \par}% Department name
-			{\normalsize \degreename\par}% Degree name
 			\bigskip
 			{\huge\textit{\abstractname} \par}
 			\bigskip
@@ -361,7 +357,6 @@ KOMA-script documentation for details.}]{fancyhdr}
 		\end{center}
 	}
 	{
-		\vfill\null
 	}
 }
 
