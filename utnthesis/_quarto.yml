@@ -64,6 +64,7 @@ execute:
 # toclinkcolor changes color of toc, lof and lot links
 format:
   quarto-thesis-pdf: 
+    fontsize: 12pt
     urlcolor: red
     toclinkcolor: black
     toc-depth: 2    

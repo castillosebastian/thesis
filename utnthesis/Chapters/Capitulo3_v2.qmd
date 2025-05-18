@@ -257,11 +257,11 @@ donde:
 \item $\mathbf{b_1}$, $\mathbf{b_2}$, y $\mathbf{b_3}$ son los sesgos correspondientes a cada capa.
 \end{itemize}
 
-Al igual que en el AVC, se generan los vectores latentes $\mu$ y $\log(\sigma^2)$ mediante dos capas lineales independientes.
+Al igual que en el AV, se generan los vectores latentes $\mu$ y $\log(\sigma^2)$ mediante dos capas lineales independientes.
 
 **Reparametrización**
 
-El vector latente $z$ se obtiene mediante la técnica de reparametrización, similar al AV tradicional, según la ecuación 3.3.
+El vector latente $z$ se obtiene mediante la técnica de reparametrización, similar al AV tradicional, según la ecuación que vimos en 3.3.
 
 **Decodificador**
 
