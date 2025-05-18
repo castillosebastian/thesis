@@ -1,6 +1,6 @@
 # Metodología: autocodificadores variacionales y datos sintéticos {#sec-Capitulo3}
 
-En este capítulo presentamos la arquitectura del Autocodificador Variacional (AV) que emplearemos para la generación de datos sintéticos: exponemos brevemente sus fundamentos teóricos, los pasos que hemos seguido en su implementación y las variaciones introducidas para su apropiada aplicación a los problemas abordados. También presentamos las métricas empleadas para evaluar los modelos y las configuraciones más relevantes para la generación de datos sintéticos. Finalmente, concluimos el capítulo comentando los hallazgos más destacados de todo este desarrollo.
+En este capítulo presentamos la arquitectura del Autocodificador Variacional (AV) que emplearemos para la generación de datos sintéticos: exponemos brevemente sus fundamentos teóricos, la metodología que hemos seguido en su implementación y las variaciones introducidas para su apropiada aplicación a los problemas abordados. También presentamos las métricas empleadas para evaluar los modelos y las configuraciones más relevantes para la generación de datos sintéticos. Finalmente, concluimos el capítulo comentando los hallazgos más destacados de todo este desarrollo.
 
 ## Modelos generativos
 
