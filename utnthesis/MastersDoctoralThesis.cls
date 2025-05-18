@@ -308,8 +308,8 @@ KOMA-script documentation for details.}]{fancyhdr}
 %	ABBREVIATIONS PAGE DESIGN
 %----------------------------------------------------------------------------------------
 
-\newcommand{\abbrevname}{Introducción}
-\providecaptionname{english,british,american}{\abbrevname}{Introducción}
+\newcommand{\abbrevname}{Presentación}
+\providecaptionname{english,british,american}{\abbrevname}{Presentación}
 \providecaptionname{ngerman,german,austrian,naustrian}{\abbrevname}{Abk\"urzungsverzeichnis}
 \NewDocumentEnvironment{abbreviations}{ m }{%
 	\ifbool{nolistspace}{\begingroup\singlespacing}{}
@@ -391,7 +391,7 @@ KOMA-script documentation for details.}]{fancyhdr}
 
 \usepackage{xcolor}
 \colorlet{mdtRed}{red!50!black}
-\newcommand{\acknowledgementname}{Introducción}
+\newcommand{\acknowledgementname}{Presentación}
 \providecaptionname{american,australian,british,canadian,english,newzealand,UKenglish,USenglish} {\acknowledgementname}{Acknowledgements} % Acknowledgement text for English countries
 \providecaptionname{german,ngerman,austrian,naustrian}{\acknowledgementname}{Danksagung} % Acknowledgement text for Germanic countries
 

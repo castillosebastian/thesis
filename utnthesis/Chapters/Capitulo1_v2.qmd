@@ -1,4 +1,4 @@
-# El problema de la selección de características {#sec-Capitulo1}
+# Introducción: el problema de la selección de características {#sec-Capitulo1}
 
 En el presente capítulo abordamos el problema de la selección de características, su importancia y desafíos. En ese marco, repasamos ciertas dificultades asociadas a los datos, como por ejemplo la alta dimensionalidad y el desbalance de clases, y veremos cómo ellas impactan en la selección de características. Luego describimos brevemente distintos enfoques para la selección de características, como así también ventajas y desventajas de cada uno. Finalmente, vinculamos la selección de características con el aporte fundamental de nuestro trabajo asociado a la generación sintética de datos. 
 
@@ -117,9 +117,15 @@ Los métodos de envolventes y embebidos, por su parte, consideran la correlació
 En el caso de los métodos envolventes, a medida que el número de características aumenta, el costo computacional se incrementa exponencialmente, lo que limita su aplicación en problemas de alta dimensionalidad [@bolon-canedoFeatureSelectionHighDimensional2015]. En línea con esta dificultad, se han propuesto distintas formas de superar el problema, como el uso de heurísticas de búsqueda para evitar exploraciones exhaustivas. Entre ellas, se han propuesto a los *algoritmos genéticos* (AG) como herramientas eficaces para la búsqueda de soluciones óptimas [@vignoloEvolutionaryLocalImprovement2017]. El propósito de este enfoque es explorar el espacio de soluciones de manera eficiente, permitiendo la identificación de subconjuntos de características que sean óptimos en términos de rendimiento. 
 
 
-## Selección, algoritmos genéticos y datos sintéticos
+## Objetivos y estado del arte: selección, algoritmos genéticos y datos sintéticos
 
 Hasta aquí hemos visto que problemas tales como la dimensionalidad, el desbalance de clases y el ruido plantean verdaderos desafíos para los procesos de aprendizaje automático, y de qué manera la selección de características puede ser una herramienta para mitigarlos.  Asimismo, hemos descrito los distintos enfoques para la selección de características, resaltando el hecho de que los métodos envolventes utilizan heurísticas como los AG para realizar búsquedas eficientes en espacios de gran dimensionalidad. Aquí surgió el problema de la escasez de datos y su impacto negativo sobre la evaluación de los subconjuntos de características; una importante limitación para los métodos envolventes de selección. En este punto final del Capítulo 1, veremos de qué manera la generación sintética de datos puede resolver el problema de la escasez muestral, y de esa forma mejorar los procesos de selección de características basados en métodos envolventes. Precisamente, este eje recorre el aporte central que realizaremos en la presente tesis.
+
+Así, nuestro trabajo tiene por objetivo general: *evaluar el impacto de la aumentación de datos mediante AV sobre el desempeño de Estrategias de Selección de Características basadas en AG.* En ese marco, los objetivos específicos de la tesis son: 
+
+- Integrar estrategias de aumentación de datos basadas en AV en los AG.
+- Evaluar el desempeño de las estrategias propuestas empleando conjuntos de datos de diferente complejidad.
+- Comparar el desempeño de AG con datos aumentados mediante las estrategias desarrolladas frente a implementaciones sin aumentación.
 
 Como dijimos, en el contexto de los métodos envolventes, los AG representan una solución al problema de la evaluación iterativa de subconjuntos de características en datos de alta dimensionalidad. Tal evaluación debe replicarse por cada subconjunto a lo largo del espacio de búsqueda, lo que resulta en un costo computacional elevado cuando el conjunto de variables a evaluar es grande [@zhangFeatureSelectionMultiview2019]. 
 

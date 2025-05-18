@@ -1,4 +1,4 @@
-# Algoritmos genéticos, datos sintéticos y selección de características {#sec-Capitulo4}
+# Resultados: algoritmos genéticos, datos sintéticos y selección de características {#sec-Capitulo4}
 
 En este capítulo presentamos una descripción general de los *algoritmos genéticos* (AG) como estrategia de selección de características, exponemos sus componentes y describimos la implementación realizada en nuestro trabajo. Seguidamente planteamos la integración del AG con la generación sintética de datos mediante *autocodificaciones variacionales* (AV) como estrategia de aumentación. Según el planteo hecho desde el inicio, la integración de ambas técnicas para favorecer la selección de características mediante la incorporación de datos sintéticos permitiría resolver problemas de alta dimensionalidad, escasez muestral y ruido. Para terminar, compartimos los experimentos realizados sobre esta integración entre AV y AG, y presentamos los resultados obtenidos a fin de determinar hasta qué punto hemos podido resolver los problemas motivantes de este trabajo.
 
