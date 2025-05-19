@@ -269,15 +269,15 @@ El enfoque experimental adoptado fue comparativo, contrastando el desempeño de 
 
 Los experimentos se diseñaron para comparar el rendimiento de los AG aplicados a los datos originales y a un conjunto de datos aumentado con muestras sintéticas. El objetivo de esta comparación era evaluar el impacto de la aumentación de datos en el proceso de selección de características. Para ello, se utilizaron los siguientes criterios de evaluación: *exactitud en la clasificación*, *número de características seleccionadas* y *estabilidad de la selección de características*. Con el fin de asegurar la comparabilidad de los resultados, siempre se empleó la partición original de testeo para evaluar la exactitud del algoritmo.
 
-Se llevaron a cabo experimentos utilizando el modelo de AG descrito previamente, adoptando una representación binaria para las características. Para encontrar la configuración más apropiada del AG para cada conjunto de datos se realizaron experimentos exploratorios a partir de los cuales se obtuvieron los parámetros del algoritmo. La función de aptitud se basó en un clasificador de perceptrón multicapa (MLP), que evaluaba la exactitud de la clasificación y penalizaba el número de características seleccionadas, ambos componentes con igual ponderación (α = 0.5). El objetivo del AG era identificar un subconjunto óptimo de características que maximizara la exactitud y minimizara la dimensionalidad del espacio de características.
-
-El aspecto innovador de este enfoque está en el uso de un AV para enriquecer el proceso evolutivo del AG. El AV, según vimos en el Capítulo 3, fue optimizado para generar muestras sintéticas que preservaran la estructura subyacente de los datos originales, y permitiera al AG explorar un espacio aumentado de características. La hipóstesis que se buscó validar en el presente trabajo fue que: aumentar sintéticamente el número de muestras disponibles permitiría al AG identificar un subconjunto más relevante de características, que se traduciría en una mejora en la exactitud y la eficiencia de la selección.
-
 ![](diseño_experimentos.png)
 
 \begin{center}
 Figura 4.6. Comparación de experimentos
 \end{center}
+
+Se llevaron a cabo experimentos utilizando el modelo de AG descrito previamente, adoptando una representación binaria para las características. Para encontrar la configuración más apropiada del AG para cada conjunto de datos se realizaron experimentos exploratorios a partir de los cuales se obtuvieron los parámetros del algoritmo. La función de aptitud se basó en un clasificador de perceptrón multicapa (MLP), que evaluaba la exactitud de la clasificación y penalizaba el número de características seleccionadas, ambos componentes con igual ponderación (α = 0.5). El objetivo del AG era identificar un subconjunto óptimo de características que maximizara la exactitud y minimizara la dimensionalidad del espacio de características.
+
+El aspecto innovador de este enfoque está en el uso de un AV para enriquecer el proceso evolutivo del AG. El AV, según vimos en el Capítulo 3, fue optimizado para generar muestras sintéticas que preservaran la estructura subyacente de los datos originales, y permitiera al AG explorar un espacio aumentado de características. La hipóstesis que se buscó validar en el presente trabajo fue que: aumentar sintéticamente el número de muestras disponibles permitiría al AG identificar un subconjunto más relevante de características, que se traduciría en una mejora en la exactitud y la eficiencia de la selección.
 
 Para comunicar los resultados de nuestra investigación hemos elegido el gráfico de cajas para representar los resultados y permitir la comparación entre experimentos realizados con datos originales y aquellos donde se utilizaron datos aumentados. Esta elección ofrece varias ventajas: facilita la visualización de la distribución completa de los resultados, permite identificar claramente la mediana y los cuartiles de cada grupo experimental, y proporciona una representación visual de la variabilidad en los resultados, ayudando a evaluar la estabilidad de las soluciones encontradas. Así, en las figuras de la presente sección cada punto en el gráfico de cajas representa un experimento e indica la exactitud promedio lograda y cantidad promedio de características seleccionadas en la población al finalizar el proceso evolutivo.
 
@@ -434,8 +434,8 @@ Como resultado de esta primera etapa de experimentos se identificó una dificult
 | 12    | 1.00      | 1.00   | 1.00     | 26      |
 | 13    | 1.00      | 1.00   | 1.00     | 29      |
 | **Exactitud**  |           |        | 1.00     | 420     |
-| **Macro avg**  | 1.00      | 1.00   | 1.00     | 420     |
-| **Weighted avg** | 1.00      | 1.00   | 1.00     | 420     |
+| **Prom. macro**  | 1.00      | 1.00   | 1.00     | 420     |
+| **Prom.ponderado** | 1.00      | 1.00   | 1.00     | 420     |
 
 \begin{center}
 Tabla 4.4. Resultados del MLP en los datos sintéticos de GCM
