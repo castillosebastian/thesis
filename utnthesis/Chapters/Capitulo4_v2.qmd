@@ -6,13 +6,15 @@ En este capítulo presentamos una descripción general de los *algoritmos genét
 
 Los AG son una clase de algoritmo inspirado en la evolución biológica y en la teoría de la selección natural. Los mismos se basan en el concepto de evolución de una población de soluciones potenciales a lo largo de múltiples generaciones. Utilizando operadores genéticos como la selección, el cruce y la mutación los AG generan nuevas soluciones a partir de las disponibles, mejorando su calidad y favoreciendo la preeminencia de ciertas características. Una breve descripción del algoritmo se presenta en el diagrama que se muestra a continuación. 
 
-En la Figura 4.1 se ilustra la estructura general de un algoritmo genético. En términos generales, se parte de un conjunto de datos (por ejemplo, un vector $(x)$) y se crea una población inicial de soluciones candidatas (individuos), cada una codificada en un cromosoma (por ejemplo, una cadena binaria). A continuación, cada individuo se evalúa mediante una función de aptitud (*fitness*) que refleja la calidad de la solución propuesta. Si no se cumple la condición de terminación (que puede estar representada por un umbral de error o un número máximo de iteraciones), se aplican las fases de selección, cruce y mutación para generar una nueva generación de individuos potencialmente más aptos. Estos pasos se repiten de manera iterativa hasta que se cumpla el criterio de terminación. Para ilustrar lo anterior, consideremos la función $y = -x^2$ y el objetivo de maximizar su valor. En este caso, cada individuo del algoritmo genético representa un posible valor de $x$ codificado en un cromosoma binario. La aptitud de cada individuo se calcula como $y = -x^2$.
+En la Figura 4.1 se ilustra la estructura general de un algoritmo genético. En términos generales, se parte de un conjunto de datos (por ejemplo, un vector $(x)$) y se crea una población inicial de soluciones candidatas (individuos), cada una codificada en un cromosoma (por ejemplo, una cadena binaria). 
 
 ![](diagrama_ag.png)
 
 \begin{center}
 Figura 4.1. Diagrama de un Algoritmo Genético
 \end{center}
+
+A continuación, cada individuo se evalúa mediante una función de aptitud (*fitness*) que refleja la calidad de la solución propuesta. Si no se cumple la condición de terminación (que puede estar representada por un umbral de error o un número máximo de iteraciones), se aplican las fases de selección, cruce y mutación para generar una nueva generación de individuos potencialmente más aptos. Estos pasos se repiten de manera iterativa hasta que se cumpla el criterio de terminación. Para ilustrar lo anterior, consideremos la función $y = -x^2$ y el objetivo de maximizar su valor. En este caso, cada individuo del algoritmo genético representa un posible valor de $x$ codificado en un cromosoma binario. La aptitud de cada individuo se calcula como $y = -x^2$.
 
 Tras las etapas de selección, cruce y mutación, los valores de $x$ que producen valores más altos de $-x^2$ tienden a sobrevivir y propagarse. Al cabo de varias iteraciones, el algoritmo converge hacia el valor $x = 0$, que es la solución que maximiza $-x^2$. De este modo, el diagrama de la figura refleja cómo, a través de procesos inspirados en la evolución biológica, se van refinando las soluciones hasta cumplir cierto objetivo.
 
@@ -28,7 +30,13 @@ La codificación adecuada del problema es un paso inicial clave para el correcto
 
 Dada la importancia que tiene la codificación, es fácil advertir que así como una elección adecuada de la estrategia de codificación puede facilitar la convergencia del AG hacia buenas soluciones, una elección inadecuada puede tener consecuencias negativas en su desempeño. En efecto, una codificación inapropiada puede llevar a una exploración ineficaz del espacio de soluciones, generando soluciones redundantes o incluso inviables. Una codificación que no preserve la viabilidad de las soluciones durante la evolución, puede resultar en la convergencia prematura del AG hacia soluciones subóptimas.
 
-La traducción entre la representación interna codificada (genotipo) y la solución en el contexto del problema (fenotipo) es un componente importante del diseño de los AG. El *genotipo* se refiere a la representación interna de una solución en el Algoritmo Genético (AG). Es el "cromosoma" o la estructura de datos que codifica la información genética de un individuo, comúnmente representado como una cadena de bits (0s y 1s). Por otro lado, el *fenotipo* es la manifestación externa del genotipo en el contexto del problema, correspondiendo a la solución real en el espacio de búsqueda que se evalúa mediante la función de aptitud para determinar la calidad del individuo. Por ejemplo, en un problema de selección de características, cada bit del genotipo indica la inclusión (1) o exclusión (0) de una característica específica. Consideremos el genotipo 1100101, que representa la selección de las características 1, 2, 5 y 7, excluyendo las características 3, 4 y 6. El fenotipo asociado a este genotipo sería el subconjunto de características seleccionadas [X1, X2, X5, X7], el cual se utilizará para entrenar un modelo. El desempeño de este modelo, evaluado mediante la función de aptitud, determinará la calidad del individuo en el proceso evolutivo del AG. El mapeo descrito anteriormente no solo permite interpretar las soluciones generadas por el algoritmo, sino que también influye en la eficacia de los operadores genéticos. Ello así, debido a que los operadores genéticos actúan directamente sobre la representación codificada, lo que puede afectar la exploración del espacio de soluciones y la convergencia del AG.
+La traducción entre la representación interna codificada (genotipo) y la solución en el contexto del problema (fenotipo) es un componente importante de los AG. El *genotipo* refiere a la representación interna de una solución, es el "cromosoma" o la estructura de datos que codifica la información genética de un individuo, comúnmente representado como una cadena de bits (0s y 1s). Por otro lado, el *fenotipo* es la manifestación externa del genotipo en el contexto del problema, correspondiendo a la solución real en el espacio de búsqueda que se evalúa mediante la función de aptitud para determinar la calidad del individuo. Por ejemplo, en un problema de selección de características, cada bit del genotipo indica la inclusión (1) o exclusión (0) de una característica específica. Consideremos el genotipo 1100101, que representa la selección de las características 1, 2, 5 y 7, excluyendo las características 3, 4 y 6. El fenotipo asociado a este genotipo sería el subconjunto de características seleccionadas [X1, X2, X5, X7], el cual se utilizará para entrenar un modelo. El desempeño de este modelo, evaluado mediante la función de aptitud, determinará la calidad del individuo en el proceso evolutivo del AG. El mapeo descrito anteriormente no solo permite interpretar las soluciones generadas por el algoritmo, sino también influye en la eficacia de los operadores genéticos. Ello así, debido a que los operadores genéticos actúan directamente sobre la representación codificada, incidiendo en la búsqueda realizada por el AG.
+
+![](codificacion-decodificacion.png)
+
+\begin{center}
+Figura 4.2. Diagrama de codificación y decodificación
+\end{center}
 
 Una de las principales ventajas de operar en un espacio codificado del problema radica en la posibilidad de aplicar operadores genéticos de manera eficiente, lo que permite una exploración conveniente del espacio de soluciones. En efecto, los operadores genéticos -que veremos en breve- son diseñados específicamente para actuar directamente sobre la representación codificada, generando nuevas soluciones de manera efectiva. 
 
@@ -41,11 +49,6 @@ Un proceso típico de codificación y decodificación en un AG incluye los sigui
 [^codificacion]: Cabe aclarar que en el caso de espacios continuos, el AG debe establecer una resolución o granularidad específica para la representación discreta del problema. Esto se debe a que un cromosoma binario solo puede representar un número finito de valores dentro del rango establecido, no cualquier valor continuo arbitrario. La elección de esta granularidad afecta directamente la exactitud con la que el AG puede aproximar soluciones en el espacio continuo.
 
 
-![](codificacion-decodificacion.png)
-
-\begin{center}
-Figura 4.2. Diagrama de codificación y decodificación
-\end{center}
 
 En el caso de nuestra investigación, dada la alta dimensionalidad de los datos y la complejidad de los modelos, la codificación adecuada de las soluciones fue un proceso fundamental para permitir que los AG pudieran encontrar buenas soluciones o cercanas al óptimo en tiempo razonable.
 
@@ -132,13 +135,15 @@ Hasta aquí hemos expuesto los fundamentos teóricos de los AG, que nos permitir
 
 ## Integración de Autocodificadores Variacionales y Algoritmos Genéticos 
 
-En esta sección decribimos la integración de AV y AG como estrategia que puede favorecer la selección de características en contexto donde los datos pueden ser caracterizados por alta dimensionalidad y escasez muestral, desbalance de clases y ruido. La estrategia propuesta, representada en la Figura 4.5, incluye la generación de datos sintéticos mediante AV para aumentar el número de muestras originales y de esta forma mejorar la selección de características con AG. Estos datos aumentados contienen las observaciones originales y también las observaciones sintéticas creadas a partir de ellas. 
+En esta sección decribimos la integración de AV y AG como estrategia que puede favorecer la selección de características en contexto donde los datos pueden ser caracterizados por alta dimensionalidad y escasez muestral, desbalance de clases y ruido. 
 
 ![](AV-AG.png)
 
 \begin{center}
 Figura 4.5 Diagrama de flujo de AV - AG
 \end{center}
+
+La estrategia propuesta, representada en la Figura 4.5, incluye la generación de datos sintéticos mediante AV para aumentar el número de muestras originales y de esta forma mejorar la selección de características con AG. Estos datos aumentados contienen las observaciones originales y también las observaciones sintéticas creadas a partir de ellas. 
 
 El proceso comienza con la etapa de generación de datos sintéticos donde se emplea un AV o AVC según el tipo de problema a resolver (clasificación binaria o multiclase). En esta etapa el modelo de *autocodificador* es entrenado con los datos originales, y parametrizado según una configuración óptima definida. En nuestro caso, dicha configuración se obtuvo mediante el proceso de optimización de hiperparámetros descrito en el capítulo anterior. 
 
