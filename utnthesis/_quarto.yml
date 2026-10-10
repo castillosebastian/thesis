@@ -1,10 +1,10 @@
 project:
   type: book
   output-dir: output
+language: _language-es.yml
 book:
-  title: Generación de Datos Sintéticos para Selección de Características con Algoritmos Genéticos
+  title: Aumentación de datos mediante autoencoders variacionales y su impacto en estrategias de selección de características basadas en Algoritmos Genéticos
   date: Mayo, 2025
-  lang: es
   author:
     name: Claudio Sebastian Castillo
     url: https://castillosebastian.com/
@@ -19,7 +19,7 @@ book:
     \end{center}
 
     \begin{center}
-    \textbf{Synthetic Data Generation for Feature Selection with Genetic Algorithms}
+    \textbf{Data Augmentation Using Variational Autoencoders and Its Impact on Genetic Algorithm–Based Feature Selection Strategies}
     \end{center}
 
     \begin{center}
