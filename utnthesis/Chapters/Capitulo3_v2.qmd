@@ -30,9 +30,9 @@ Formalmente, podemos establecer estas definiciones [@delatorreAutocodificadoresV
 
 - Sea $x$ el espacio de características de los datos de entrada y $z$ el espacio latente, ambos espacios son euclidianos, $x = \mathbb{R}^m$ y $z = \mathbb{R}^n$, donde $m > n$.
 - Sea las siguientes funciones paramétricas $C_\theta: x \rightarrow z$ y $D_\phi: z \rightarrow x'$ que representan el codificador y decodificador respectivamente.
-- Entonces para cada observación $x_i \in x$, el autocodificador busca minimizar la función de pérdida $L(x_i, D_\phi(E_\theta(x_i)))$. Ambas funciones $E_\theta$ y $D_\phi$ son redes neuronales que se entrenan simultáneamente.
+- Entonces para cada observación $x_i \in x$, el autocodificador busca minimizar la función de pérdida $L(x_i, D_\phi(C_\theta(x_i)))$. Ambas funciones $C_\theta$ y $D_\phi$ son redes neuronales que se entrenan simultáneamente.
 
-Para optimizar un autocodificador se requiere una función que permita medir la diferencia entre la observación original y la reconstrucción. Esta diferencia usualmente se basa en la *distancia euclidia* entre $x_i$ y $\hat{x_i}$, es decir, $||x_i - x_i'||^2$. La función de pérdida se define como la suma de todas las distancias a lo largo del conjunto de datos de entrenamiento. Tenemos entonces que: 
+Para optimizar un autocodificador se requiere una función que permita medir la diferencia entre la observación original y la reconstrucción. Esta diferencia usualmente se basa en el *cuadrado de la distancia euclídea* entre $x_i$ y su reconstrucción $x_i'$, es decir, $||x_i - x_i'||^2$. La función de pérdida se define como la suma de todas las distancias a lo largo del conjunto de datos de entrenamiento. Tenemos entonces que: 
 
 \begin{equation}\label{eq:autocodificador_perdida}
 L(\theta, \phi) =  argmin_{\theta, \phi} \sum_{i=1}^{N} ||x_i - D_\phi(C_\theta(x_i))||^2, 
@@ -42,7 +42,7 @@ donde $L(\theta, \phi)$ representa la función de pérdida que queremos minimiza
 
 ## Autocodificadores y el problema de la generación de datos
 
-En el proceso de aprendizaje antes descripto, la optimización no está sujeta a otra restricción mas que  minimizar la diferencia entre la observación original y la reconstrucción, dando lugar a espacios latentes generalmente discontinuos. Esto sucede porque la red puede aprender a representar los datos de entrada de manera eficiente sin necesidad de aprender una representación continua. En la arquitectura del autocodificador no hay determinantes para que dos puntos cercanos en el espacio de características se mapeen a puntos cercanos en el espacio latente. 
+En el proceso de aprendizaje antes descripto, la optimización no está sujeta a otra restricción más que minimizar la diferencia entre la observación original y la reconstrucción, dando lugar a espacios latentes generalmente discontinuos. Esto sucede porque la red puede aprender a representar los datos de entrada de manera eficiente sin necesidad de aprender una representación continua. En la arquitectura del autocodificador no hay determinantes para que dos puntos cercanos en el espacio de características se mapeen a puntos cercanos en el espacio latente. 
 
 ![](espacio_latente_discontinuo.png)
 
@@ -87,7 +87,7 @@ An Introduction to Variational Autocodificadors, KINGMA,2019
 
 La forma más común de calcular el parámetro $\theta$ es a través del estimador de *máxima verosimilitud*, cuya función de optimización es: $\theta^* = \arg \max_\theta \log p_\theta(x)$, es decir, buscamos los parámetros $\theta$ que maximizan la log-verosimilitud asignada a los datos por el modelo. 
 
-En el contexto de los AV, el objetivo es modelar la distribución de probabilidad de los datos observados $x$ a través de una distribución de probabilidad conjunta de variables observadas y latentes: $p_\theta(x, z)$. Aplicando la regla de la cadena de probabilidad podemos factorizar la distribución conjunta de la siguiente manera: $p_\theta(x, z) = p_\theta(x|z) p_\theta(z)$. Aquí $p_\theta(x|z)$ es la probabilidad condicional de los datos observados dados los latentes, y $p_\theta(z)$ es la probabilidad *a priori*[^apriori] de los latentes.
+En el contexto de los AV, el objetivo es modelar la distribución de probabilidad de los datos observados $x$ a través de una distribución de probabilidad conjunta de variables observadas y latentes: $p_\theta(x, z)$. Aplicando la regla del producto de probabilidades —de la que se deriva la regla de Bayes— podemos factorizar la distribución conjunta de la siguiente manera: $p_\theta(x, z) = p_\theta(x|z) p_\theta(z)$. Aquí $p_\theta(x|z)$ es la probabilidad condicional de los datos observados dados los latentes, y $p_\theta(z)$ es la probabilidad *a priori*[^apriori] de los latentes.
 
 [^apriori]: La expresión *a priori* alude a que no está condicionada por ningun dato observado.
 
@@ -231,7 +231,7 @@ Finalmente, la salida $\hat{x}$ es una aproximación reconstruida de la entrada 
 
 ### Modelo AVC para datos multiclase
 
-Para abordar los dataset GCM y ALL Leukemia, que contienen multiples clases con distribuciones desiguales, se creó un AVC que combina la capacidad de generación de un AV tradicional con el condicionamiento explícito en las etiquetas de clase. El AVC propuesto permitió una modelización más precisa de los datos, al incorporar información de clase en el proceso de codificación y decodificación.
+Para abordar los dataset GCM y ALL Leukemia, que contienen múltiples clases con distribuciones desiguales, se creó un AVC que combina la capacidad de generación de un AV tradicional con el condicionamiento explícito en las etiquetas de clase. El AVC propuesto permitió una modelización más precisa de los datos, al incorporar información de clase en el proceso de codificación y decodificación.
 
 En escenarios donde los datasets están desbalanceados, los modelos generativos pueden tender a favorecer las clases mayoritarias, ignorando las minoritarias. Para abordar el desbalance de clases que presenta GCM, se implementó una estrategia de ponderación de clases dentro de la función de pérdida, penalizando de manera diferenciada los errores de reconstrucción en función de la clase, buscando mejorar así la capacidad del modelo para representar adecuadamente las clases minoritarias.
 

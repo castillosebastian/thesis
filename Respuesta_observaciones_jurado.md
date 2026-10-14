@@ -4,12 +4,13 @@
 
 ## Contexto
 
-Los dos evaluadores aceptaron la tesis para su defensa oral y pública sin pedir correcciones al documento. Sus observaciones son sugerencias para la defensa, no condiciones. Este documento prepara una respuesta por cada observación.
+Los dos primeros evaluadores aceptaron la tesis para su defensa oral y pública sin pedir correcciones al documento. Sus observaciones son sugerencias para la defensa, no condiciones. El tercer evaluador envió sus observaciones como comentarios sobre el PDF: son correcciones puntuales de redacción, notación y contenido, y ya están incorporadas en la versión corregida de la tesis. Este documento prepara una respuesta por cada observación.
 
 | Evaluador | Institución | Observaciones |
 | --- | --- | --- |
 | Dr. Facundo Manuel Quiroga | Facultad de Informática, UNLP | (a) comparar con el estado del arte del capítulo 2, (b) comparar con SMOTE y otros métodos de aumentación, (c) unificar escalas en los gráficos de exactitud, (d) analizar primero los resultados de forma global |
 | Dra. Débora Chan | Universidad Austral | (e) definir qué significa "mejora en la selección de características", (f) enfatizar limitaciones de generalización y moderar conclusiones donde las diferencias no fueron significativas |
+| Gambini | comentarios sobre el PDF | (g) correcciones de forma y notación, (h) el clasificador SGD, (i) descripción superficial de los métodos clásicos, (j) inconsistencia en la Figura 4.2 |
 
 Cada respuesta tiene dos partes. **Para el jurado** es el texto que podés decir o poner en una diapositiva. **Para vos** explica de dónde sale, qué datos de la tesis lo respaldan y qué conviene no decir.
 
@@ -71,6 +72,30 @@ Frente a la literatura externa, la comparación honesta es esta. En GCM, Ramaswa
 
 **Para vos.** Hay tres frases de la tesis que conviene moderar en la defensa. En ALL Leukemia la tesis dice que la combinación "incrementa la precisión de manera consistente" cuando se reducen las variables, pero los datos muestran diferencias de +1,7 y +0,9 puntos con p mayor a 0,4, y con 300 genes activos los originales fueron mejores (0,754 contra 0,735). Decí "no se observaron diferencias significativas; la tendencia favorable en 35 y 180 genes no alcanza significación". En GCM el salto de 9% es relativo (de 0,497 a 0,541); en puntos porcentuales son 4,4. Conviene dar los dos números. En Madelon el 10,4% también es relativo; son 7,8 puntos porcentuales. Un punto delicado: el script que respaldó la significación en GCM usó como tamaños muestrales 3.133 y 133, que son las cantidades de observaciones de los datasets, no de corridas del AG. Ese test estaba mal planteado. Lo recalculé con las corridas reales (9 aumentadas, 10 originales) y la diferencia sigue siendo significativa (p = 0,005 con Welch, p = 0,006 con Mann-Whitney), y también si se toman las 18 contra 25 corridas de toda la segunda etapa (p = 0,008). Así que la conclusión se sostiene, pero si te preguntan por el test, respondé con estos números y no con los de la tesis.
 
+### (g) Correcciones de forma y notación
+
+**Para el jurado.** Gracias por la lectura detallada. Todas las correcciones están incorporadas en la versión corregida. En el prefacio, "precísamente" y "escacez". En el capítulo 2 y el 3, "múltiples" y "más". En la sección de autocodificadores del capítulo 3, el codificador se llamaba $C_\theta$, luego $E_\theta$ y otra vez $C_\theta$; ahora es $C_\theta$ en todo el texto. La pérdida de reconstrucción $\|x_i - x_i'\|^2$ es el cuadrado de la distancia euclídea, no la distancia, y así quedó escrito. La factorización $p_\theta(x,z) = p_\theta(x|z)\,p_\theta(z)$ ahora se presenta como la regla del producto, de la que se deriva la regla de Bayes.
+
+**Para vos.** Son erratas sin consecuencia sobre los resultados, así que la respuesta es agradecer y decir que están corregidas, sin más. Sobre la regla de Bayes: lo que escribiste es, en rigor, la regla del producto (que con dos variables coincide con la regla de la cadena), y la regla de Bayes sale de igualar las dos factorizaciones posibles. No lo discutas: la redacción nueva nombra las dos cosas y deja contento a todos. Aproveché para corregir también "Mandelon" en el resumen y otro "escacez" del capítulo 1 que el jurado no marcó.
+
+### (h) El clasificador SGD
+
+**Para el jurado.** Tiene razón: el descenso de gradiente estocástico es un método de optimización, no un clasificador. Lo que se usó en la tesis es el `SGDClassifier` de `scikit-learn`, que es un modelo lineal (por defecto, una máquina de soporte vectorial lineal; con otra función de pérdida, una regresión logística) cuyos parámetros se estiman mediante descenso de gradiente estocástico. El texto corregido lo presenta así y aclara que, a diferencia de LDA o Ridge, cuyos parámetros se obtienen por métodos directos, aquí se actualizan de forma incremental, lo que conviene en alta dimensión.
+
+**Para vos.** La confusión viene del nombre de la clase de `scikit-learn`, y el jurado lo dice. El comentario de que "no es un modelo lineal" se refiere al método, no al clasificador: el clasificador sí es lineal. Si te lo preguntan, la frase es "es un clasificador lineal entrenado con SGD". El código de los modelos clásicos no está en este repo, así que no pude confirmar qué pérdida quedó elegida en la búsqueda en grilla; por eso el texto dice "según la función de pérdida elegida". En la Tabla 2.1 la fila sigue llamándose SGD, que es como se lo conoce.
+
+### (i) Descripción superficial de los métodos clásicos
+
+**Para el jurado.** Es cierto que la sección de modelos clásicos del capítulo 2 es descriptiva. Su función en la tesis es dar una línea de base de desempeño sobre el espacio completo de características, para dimensionar la dificultad de cada conjunto de datos antes de aplicar el AG. El aporte de la tesis está en la integración entre AV y AG, que se desarrolla en los capítulos 3 y 4. Para cada familia de modelos se citan los supuestos centrales y la referencia general (Hastie, Tibshirani y Friedman, 2009).
+
+**Para vos.** No reescribí esa sección: ampliarla bien llevaría varias páginas y no cambia ninguna conclusión. Reconocé el comentario sin justificarte de más. Si te preguntan por un modelo concreto, lo que importa es que puedas explicar por qué algunos no se evaluaron en GCM y Gisette (dimensionalidad y multiclase), que está en el mismo capítulo.
+
+### (j) Inconsistencia en la Figura 4.2
+
+**Para el jurado.** La figura mostraba un espacio original de cinco variables (X1 a X5) y un cromosoma de siete bits (1100101), y el ejemplo decodificaba ese cromosoma en las cinco variables. Ambas cosas eran incorrectas. La figura corregida usa siete variables y decodifica 1100101 en X1, X2, X5 y X7, que son las posiciones con valor 1, en coincidencia con el ejemplo del texto.
+
+**Para vos.** El texto del capítulo 4 ya usaba bien el ejemplo de siete variables; el error era solo de la figura. La rehice con un script, `utnthesis/codificacion-decodificacion.py`, que genera el PNG. Es el comentario más visible de los cuatro, porque cualquiera lo ve, así que es bueno que esté resuelto antes de la defensa. La presentación no usa esta figura.
+
 ## Datos de respaldo
 
 Todo lo que sigue sale del archivo de experimentos del repo (`utnthesis/filtered_experiment_data_v2.csv`), recalculado el 10 de octubre de 2026. Cada fila de ese archivo es una corrida completa del AG. La exactitud es la media de la población final sobre la partición original de testeo. El valor p es de un test t de Welch entre corridas aumentadas y originales; Mann-Whitney da la misma conclusión en todos los casos.
@@ -120,7 +145,12 @@ Diferencia de exactitud aumentados menos originales, en puntos porcentuales, con
 
 ## Cambios pendientes
 
-Ninguno es obligatorio: la tesis fue aceptada sin correcciones. Son ajustes para que lo que digas en la defensa coincida con lo escrito, por si el jurado los pide después.
+Las correcciones del tercer jurado ya están hechas y compiladas en `utnthesis/output/...-version_corregida.pdf`. El PDF entregado queda sin cambios en la misma carpeta. Los demás ajustes no son obligatorios: son para que lo que digas en la defensa coincida con lo escrito, por si el jurado los pide después.
+
+- [x] Prefacio, capítulos 1 a 3 y resumen: erratas "precísamente", "escacez", "conviertiéndolos", "multiples", "mas", "Mandelon".
+- [x] Capítulo 3: unificar el codificador como $C_\theta$, "cuadrado de la distancia euclídea", regla del producto y regla de Bayes.
+- [x] Capítulo 2: el SGD como clasificador lineal entrenado con descenso de gradiente estocástico.
+- [x] Figura 4.2: siete variables y decodificación X1, X2, X5, X7.
 
 - [ ] Capítulo 4, sección ALL Leukemia, y capítulo 5: reemplazar "incrementa la precisión de manera consistente" por "muestra una tendencia favorable que no alcanza significación estadística".
 - [ ] Capítulo 4, GCM segunda etapa: junto al 8,85% relativo, agregar "4,4 puntos porcentuales" y el número de corridas (9 y 10).
