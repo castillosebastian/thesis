@@ -1,0 +1,80 @@
+MAESTRÍA EN MINERÍA DE DATOS
+FORMULARIO DE EVALUACIÓN DE TESIS
+TÍTULO DE LA TESIS: AUMENTACIÓN DE DATOS MEDIANTE
+AUTOENCODERS VARIACIONALES Y SU IMPACTO EN ESTRATEGIAS DE
+SELECCIÓN DE CARACTERÍSTICAS BASADAS EN ALGORITMOS
+GENÉTICOS
+NOMBRE DEL/DE LA TESISTA: Claudio Sebastian Castillo
+NOMBRE DEL DIRECTOR/A: Dr. Matías Gerard
+NOMBRE DEL CODIRECTOR/A (si corresponde): Dr. Leandro Vignolo
+RESULTADO DE LA EVALUACIÓN
+X Aceptada para su defensa oral y pública.
+OBSERVACIONES
+La tesis de maestría evalúa la integración de la aumentación de datos mediante
+Autocodificadores Variacionales (AV) con Algoritmos Genéticos (AG) para la selección de
+características en escenarios de alta dimensionalidad y escasez de muestras. Para
+abordar estos problemas, el autor optimizó arquitecturas de AV para clasificaciones
+binarias y multiclase. Los resultados experimentales revelan que la efectividad de este
+enfoque es condicional: en conjuntos de datos cercanos a la saturación, la aumentación
+no generó mejoras significativas en la exactitud, aportando únicamente una reducción en
+la varianza de los resultados. En contraste, en problemas de alta complejidad o ruido , el
+enfoque híbrido logró incrementar la exactitud, aunque requirió de un diseño secuencial
+complejo de "selección-generación-selección". El documento es original, fácil de leer,
+completo, la metodología de investigación es aceptable y la investigación realizada apta
+para el grado de maestría, incluyendo la evaluación bibliográfica. Por este motivo,
+considero a la tesis como ACEPTADA para su defensa pública.
+Como sugerencias para la defensa, sería de utilidad considerar (a) comparar los
+resultados obtenidos en cada conjunto de datos con los métodos del estado del arte
+presentados en el capítulo 2 y otros (b) mostrar los resultados de la comparación con
+otros métodos de aumentación como SMOTE, (c) unificar las escalas en los gráficos de
+exactitud y (d) analizar primero los resultados de forma global, en lugar de ir en
+profundidad con cada conjunto de datos.
+
+FIRMA DEL EVALUADOR:
+NOMBRE Y APELLIDO DEL EVALUADOR: Facundo Manuel Quiroga
+CARGO/INSTITUCIÓN: Profesor, Facultad de Informática, UNLP
+DIRECCIÓN INSTITUCIONAL: 50 y 120, Facultad de Informática CP 1900
+
+
+-----------------------
+
+MAESTRÍA EN MINERÍA DE DATOS
+FORMULARIO DE EVALUACIÓN DE TESIS
+
+TÍTULO DE LA TESIS: Aumentación de datos mediante autoencoders
+variacionales y su impacto en estrategias de selección de características basadas
+en Algoritmos Genéticos
+NOMBRE DEL/DE LA TESISTA: Claudio Sebastian Castillo
+NOMBRE DEL DIRECTOR/A: Dr. Matías Gerard
+NOMBRE DEL CODIRECTOR/A (si corresponde): Dr. Leandro Vignolo
+RESULTADO DE LA EVALUACIÓN
+(Marque con una X la opción correspondiente)
+□X Aceptada para su defensa oral y pública.
+□ Devuelta para la realización de modificaciones y/o correcciones, debiendo
+reiniciarse posteriormente el procedimiento de evaluación.
+□ Rechazada.
+OBSERVACIONES (*)
+La tesis aborda un problema relevante de minería de datos y presenta una
+propuesta metodológica de integración entre autoencoders variacionales y
+algoritmos genéticos, evaluada experimentalmente sobre distintos conjuntos de
+datos. El trabajo evidencia un aporte propio y resultados de interés,
+particularmente en escenarios de alta dimensionalidad, escasez muestral y
+mayor complejidad. No obstante, se recomienda que en la defensa oral se
+explicite con mayor precisión qué se entiende por “mejora en la selección de
+características”, diferenciando desempeño predictivo, estabilidad y reducción de
+variables. Asimismo, convendría enfatizar las limitaciones de generalización de
+los resultados y moderar las conclusiones en aquellos casos donde las diferencias
+observadas no resultaron significativas. Se considera que el trabajo reúne las
+condiciones para su defensa oral y pública.
+
+(*) Si lo considera necesario, podrá ampliar sus observaciones en hojas anexas,
+las que deberán estar debidamente firmadas.
+
+Ministerio de Capital Humano
+Universidad Tecnológica Nacional
+Facultad Regional Paraná
+
+FIRMA DEL EVALUADOR:
+NOMBRE Y APELLIDO DEL EVALUADOR: Dra. Débora Chan
+CARGO/INSTITUCIÓN: Profesor Titular Universidad Austral
+DIRECCIÓN INSTITUCIONAL: dchan@austral.edu.ar
