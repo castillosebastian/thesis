@@ -87,8 +87,27 @@
   .c2 { grid-template-columns: 1fr 1fr; } .c3 { grid-template-columns: repeat(3, 1fr); } .c4 { grid-template-columns: repeat(4, 1fr); }
   .card { border: 1.5px solid var(--rule); border-radius: 4px; padding: 22px 26px; font-size: 27px; line-height: 1.38; }
   .card.key { border-color: var(--blue); }
+  .card svg.esq { display: block; width: 100%; height: auto; margin: 4px 0 8px; }
   .card ul { padding-left: 26px; } .card li { margin-bottom: 8px; }
   .card .ref { color: var(--grey); font-size: 22px; margin-top: 8px; }
+  .cards.c1.raiz { grid-template-columns: 1100px; justify-content: center; flex-shrink: 0; }
+  .cards.raiz .card { display: grid; grid-template-columns: auto 1fr; column-gap: 30px; align-items: center; padding: 14px 26px 16px; }
+  .cards.raiz .card h3 { grid-column: 1 / -1; margin-bottom: 4px; }
+  .cards.raiz .card .formal { margin: 0; padding: 0 30px 0 0; border-bottom: 0; border-right: 1px solid var(--rule); }
+  .ramas { display: block; width: 100%; height: 72px; flex: 0 0 72px; margin: 0; }
+  .ramas-rotulos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; text-align: center; font-size: 20px; color: var(--grey); margin: -2px 0 8px; flex-shrink: 0; }
+  .cards.c3 { flex-shrink: 0; }
+  /* diapositiva 14: estrategias de selección */
+  .sel { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 10px; }
+  .sel div { font-family: var(--sans); font-size: 23px; line-height: 1.3; color: var(--grey); }
+  .sel b { display: block; color: var(--ink); font-weight: 600; }
+  .sel .usada b { color: var(--blue); }
+  .sel .usada b span { color: var(--grey); font-weight: 400; font-size: 20px; }
+  .cards.c3.hijas .card { padding: 18px 26px 16px; }
+  .card .formal { font-family: var(--serif); font-size: 31px; line-height: 1.2; color: var(--blue); margin: 4px 0 14px; padding-bottom: 12px; border-bottom: 1px solid var(--rule); }
+  .card .formal i { font-style: italic; }
+  .card .formal sub { font-size: 18px; }
+  .card .formal small { display: block; font-family: var(--sans); font-size: 20px; color: var(--grey); margin-top: 6px; line-height: 1.3; }
 
   /* pasos encadenados */
   .steps { display: flex; align-items: stretch; gap: 0; }
@@ -105,6 +124,25 @@
   dl.defs dt { font-family: var(--serif); font-size: 30px; color: var(--blue); padding: 16px 0; border-top: 1px solid var(--rule); }
   dl.defs dd { margin: 0; padding: 18px 0; border-top: 1px solid var(--rule); }
   dl.defs dt:first-of-type, dl.defs dd:first-of-type { border-top: 0; }
+  .tiles { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; }
+  .tile { margin: 0; }
+  .tile img { display: block; width: 100%; height: 200px; object-fit: contain; object-position: center bottom; }
+  .tile figcaption { font-size: 21px; line-height: 1.3; color: var(--grey); margin-top: 8px; }
+  .tile figcaption b { color: var(--ink); font-weight: 600; }
+  .tile figcaption .xs { font-size: 16px; }
+  dl.defs dt { grid-column: 1; }
+  dl.defs dd { grid-column: 2; }
+  dl.defs svg.down { grid-column: 1; justify-self: center; height: 56px; width: 28px; display: block; margin: 2px 0; }
+  dl.defs svg.down ~ dt, dl.defs svg.down ~ dd { border-top: 0; padding-top: 6px; }
+  dl.defs ol.crit { margin: 4px 0 0; padding-left: 34px; font-size: 24px; line-height: 1.28; }
+  dl.defs ol.crit li { margin-bottom: 1px; }
+  dl.defs.compacta dt { font-size: 28px; padding: 10px 0; }
+  dl.defs.compacta dd { font-size: 25px; line-height: 1.32; padding: 12px 0; }
+  dl.defs.compacta svg.down { height: 40px; width: 24px; margin: 0; }
+  dl.defs.compacta svg.down ~ dt, dl.defs.compacta svg.down ~ dd { padding-top: 2px; }
+  .tiles.baja .tile img { height: 150px; }
+  .tiles.baja .tile figcaption { font-size: 19px; margin-top: 6px; }
+  .tiles.baja .tile figcaption .xs { font-size: 15px; }
 
   /* tablas */
   table { border-collapse: collapse; width: 100%; font-size: 27px; line-height: 1.3; }
@@ -128,12 +166,19 @@
   /* fórmulas */
   .formula { font-family: var(--serif); font-size: 44px; line-height: 1.3; }
   .formula i { font-style: italic; }
-  .formula sub { font-size: 0.6em; }
+  .formula sub { font-size: 0.6em; line-height: 0; }
   .elbo { display: flex; align-items: flex-start; justify-content: center; gap: 18px; margin: 30px 0 10px; }
   .elbo .term { text-align: center; }
   .elbo .term .f { padding: 0 10px 12px; border-bottom: 3px solid var(--blue); }
   .elbo .term .l { font-family: var(--sans); font-size: 24px; line-height: 1.3; margin-top: 14px; }
   .elbo .term .l span { display: block; color: var(--grey); font-size: 21px; }
+  /* R7: cuatro pasos, cada uno con rótulo, fórmula y explicación */
+  .pasos { display: grid; grid-template-columns: 230px 1fr 470px; column-gap: 24px; row-gap: 26px; align-items: center; margin-top: 10px; }
+  .pasos .r { font-family: var(--sans); font-size: 24px; line-height: 1.25; }
+  .pasos .r b { display: block; color: var(--blue); font-size: 20px; letter-spacing: 0.02em; text-transform: uppercase; }
+  .pasos .formula { font-size: 32px; text-align: center; white-space: nowrap; }
+  .pasos .e { font-family: var(--sans); font-size: 21px; line-height: 1.3; color: var(--grey); }
+  .pasos .e b { color: var(--ink); font-weight: 600; }
 
   /* cromosomas */
   .bits { display: flex; gap: 4px; margin: 6px 0; align-items: center; font-variant-numeric: tabular-nums; }
@@ -189,13 +234,17 @@
   .help { position: fixed; top: 62px; right: 18px; font-size: 14px; color: var(--grey); opacity: 0; transition: opacity 300ms; z-index: 5; }
   body:hover .help { opacity: 0.8; }
 
+  /* capa de dibujo: D activa, arrastrar traza, Shift recta, R rojo/azul, C borra */
+  .ink { position: fixed; inset: 0; z-index: 7; pointer-events: none; touch-action: none; }
+  body.draw .ink { pointer-events: auto; cursor: crosshair; }
+
   @media print {
     @page { size: 1600px 900px; margin: 0; }
     html, body { overflow: visible; height: auto; }
     * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .deck { position: static; }
     .slide { position: relative; left: 0; top: 0; margin: 0; transform: none !important; opacity: 1; visibility: visible; break-after: page; page-break-after: always; overflow: hidden; }
-    .progress, .notes-panel, .help { display: none !important; }
+    .progress, .notes-panel, .help, .ink { display: none !important; }
   }
 </style>
 </head>
@@ -206,7 +255,7 @@
     <marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1F4E79"/></marker>
   </defs>
 </svg>
-<div class="help">← → avanzar · N notas · F pantalla completa</div>
+<div class="help">← → avanzar · N notas · F pantalla completa · D dibujar (Shift recta · R rojo · C borrar)</div>
 <div class="progress" id="progress"></div>
 <div class="deck" id="deck">
 
@@ -228,42 +277,106 @@
 
 <!-- ======================================================= 1. INTRODUCCIÓN -->
 <section class="slide" data-n="2" data-sec="1">
-  <div class="cards c2">
-    <div class="card"><h3>Microarreglos de ADN</h3>Miles de genes medidos sobre decenas de pacientes.</div>
-    <div class="card"><h3>Video, finanzas, redes sociales</h3>Problemas representados por grandes conjuntos de variables.</div>
+  <div class="tiles baja">
+    <figure class="tile"><img src="figuras/datos_adn.png" alt=""><figcaption><b>Microarreglos de ADN.</b> Leukemia (Golub et al., 1999): 72 pacientes × 7.129 genes.</figcaption></figure>
+    <figure class="tile"><img src="figuras/datos_video.png" alt=""><figcaption><b>Video.</b> Cada fotograma: 640 × 360 píxeles × 3 canales = 691.200 variables. <span class="xs">Big Buck Bunny, Blender Foundation, CC BY 3.0.</span></figcaption></figure>
+    <figure class="tile"><img src="figuras/datos_finanzas.png" alt=""><figcaption><b>Finanzas.</b> S&amp;P 500: 476 acciones × 1.259 días de cotización, 2013 a 2018.</figcaption></figure>
   </div>
   <div class="spacer"></div>
-  <dl class="defs">
+  <dl class="defs compacta">
     <dt>Maldición de la dimensionalidad</dt>
     <dd>Alta demanda computacional y costo de optimización en espacios de muchas variables, que vuelven intratables ciertos problemas en la práctica <span class="muted">(Bolón-Canedo et al., 2015)</span>.</dd>
+    <svg class="down" viewBox="0 0 28 56" aria-hidden="true"><line x1="14" y1="2" x2="14" y2="42" stroke="#1F4E79" stroke-width="2.5"/><polygon points="5,40 23,40 14,54" fill="#1F4E79"/></svg>
     <dt>Selección de características</dt>
-    <dd>Detectar las variables relevantes y descartar las irrelevantes o redundantes, con mínima pérdida de rendimiento.</dd>
+    <dd>Determinar un subconjunto de atributos que satisfaga uno de estos criterios <span class="muted">(Vignolo y Gerard, 2017)</span>:
+      <ol class="crit">
+        <li>el subconjunto de un tamaño especificado que maximice la precisión de la predicción;</li>
+        <li>el subconjunto de menor tamaño que satisfaga un requisito de precisión mínima;</li>
+        <li>el subconjunto que logre el mejor compromiso entre dimensionalidad y precisión.</li>
+      </ol></dd>
   </dl>
   <div class="spacer"></div>
 </section>
 
 <section class="slide" data-n="3" data-sec="1">
-  <div class="spacer"></div>
-  <div class="cards c4">
-    <div class="card"><h3>Alta dimensionalidad y escasez muestral</h3>Muchas más variables que observaciones: sobreajuste, o modelos que no capturan la estructura de los datos.</div>
-    <div class="card"><h3>Desbalance de clases</h3>La evaluación prioriza la clase mayoritaria y descarta variables útiles para las minoritarias.</div>
-    <div class="card"><h3>Complejidad</h3>Ambigüedad de clases, fronteras de decisión complejas y dispersión de las muestras.</div>
-    <div class="card"><h3>Ruido</h3>Variables sin poder predictivo mezcladas con las relevantes.</div>
+  <div class="cards c1 raiz">
+    <div class="card"><h3>Alta dimensionalidad y escasez muestral</h3>
+      <div class="formal"><i>n</i> ≫ <i>m</i><small><i>n</i> características, <i>m</i> observaciones</small></div>
+      Sobreajuste a las observaciones disponibles, o incapacidad de capturar la estructura subyacente de los datos.</div>
+  </div>
+  <svg class="ramas" viewBox="0 0 1440 72" aria-hidden="true">
+    <path d="M720,2 C720,40 240,16 240,46 L240,66" fill="none" stroke="#1F4E79" stroke-width="2.5" marker-end="url(#ahb)"/>
+    <path d="M720,2 L720,66" fill="none" stroke="#1F4E79" stroke-width="2.5" marker-end="url(#ahb)"/>
+    <path d="M720,2 C720,40 1200,16 1200,46 L1200,66" fill="none" stroke="#1F4E79" stroke-width="2.5" marker-end="url(#ahb)"/>
+  </svg>
+  <div class="ramas-rotulos">
+    <span>agrava</span><span>genera dispersión de las muestras</span><span>multiplica las variables irrelevantes</span>
+  </div>
+  <div class="cards c3 hijas">
+    <div class="card"><h3>Desbalance de clases</h3>
+      <div class="formal"><i>m</i><sub>mayoritaria</sub> ≫ <i>m</i><sub>minoritaria</sub><small>distribución de clases altamente desigual</small></div>
+      La evaluación prioriza la clase mayoritaria y descarta características útiles para las minoritarias.</div>
+    <div class="card"><h3>Complejidad</h3>
+      <div class="formal">Frontera de decisión difícil de identificar<small>tres aspectos, que pueden coexistir</small></div>
+      Ambigüedad de clases, complejidad de las fronteras y dispersión de las muestras.</div>
+    <div class="card"><h3>Ruido</h3>
+      <div class="formal"><i>x̃</i> = <i>x</i> + <i>ε</i><small>valores imperfectos por medición, transcripción o transmisión</small></div>
+      Características irrelevantes o redundantes mezcladas con las relevantes.</div>
   </div>
   <div class="spacer"></div>
-  <div class="line">Estos cuatro problemas organizan la tesis y la elección de los conjuntos de datos.</div>
+  <div class="line">Los cuatro problemas organizan la tesis y la elección de los conjuntos de datos; la aumentación ataca el primero.</div>
 </section>
 
 <section class="slide" data-n="4" data-sec="1">
   <div class="cards c3">
-    <div class="card"><h3>Filtro</h3><ul><li>Preprocesamiento independiente del modelo.</li><li>Rápido y escalable.</li><li>No considera las interacciones entre variables.</li></ul></div>
-    <div class="card key"><h3>Envolvente</h3><ul><li>Evalúa cada subconjunto con un clasificador.</li><li>Captura dependencias entre variables.</li><li>Costo exponencial: 2<sup>n</sup> subconjuntos posibles.</li></ul></div>
-    <div class="card"><h3>Embebido</h3><ul><li>La selección ocurre durante el entrenamiento.</li><li>Menor costo que el envolvente.</li><li>Específico de cada modelo.</li></ul></div>
+    <div class="card"><h3>Filtro</h3>
+      <svg class="esq" viewBox="0 0 414 165" role="img" aria-label="Filtro: los datos pasan por una selección previa y después por el entrenamiento, en secuencia">
+        <text x="0" y="82" font-size="18">Datos</text>
+        <line class="arrow" x1="48" y1="76" x2="64" y2="76"/>
+        <rect class="box blue" x="68" y="50" width="100" height="52" rx="4"/>
+        <text x="118" y="82" text-anchor="middle" font-size="18" fill="#1F4E79">Selección</text>
+        <line class="arrow" x1="172" y1="76" x2="188" y2="76"/>
+        <rect class="box" x="192" y="50" width="128" height="52" rx="4"/>
+        <text x="256" y="82" text-anchor="middle" font-size="18">Entrenamiento</text>
+        <line class="arrow" x1="324" y1="76" x2="340" y2="76"/>
+        <text x="343" y="82" font-size="18">Modelo</text>
+        <text x="200" y="150" text-anchor="middle" font-size="17" fill="#6B6B6B">paso previo e independiente del modelo</text>
+      </svg>
+      <ul><li>Rápido y escalable; no usa el clasificador.</li><li>Univariados: ignoran las dependencias entre variables. Multivariados: las miden con un criterio estadístico, no con el desempeño del modelo.</li></ul></div>
+    <div class="card key"><h3>Envolvente</h3>
+      <svg class="esq" viewBox="0 0 414 165" role="img" aria-label="Envolvente: la selección propone un subconjunto, el entrenamiento lo evalúa y devuelve su aptitud, en un ciclo">
+        <text x="0" y="54" font-size="18">Datos</text>
+        <line class="arrow" x1="48" y1="48" x2="64" y2="48"/>
+        <rect class="box blue" x="68" y="22" width="100" height="52" rx="4"/>
+        <text x="118" y="54" text-anchor="middle" font-size="18" fill="#1F4E79">Selección</text>
+        <line class="arrow" x1="172" y1="48" x2="188" y2="48"/>
+        <rect class="box" x="192" y="22" width="128" height="52" rx="4"/>
+        <text x="256" y="54" text-anchor="middle" font-size="18">Entrenamiento</text>
+        <line class="arrow" x1="324" y1="48" x2="340" y2="48"/>
+        <text x="343" y="54" font-size="18">Modelo</text>
+        <path class="arrow" d="M256,76 L256,106 L118,106 L118,78"/>
+        <text x="187" y="126" text-anchor="middle" font-size="16" fill="#6B6B6B">aptitud del subconjunto</text>
+        <text x="200" y="150" text-anchor="middle" font-size="17" fill="#6B6B6B">ciclo: el clasificador evalúa cada subconjunto</text>
+      </svg>
+      <ul><li>Captura las dependencias entre variables.</li><li>Costo exponencial: 2<sup>n</sup> subconjuntos posibles.</li></ul></div>
+    <div class="card"><h3>Embebido</h3>
+      <svg class="esq" viewBox="0 0 414 165" role="img" aria-label="Embebido: selección y entrenamiento ocurren dentro de una misma optimización">
+        <text x="0" y="82" font-size="18">Datos</text>
+        <line class="arrow" x1="48" y1="76" x2="64" y2="76"/>
+        <rect class="box" x="68" y="38" width="252" height="76" rx="4"/>
+        <rect class="box blue" x="76" y="50" width="100" height="52" rx="4"/>
+        <text x="126" y="82" text-anchor="middle" font-size="18" fill="#1F4E79">Selección</text>
+        <text x="250" y="82" text-anchor="middle" font-size="18">Entrenamiento</text>
+        <line class="arrow" x1="324" y1="76" x2="340" y2="76"/>
+        <text x="343" y="82" font-size="18">Modelo</text>
+        <text x="200" y="150" text-anchor="middle" font-size="17" fill="#6B6B6B">simultáneos: una sola optimización</text>
+      </svg>
+      <ul><li>Menor costo que el envolvente.</li><li>Específico de cada modelo.</li></ul></div>
   </div>
   <div class="spacer"></div>
   <div class="line">
     <p>Con n = 16.063 genes, la búsqueda exhaustiva es intratable: se recurre a heurísticas de búsqueda.</p>
-    <p><b>Método envolvente + heurística de búsqueda = algoritmo genético</b> <span class="muted">(Vignolo et al., 2017)</span>.</p>
+    <p><b>Método envolvente + heurística de búsqueda = algoritmo genético</b> <span class="muted">(Vignolo y Gerard, 2017)</span>.</p>
   </div>
 </section>
 
@@ -297,14 +410,37 @@
 </section>
 
 <section class="slide" data-n="6" data-sec="1">
-  <table>
-    <tr><th style="width:24%">Técnica</th><th style="width:30%">Mecanismo</th><th>Alcance en alta dimensionalidad con pocas muestras</th></tr>
-    <tr><td>SMOTE</td><td>Interpola entre vecinos cercanos; rebalancea clases.</td><td>La interpolación pierde sentido; no aporta beneficio <span class="muted">(Blagus y Lusa, 2013)</span>.</td></tr>
-    <tr><td>Redes generativas antagónicas (GAN)</td><td>Un generador compite con un discriminador.</td><td>Entrenamiento inestable con pocas muestras <span class="muted">(Fajardo et al., 2021)</span>.</td></tr>
-    <tr class="hl"><td>Autocodificador variacional (AV)</td><td>Aprende una distribución latente continua de los datos.</td><td>Preserva la estructura estadística; mejor generador en comparaciones recientes <span class="muted">(Fajardo et al., 2021; Ai et al., 2023)</span>.</td></tr>
-  </table>
+  <div class="row" style="align-items:flex-start; gap:50px">
+    <svg viewBox="0 0 570 320" style="flex: 0 0 600px" role="img" aria-label="Taxonomía: la aumentación de datos se divide en muestreo (sobremuestreo aleatorio, SMOTE) y modelos generativos (GAN, AV, difusión)">
+      <rect class="box" x="155" y="8" width="260" height="50" rx="4"/>
+      <text x="285" y="40" text-anchor="middle" font-size="21">Aumentación de datos</text>
+      <path class="arrow" d="M285,58 L285,80 L120,80 L120,100"/>
+      <path class="arrow" d="M285,58 L285,80 L410,80 L410,100"/>
+      <rect class="box soft" x="10" y="104" width="220" height="48" rx="4"/>
+      <text x="120" y="135" text-anchor="middle" font-size="21">Muestreo</text>
+      <rect class="box blue" x="300" y="104" width="220" height="48" rx="4"/>
+      <text x="410" y="135" text-anchor="middle" font-size="21" fill="#1F4E79">Modelos generativos</text>
+      <line x1="24" y1="152" x2="24" y2="282" stroke="#D8D6D0" stroke-width="2"/>
+      <line x1="314" y1="152" x2="314" y2="292" stroke="#D8D6D0" stroke-width="2"/>
+      <g font-size="19" fill="#1A1A1A">
+        <circle cx="24" cy="188" r="4" fill="#6B6B6B"/><text x="38" y="194">Sobremuestreo aleatorio</text>
+        <text x="38" y="216" fill="#6B6B6B" font-size="17">replica observaciones existentes</text>
+        <circle cx="24" cy="254" r="4" fill="#6B6B6B"/><text x="38" y="260">SMOTE</text>
+        <text x="38" y="282" fill="#6B6B6B" font-size="17">interpola entre vecinos cercanos</text>
+        <circle cx="314" cy="188" r="4" fill="#1F4E79"/><text x="328" y="194">GAN</text>
+        <circle cx="314" cy="226" r="4" fill="#1F4E79"/><text x="328" y="232" fill="#1F4E79" font-weight="600">Autocodificador</text><text x="328" y="254" fill="#1F4E79" font-weight="600">variacional (AV)</text>
+        <circle cx="314" cy="292" r="4" fill="#6B6B6B"/><text x="328" y="298" fill="#6B6B6B" font-size="17">Difusión (no abordados)</text>
+      </g>
+    </svg>
+    <table class="sm" style="flex: 1 1 auto">
+      <tr><th>Técnica</th><th>Mecanismo</th><th>Con <i>n</i> ≫ <i>m</i></th></tr>
+      <tr><td>SMOTE</td><td>Interpola entre vecinos cercanos de la clase minoritaria; solo rebalancea clases.</td><td>Las distancias pierden sentido; sin beneficio salvo selección previa de variables <span class="muted">(Blagus y Lusa, 2013)</span>.</td></tr>
+      <tr><td>GAN</td><td>Un generador aprende a engañar a un discriminador que separa muestras reales de sintéticas.</td><td>Entrenamiento inestable y colapso de modos con pocas muestras; sin codificador <span class="muted">(Fajardo et al., 2021)</span>.</td></tr>
+      <tr class="hl"><td>AV</td><td>Codifica cada observación como una distribución latente y decodifica muestras de ella.</td><td>Entrenamiento estable; latente continuo; el paso codificar-decodificar atenúa el ruido <span class="muted">(Fajardo et al., 2021; Ai et al., 2023)</span>.</td></tr>
+    </table>
+  </div>
   <div class="spacer"></div>
-  <div class="line">Los AV se han aplicado a la generación de imágenes, texto, habla, datos tabulares, datos longitudinales y grafos.</div>
+  <div class="line">En las comparaciones directas, el AV condicional fue el mejor generador frente a SMOTE y GAN <span class="muted">(Fajardo et al., 2021)</span>. Antecedentes en respaldo.</div>
 </section>
 
 <section class="slide" data-n="7" data-sec="1">
@@ -382,7 +518,10 @@
       </svg>
     </div>
   </div>
-  <div class="line"><span class="formula" style="font-size:34px"><i>L</i>(θ, φ) = Σ<sub><i>i</i></sub> ‖<i>x<sub>i</sub></i> − <i>D</i><sub>φ</sub>(<i>C</i><sub>θ</sub>(<i>x<sub>i</sub></i>))‖²</span> &nbsp;&nbsp; <span class="muted">Sin restricción sobre la estructura del espacio latente.</span></div>
+  <div class="elbo formula" style="margin:14px 0 6px">
+    <div class="term"><div class="f"><i>L</i>(θ, φ) = Σ<sub><i>i</i></sub> ‖<i>x<sub>i</sub></i> − <i>D</i><sub>φ</sub>(<i>C</i><sub>θ</sub>(<i>x<sub>i</sub></i>))‖²</div><div class="l">Error de reconstrucción<span>cuadrado de la distancia euclídea, sumado sobre el conjunto de entrenamiento</span></div></div>
+  </div>
+  <div class="line">La pérdida solo compara entrada y salida: <b>sin restricción sobre la estructura del espacio latente</b>, que puede ser discontinuo.</div>
 </section>
 
 <section class="slide" data-n="11" data-sec="2">
@@ -404,7 +543,9 @@
       <text class="ser" x="825" y="197" text-anchor="middle">z = μ + σ · ε</text>
       <text class="ser" x="825" y="52" text-anchor="middle" font-size="28">ε ~ N(0, I)</text>
       <line class="arrow blue" x1="825" y1="68" x2="825" y2="138"/>
+      <text class="sub" x="840" y="110" text-anchor="start">ruido gaussiano estándar</text>
       <text class="sub" x="825" y="262" text-anchor="middle">reparametrización</text>
+      <text class="sub" x="825" y="290" text-anchor="middle">μ y σ definen la distribución; ε elige el punto</text>
       <line class="arrow" x1="950" y1="185" x2="1038" y2="185"/>
       <polygon class="box" points="1042,130 1270,50 1270,320 1042,240"/>
       <text class="lbl" x="1156" y="194" text-anchor="middle">Decodificador</text>
@@ -412,26 +553,16 @@
       <text class="ser" x="1394" y="196" text-anchor="middle">x̂</text>
     </svg>
   </div>
-  <div class="line">
-    <p>El codificador produce un vector de medias μ y uno de desvíos σ; la reparametrización permite retropropagar a través del muestreo.</p>
-    <p><b>Generación:</b> muestrear z de N(0, I) y decodificar.</p>
+  <div class="elbo formula" style="margin:14px 0 6px">
+    <div><i>L</i>(θ, φ) = Σ<sub><i>i</i></sub></div>
+    <div class="term"><div class="f">‖<i>x<sub>i</sub></i> − <i>D</i><sub>θ</sub>(<i>z<sub>i</sub></i>)‖²</div><div class="l">Reconstrucción<span>error cuadrático, como en el autocodificador</span></div></div>
+    <div>+</div>
+    <div class="term"><div class="f">KL( <i>q</i><sub>φ</sub>(<i>z</i>|<i>x<sub>i</sub></i>) ‖ N(0, I) )</div><div class="l">Regularización<span>mantiene cada distribución codificada cerca de la normal estándar</span></div></div>
   </div>
+  <div class="line"><p><b>Cada observación se codifica como una distribución, no como un punto;</b> <i>z</i> = μ + σ · ε permite retropropagar a través del muestreo. <b>Generación:</b> <i>z</i> ∼ N(0, I) y decodificar.</p><p><b>KL:</b> divergencia de Kullback-Leibler.</p></div>
 </section>
 
 <section class="slide" data-n="12" data-sec="2">
-  <div class="spacer"></div>
-  <p class="muted" style="text-align:center">Cota inferior de la evidencia (ELBO)</p>
-  <div class="elbo formula">
-    <div>log <i>p</i><sub>θ</sub>(<i>x</i>) &nbsp;≥</div>
-    <div class="term"><div class="f">E<sub><i>z</i> ∼ <i>q</i><sub>φ</sub>(<i>z</i>|<i>x</i>)</sub> [ log <i>p</i><sub>θ</sub>(<i>x</i>|<i>z</i>) ]</div><div class="l">Reconstrucción<span>en la práctica, error cuadrático medio</span></div></div>
-    <div>−</div>
-    <div class="term"><div class="f"><i>D</i><sub>KL</sub>( <i>q</i><sub>φ</sub>(<i>z</i>|<i>x</i>) ‖ <i>p</i>(<i>z</i>) )</div><div class="l">Regularización<span>divergencia KL respecto de N(0, I)</span></div></div>
-  </div>
-  <div class="spacer"></div>
-  <div class="line">Si la divergencia KL domina la pérdida, el espacio latente queda bien regularizado, pero la reconstrucción se degrada.</div>
-</section>
-
-<section class="slide" data-n="13" data-sec="2">
   <div class="fig">
     <svg width="1440" height="360" viewBox="0 0 1440 360" role="img" aria-label="Autocodificador variacional condicional: la etiqueta de clase y se concatena a la entrada del codificador y a la entrada del decodificador">
       <rect class="box blue" x="560" y="6" width="320" height="60" rx="4"/>
@@ -464,16 +595,56 @@
   <div class="line">
     <ul>
       <li>La etiqueta de clase se concatena a la entrada del codificador y a la del decodificador.</li>
-      <li>Pesos de clase inversos a la frecuencia en la pérdida de reconstrucción.</li>
-      <li>Muestreo ponderado por clase en cada mini-lote.</li>
+      <li>Pesos de clase inversos a la frecuencia en la reconstrucción: los errores en las clases minoritarias pesan más.</li>
+      <li>Muestreo ponderado por clase en cada mini-lote: las clases minoritarias entran con mayor probabilidad.</li>
     </ul>
+    <p><b>Permite generar muestras por clase en problemas desbalanceados.</b></p>
   </div>
 </section>
 
-<section class="slide" data-n="14" data-sec="2">
+<section class="slide" data-n="13" data-sec="2">
   <div class="row">
     <div class="fig" style="flex: 0 0 1000px">
-      <svg width="1000" height="430" viewBox="0 0 1000 430" role="img" aria-label="Ciclo del algoritmo genético: población inicial, evaluación de aptitud, criterio de terminación, selección, cruce, mutación y nueva generación">
+      <svg width="1000" height="580" viewBox="0 0 1000 580" role="img" aria-label="Individuo como cadena de bits y ciclo del algoritmo genético: población inicial, evaluación de aptitud, criterio de terminación, selección, cruce, mutación y nueva generación">
+        <text class="lbl b" x="0" y="22" font-size="24">Individuo</text>
+        <text class="sub" x="128" y="22">solución candidata: un subconjunto de variables codificado como una cadena de bits</text>
+        <text class="sub" x="20" y="44" text-anchor="middle" font-size="15"><tspan font-style="italic">x</tspan><tspan font-size="11" dy="3">1</tspan></text>
+        <text class="sub" x="64" y="44" text-anchor="middle" font-size="15"><tspan font-style="italic">x</tspan><tspan font-size="11" dy="3">2</tspan></text>
+        <text class="sub" x="108" y="44" text-anchor="middle" font-size="15"><tspan font-style="italic">x</tspan><tspan font-size="11" dy="3">3</tspan></text>
+        <text class="sub" x="152" y="44" text-anchor="middle" font-size="15"><tspan font-style="italic">x</tspan><tspan font-size="11" dy="3">4</tspan></text>
+        <text class="sub" x="196" y="44" text-anchor="middle" font-size="15"><tspan font-style="italic">x</tspan><tspan font-size="11" dy="3">5</tspan></text>
+        <text class="sub" x="240" y="44" text-anchor="middle" font-size="15"><tspan font-style="italic">x</tspan><tspan font-size="11" dy="3">6</tspan></text>
+        <text class="sub" x="284" y="44" text-anchor="middle" font-size="15"><tspan font-style="italic">x</tspan><tspan font-size="11" dy="3">7</tspan></text>
+        <text class="sub" x="328" y="44" text-anchor="middle" font-size="15"><tspan font-style="italic">x</tspan><tspan font-size="11" dy="3">8</tspan></text>
+        <text class="sub" x="372" y="44" text-anchor="middle" font-size="15"><tspan font-style="italic">x</tspan><tspan font-size="11" dy="3">9</tspan></text>
+        <text class="sub" x="416" y="44" text-anchor="middle" font-size="15"><tspan font-style="italic">x</tspan><tspan font-size="11" dy="3">10</tspan></text>
+        <text class="sub" x="460" y="44" text-anchor="middle" font-size="15"><tspan font-style="italic">x</tspan><tspan font-size="11" dy="3">11</tspan></text>
+        <text class="sub" x="504" y="44" text-anchor="middle" font-size="15"><tspan font-style="italic">x</tspan><tspan font-size="11" dy="3">12</tspan></text>
+        <text class="sub" x="548" y="44" text-anchor="middle" font-size="15"><tspan font-style="italic">x</tspan><tspan font-size="11" dy="3">13</tspan></text>
+        <text class="sub" x="592" y="44" text-anchor="middle" font-size="15"><tspan font-style="italic">x</tspan><tspan font-size="11" dy="3">14</tspan></text>
+        <text class="sub" x="680" y="44" text-anchor="middle" font-size="15"><tspan font-style="italic">x</tspan><tspan font-size="11" dy="3">n−1</tspan></text>
+        <text class="sub" x="724" y="44" text-anchor="middle" font-size="15"><tspan font-style="italic">x</tspan><tspan font-size="11" dy="3">n</tspan></text>
+        <rect class="box soft" x="0" y="52" width="40" height="40" rx="3"/><text class="sub" x="20" y="81" text-anchor="middle" font-size="22">0</text>
+        <rect class="fillb" x="44" y="52" width="40" height="40" rx="3"/><text class="lbl b" x="64" y="81" text-anchor="middle" font-size="22">1</text>
+        <rect class="fillb" x="88" y="52" width="40" height="40" rx="3"/><text class="lbl b" x="108" y="81" text-anchor="middle" font-size="22">1</text>
+        <rect class="box soft" x="132" y="52" width="40" height="40" rx="3"/><text class="sub" x="152" y="81" text-anchor="middle" font-size="22">0</text>
+        <rect class="box soft" x="176" y="52" width="40" height="40" rx="3"/><text class="sub" x="196" y="81" text-anchor="middle" font-size="22">0</text>
+        <rect class="fillb" x="220" y="52" width="40" height="40" rx="3"/><text class="lbl b" x="240" y="81" text-anchor="middle" font-size="22">1</text>
+        <rect class="box soft" x="264" y="52" width="40" height="40" rx="3"/><text class="sub" x="284" y="81" text-anchor="middle" font-size="22">0</text>
+        <rect class="box soft" x="308" y="52" width="40" height="40" rx="3"/><text class="sub" x="328" y="81" text-anchor="middle" font-size="22">0</text>
+        <rect class="box soft" x="352" y="52" width="40" height="40" rx="3"/><text class="sub" x="372" y="81" text-anchor="middle" font-size="22">0</text>
+        <rect class="fillb" x="396" y="52" width="40" height="40" rx="3"/><text class="lbl b" x="416" y="81" text-anchor="middle" font-size="22">1</text>
+        <rect class="box soft" x="440" y="52" width="40" height="40" rx="3"/><text class="sub" x="460" y="81" text-anchor="middle" font-size="22">0</text>
+        <rect class="box soft" x="484" y="52" width="40" height="40" rx="3"/><text class="sub" x="504" y="81" text-anchor="middle" font-size="22">0</text>
+        <rect class="box soft" x="528" y="52" width="40" height="40" rx="3"/><text class="sub" x="548" y="81" text-anchor="middle" font-size="22">0</text>
+        <rect class="fillb" x="572" y="52" width="40" height="40" rx="3"/><text class="lbl b" x="592" y="81" text-anchor="middle" font-size="22">1</text>
+        <text class="sub" x="636" y="80" text-anchor="middle" font-size="24">…</text>
+        <rect class="box soft" x="660" y="52" width="40" height="40" rx="3"/><text class="sub" x="680" y="81" text-anchor="middle" font-size="22">0</text>
+        <rect class="fillb" x="704" y="52" width="40" height="40" rx="3"/><text class="lbl b" x="724" y="81" text-anchor="middle" font-size="22">1</text>
+        <text class="sub" x="0" y="122" font-size="19">1: la variable forma parte del subconjunto · 0: queda fuera · <tspan font-style="italic">n</tspan> bits, uno por variable (7.129 en Leukemia)</text>
+        <line class="arrow" x1="100" y1="134" x2="100" y2="188"/>
+        <text class="sub" x="112" y="168" font-size="19">× 100, generados al azar</text>
+        <g transform="translate(0,150)">
         <rect class="box" x="0" y="40" width="200" height="90" rx="4"/>
         <text class="lbl" x="100" y="78" text-anchor="middle" font-size="24">Población</text>
         <text class="lbl" x="100" y="108" text-anchor="middle" font-size="24">inicial aleatoria</text>
@@ -502,7 +673,8 @@
         <rect class="fillb" x="230" y="270" width="140" height="80" rx="4"/>
         <text class="lbl" x="300" y="319" text-anchor="middle" font-size="24">Mutación</text>
         <path class="arrow" d="M300,270 L300,200 L370,200 L370,132"/>
-        <text class="sub" x="286" y="220" text-anchor="end">nueva generación</text>
+        <text class="sub" x="312" y="246">nueva generación</text>
+        </g>
       </svg>
     </div>
     <div class="grow small">
@@ -518,7 +690,7 @@
   <div class="line">Adecuado para espacios de búsqueda discretos, no diferenciables y multimodales.</div>
 </section>
 
-<section class="slide" data-n="15" data-sec="2">
+<section class="slide" data-n="14" data-sec="2">
   <div class="spacer"></div>
   <div class="cards c3">
     <div>
@@ -544,11 +716,17 @@
       <p class="small muted" style="margin-top:22px">Cada bit se invierte con una probabilidad fija.</p>
     </div>
   </div>
+  <h3 style="margin-top:36px">Selección: quién se reproduce</h3>
+  <div class="sel">
+    <div><b>Ruleta</b>Probabilidad de ser elegido proporcional a la aptitud. Favorece con fuerza a los más aptos; reduce la diversidad.</div>
+    <div class="usada"><b>Torneo <span>· empleada en la tesis</span></b>Se sortean <i>k</i> individuos al azar y pasa el mejor. El tamaño del torneo regula la presión de selección.</div>
+    <div><b>Ventana</b>La población se divide en grupos y se toma el mejor de cada uno. Preserva la diversidad entre regiones del espacio de búsqueda.</div>
+  </div>
   <div class="spacer"></div>
   <div class="line">La longitud del cromosoma es igual al número de variables: 7.129 bits en Leukemia, 16.063 en GCM. La proporción de bits activos en la inicialización define el tamaño del subconjunto explorado.</div>
 </section>
 
-<section class="slide" data-n="16" data-sec="2">
+<section class="slide" data-n="15" data-sec="2">
   <div class="spacer"></div>
   <dl class="defs">
     <dt>Desempeño predictivo</dt>
@@ -563,25 +741,24 @@
 </section>
 
 <!-- ================================================ 3. MATERIALES Y MÉTODOS -->
-<section class="slide" data-n="17" data-sec="3" data-org="3"></section>
+<section class="slide" data-n="16" data-sec="3" data-org="3"></section>
 
-<section class="slide" data-n="18" data-sec="3">
-  <table>
-    <tr><th>Conjunto</th><th class="n">Observaciones × características</th><th>Clases</th><th>Desafío principal</th></tr>
-    <tr><td>Leukemia</td><td class="n">72 × 7.129</td><td>2, desbalanceado</td><td>Más variables que observaciones; correlación entre genes</td></tr>
-    <tr><td>Gisette</td><td class="n">13.500 × 5.000</td><td>2, balanceado</td><td>Ruido y redundancia en un espacio de búsqueda grande</td></tr>
-    <tr><td>Madelon</td><td class="n">2.000 × 500</td><td>2, balanceado</td><td>20 variables con señal y 480 de ruido</td></tr>
-    <tr><td>GCM</td><td class="n">190 × 16.063</td><td>14, desbalanceado</td><td>Más variables que observaciones; multiclase con desbalance</td></tr>
-    <tr><td>ALL Leukemia</td><td class="n">327 × 12.600</td><td>14, desbalanceado</td><td>Más variables que observaciones; multiclase. Validación del flujo</td></tr>
+<section class="slide" data-n="17" data-sec="3">
+  <table class="sm">
+    <tr><th style="width:170px">Conjunto</th><th style="width:415px">Tema</th><th class="n" style="width:175px">Observaciones ×<br>características</th><th style="width:200px">Clases</th><th>Desafío principal</th></tr>
+    <tr><td>Leukemia</td><td>Expresión génica; ALL frente a AML</td><td class="n">72 × 7.129</td><td style="white-space:nowrap">2, desbalanceado</td><td>Más variables que observaciones; correlación entre genes</td></tr>
+    <tr><td>Gisette</td><td>Dígitos manuscritos; 4 frente a 9</td><td class="n">13.500 × 5.000</td><td style="white-space:nowrap">2, balanceado</td><td>Ruido y redundancia en un espacio de búsqueda grande</td></tr>
+    <tr><td>Madelon</td><td>Artificial; XOR en 5 dimensiones</td><td class="n">2.000 × 500</td><td style="white-space:nowrap">2, balanceado</td><td>20 variables con señal y 480 de ruido</td></tr>
+    <tr><td>GCM</td><td>Expresión génica; 14 tipos de tumor</td><td class="n">190 × 16.063</td><td style="white-space:nowrap">14, desbalanceado</td><td>Más variables que observaciones; multiclase con desbalance</td></tr>
+    <tr><td style="white-space:nowrap">ALL Leukemia</td><td>Expresión génica; LLA pediátrica</td><td class="n">327 × 12.600</td><td style="white-space:nowrap">14, desbalanceado</td><td>Más variables que observaciones; multiclase. Validación del flujo</td></tr>
   </table>
   <div class="spacer"></div>
   <div class="line">
-    <p>Expresión génica: Leukemia <span class="muted">(Golub et al., 1999)</span>, GCM <span class="muted">(Ramaswamy et al., 2001)</span> y ALL Leukemia <span class="muted">(Yeoh et al., 2002)</span>. Desafío NIPS 2003: Gisette y Madelon.</p>
-    <p>En todos los experimentos con AV y AG se respetan las particiones originales de entrenamiento y testeo.</p>
+    <p>Leukemia <span class="muted">(Golub et al., 1999)</span>, GCM <span class="muted">(Ramaswamy et al., 2001)</span>, ALL Leukemia <span class="muted">(Yeoh et al., 2002)</span>; Gisette y Madelon, desafío NIPS 2003. <b>En todos los experimentos se respetan las particiones originales de entrenamiento y testeo.</b></p>
   </div>
 </section>
 
-<section class="slide" data-n="19" data-sec="3">
+<section class="slide" data-n="18" data-sec="3">
   <table>
     <tr><th>Conjunto</th><th>Métrica</th><th>Mejor resultado</th><th>Rango de la mayoría de los modelos</th><th>Lectura</th></tr>
     <tr><td>Leukemia</td><td>AUC</td><td>1,00 <span class="muted">(Bagging, Random Forest, SVC)</span></td><td class="nw">0,85 a 1,00</td><td>Cercano a la saturación</td></tr>
@@ -593,7 +770,7 @@
   <div class="line">Dieciocho modelos de scikit-learn con búsqueda en grilla, sobre una partición 80/20. Tabla 2.1 de la tesis.</div>
 </section>
 
-<section class="slide" data-n="20" data-sec="3">
+<section class="slide" data-n="19" data-sec="3">
   <div class="cards c3" style="margin-bottom:26px">
     <div class="card"><b>Codificador.</b> Tres capas lineales, cada una con normalización por lotes y ReLU.</div>
     <div class="card"><b>Espacio latente.</b> μ y log σ² mediante dos capas lineales independientes.</div>
@@ -611,7 +788,7 @@
   <div class="line">Optimizador Adam, parada temprana e hiperparámetros por búsqueda en grilla y optimización bayesiana. En multiclase, error de reconstrucción balanceado por clase. Tabla 4.1 de la tesis.</div>
 </section>
 
-<section class="slide" data-n="21" data-sec="3">
+<section class="slide" data-n="20" data-sec="3">
   <div class="spacer"></div>
   <p class="formula" style="text-align:center; font-size:56px"><i>f</i> = α · <i>exactitud</i> + (1 − α) · (1 − <i>k</i> / <i>n</i>)</p>
   <p class="muted" style="text-align:center">α = 0,5 &nbsp;·&nbsp; <i>k</i>: variables seleccionadas &nbsp;·&nbsp; <i>n</i>: variables totales</p>
@@ -631,7 +808,7 @@
   <div class="line">Por diseño, el AG resigna parte de la exactitud a cambio de una menor dimensionalidad.</div>
 </section>
 
-<section class="slide" data-n="22" data-sec="3">
+<section class="slide" data-n="21" data-sec="3">
   <div class="fig">
     <svg width="1440" height="330" viewBox="0 0 1440 330" role="img" aria-label="Diseño experimental: el mismo algoritmo genético se ejecuta sin aumentación y con aumentación, y ambos se evalúan en la partición original de testeo">
       <text class="lbl" x="0" y="84" fill="#6B6B6B">Sin</text><text class="lbl" x="0" y="116" fill="#6B6B6B">aumentación</text>
@@ -669,13 +846,14 @@
   </div>
   <div class="line">
     <ul>
+      <li><b>El mismo AG, con y sin aumentación, evaluado siempre en la partición original de testeo.</b></li>
       <li>Cada corrida completa del AG es una observación: exactitud media de la población final.</li>
       <li>Comparación de distribuciones entre grupos: gráficos de cajas, test t de Welch y test de Mann-Whitney.</li>
     </ul>
   </div>
 </section>
 
-<section class="slide" data-n="23" data-sec="3">
+<section class="slide" data-n="22" data-sec="3">
   <div class="spacer"></div>
   <div class="steps">
     <div class="step"><b>1. Selección</b>AG sobre el espacio completo de variables.<span style="margin-top:10px">Salida: las características más frecuentes en los cromosomas finales.</span></div>
@@ -694,14 +872,14 @@
 </section>
 
 <!-- =========================================================== 4. RESULTADOS -->
-<section class="slide" data-n="24" data-sec="4" data-org="4"></section>
+<section class="slide" data-n="23" data-sec="4" data-org="4"></section>
 
-<section class="slide" data-n="25" data-sec="4">
+<section class="slide" data-n="24" data-sec="4">
   <div class="fig"><img src="figuras/mlp_reales_vs_sinteticos.png" alt="Exactitud de un MLP entrenado con datos reales y de un MLP entrenado con datos sintéticos, en Leukemia, Madelon, Gisette y GCM"></div>
   <div class="line">Ambos modelos se evalúan en la partición original de testeo. Figura 3.4 de la tesis.</div>
 </section>
 
-<section class="slide" data-n="26" data-sec="4">
+<section class="slide" data-n="25" data-sec="4">
   <div class="fig"><img src="figuras/umbral_muestras_gcm.png" alt="Exactitud del MLP en GCM según la cantidad de muestras sintéticas de entrenamiento: 190, 400, 3.000 y 6.000"></div>
   <div class="line">
     <p>Con 3.000 muestras balanceadas (214 por clase) se iguala al MLP entrenado con datos reales; con 6.000, la exactitud se degrada.</p>
@@ -709,7 +887,7 @@
   </div>
 </section>
 
-<section class="slide" data-n="27" data-sec="4">
+<section class="slide" data-n="26" data-sec="4">
   <table>
     <tr><th>Conjunto</th><th class="n">Corridas<br>con / sin</th><th class="n">Exactitud<br>sin aumentación</th><th class="n">Exactitud<br>con aumentación</th><th class="n">Diferencia<br>(puntos porcentuales)</th><th class="n">p</th><th>Lectura</th></tr>
     <tr><td>Leukemia</td><td class="n">90 / 90</td><td class="n">0,989</td><td class="n">0,992</td><td class="n">+0,3</td><td class="n">0,09</td><td>Saturado, sin cambio</td></tr>
@@ -722,12 +900,12 @@
   <div class="line">Test t de Welch con las corridas del AG como unidad de observación. El test de Mann-Whitney conduce a la misma conclusión en todos los casos.</div>
 </section>
 
-<section class="slide" data-n="28" data-sec="4">
+<section class="slide" data-n="27" data-sec="4">
   <div class="fig"><img src="figuras/ic95.png" alt="Diferencia de exactitud entre corridas con y sin aumentación, con intervalo de confianza del 95 por ciento, para los cinco conjuntos"></div>
   <div class="line">Diferencia de medias (con aumentación menos sin aumentación) e intervalo de confianza del 95%. Donde el intervalo incluye el cero no hay evidencia de efecto.</div>
 </section>
 
-<section class="slide" data-n="29" data-sec="4">
+<section class="slide" data-n="28" data-sec="4">
   <div class="fig"><img src="figuras/escala_comun.png" alt="Exactitud por corrida, con y sin aumentación, en los cinco conjuntos con un eje común de 0,4 a 1,0"></div>
   <div class="line">
     <div class="cards c2">
@@ -737,7 +915,7 @@
   </div>
 </section>
 
-<section class="slide" data-n="30" data-sec="4">
+<section class="slide" data-n="29" data-sec="4">
   <div class="row">
     <div class="fig" style="flex: 0 0 1000px"><img src="figuras/madelon.png" alt="Madelon: exactitud y número de variables seleccionadas por corrida, con y sin aumentación"></div>
     <div class="kv col grow">
@@ -748,7 +926,7 @@
   <div class="line">30 corridas con aumentación y 49 sin aumentación. La desviación estándar de la exactitud también disminuye: 0,023 frente a 0,038.</div>
 </section>
 
-<section class="slide" data-n="31" data-sec="4">
+<section class="slide" data-n="30" data-sec="4">
   <div class="fig">
     <svg width="1440" height="400" viewBox="0 0 1440 400" role="img" aria-label="Esquema: las 500 variables de Madelon, 20 con señal y 480 de ruido, pasan por un espacio latente de 25 dimensiones y se reconstruyen con el ruido atenuado">
       <rect x="330" y="40" width="110" height="40" fill="#2E6DA4"/>
@@ -775,7 +953,7 @@
   <div class="line">Los datos sintéticos realzan la señal que el AG debe encontrar. <span class="muted">Esquema ilustrativo de la interpretación propuesta en la tesis; no es un resultado medido.</span></div>
 </section>
 
-<section class="slide" data-n="32" data-sec="4">
+<section class="slide" data-n="31" data-sec="4">
   <div class="row">
     <div class="fig" style="flex: 0 0 1000px"><img src="figuras/gcm_etapa1.png" alt="GCM, primera etapa: exactitud y número de variables seleccionadas por corrida, con y sin aumentación"></div>
     <div class="kv col grow">
@@ -786,7 +964,7 @@
   <div class="line">1.400 muestras sintéticas (100 por clase) más 133 originales; cromosomas de aproximadamente 1.600 genes; 20 generaciones. Figura 4.10 de la tesis.</div>
 </section>
 
-<section class="slide" data-n="33" data-sec="4">
+<section class="slide" data-n="32" data-sec="4">
   <div class="spacer"></div>
   <div class="kv" style="justify-content:center; gap:160px">
     <div><span class="k">100%</span><span class="v">exactitud en la partición<br>sintética de testeo</span></div>
@@ -800,7 +978,7 @@
   </div>
 </section>
 
-<section class="slide" data-n="34" data-sec="4">
+<section class="slide" data-n="33" data-sec="4">
   <div class="row">
     <div class="fig" style="flex: 0 0 720px"><img src="figuras/gcm_etapa2.png" alt="GCM, segunda etapa: exactitud por corrida, con y sin aumentación"></div>
     <div class="grow">
@@ -814,7 +992,7 @@
   <div class="line">AVC entrenado sobre las 1.600 características más frecuentes; 3.000 muestras sintéticas balanceadas por clase; 15 generaciones. Figura 4.11 de la tesis.</div>
 </section>
 
-<section class="slide" data-n="35" data-sec="4">
+<section class="slide" data-n="34" data-sec="4">
   <div class="row">
     <div class="fig" style="flex: 0 0 900px"><img src="figuras/gcm_cromosoma.png" alt="GCM: exactitud por corrida según el número de genes activos en el cromosoma, con y sin aumentación"></div>
     <div class="grow">
@@ -831,7 +1009,7 @@
   <div class="line">Figura 4.12 de la tesis, redibujada con los mismos datos.</div>
 </section>
 
-<section class="slide" data-n="36" data-sec="4">
+<section class="slide" data-n="35" data-sec="4">
   <div class="row">
     <div class="fig" style="flex: 0 0 900px"><img src="figuras/all_cromosoma.png" alt="ALL Leukemia: exactitud por corrida según el número de genes activos en el cromosoma, con y sin aumentación"></div>
     <div class="grow">
@@ -847,7 +1025,7 @@
   <div class="line">Mismo flujo que en GCM: AVC sobre el subespacio seleccionado, 1.000 muestras sintéticas, 15 generaciones. Figura 4.13 de la tesis, redibujada con los mismos datos.</div>
 </section>
 
-<section class="slide" data-n="37" data-sec="4">
+<section class="slide" data-n="36" data-sec="4">
   <div class="fig"><img src="figuras/saturados.png" alt="Leukemia y Gisette: exactitud por corrida con y sin aumentación; Gisette: número de variables seleccionadas"></div>
   <div class="line">
     <p><b>Leukemia.</b> Desviación estándar de la exactitud: 0,011 con aumentación frente a 0,016 sin aumentación.</p>
@@ -855,7 +1033,7 @@
   </div>
 </section>
 
-<section class="slide" data-n="38" data-sec="4">
+<section class="slide" data-n="37" data-sec="4">
   <table>
     <tr><th>Conjunto</th><th>Desempeño predictivo</th><th>Reducción de variables</th><th>Estabilidad de la exactitud</th></tr>
     <tr><td>Leukemia</td><td>Sin diferencia <span class="muted">(p = 0,09)</span></td><td>Igual <span class="muted">(259 y 259)</span></td><td><span class="up">Mejora</span> <span class="muted">(0,011 frente a 0,016)</span></td></tr>
@@ -868,7 +1046,7 @@
   <div class="line">En cada celda, el valor con aumentación precede al valor sin aumentación. Estabilidad: desviación estándar de la exactitud entre corridas.</div>
 </section>
 
-<section class="slide" data-n="39" data-sec="4">
+<section class="slide" data-n="38" data-sec="4">
   <div class="spacer"></div>
   <dl class="defs">
     <dt>Mejora</dt>
@@ -882,9 +1060,9 @@
 </section>
 
 <!-- ====================================== 5. CONCLUSIONES Y TRABAJOS FUTUROS -->
-<section class="slide" data-n="40" data-sec="5" data-org="5"></section>
+<section class="slide" data-n="39" data-sec="5" data-org="5"></section>
 
-<section class="slide" data-n="41" data-sec="5">
+<section class="slide" data-n="40" data-sec="5">
   <div class="spacer"></div>
   <ol>
     <li>Los datos sintéticos generados por un AV o AVC adecuadamente configurado son aptos para el entrenamiento: un MLP entrenado únicamente con sintéticos alcanza la exactitud del entrenado con reales en Leukemia, Madelon y GCM.</li>
@@ -895,7 +1073,7 @@
   <div class="spacer"></div>
 </section>
 
-<section class="slide" data-n="42" data-sec="5">
+<section class="slide" data-n="41" data-sec="5">
   <div class="spacer"></div>
   <ol>
     <li>Cinco conjuntos de datos, dos de ellos artificiales; el efecto depende de la dificultad del problema.</li>
@@ -907,7 +1085,7 @@
   <div class="spacer"></div>
 </section>
 
-<section class="slide" data-n="43" data-sec="5">
+<section class="slide" data-n="42" data-sec="5">
   <div class="spacer"></div>
   <ol>
     <li><b>Función de pérdida del AV.</b> Reponderar reconstrucción y divergencia KL; inferencia variacional recocida; AV jerárquicos para datos como GCM.</li>
@@ -919,7 +1097,7 @@
 </section>
 
 <!-- ================================================================ CIERRE -->
-<section class="slide plain cover" data-n="44">
+<section class="slide plain cover" data-n="43">
   <div class="kind">Tesis de Maestría en Minería de Datos</div>
   <h1 style="font-size:40px; max-width:1240px">Aumentación de datos mediante autoencoders variacionales y su impacto en estrategias de selección de características basadas en algoritmos genéticos</h1>
   <div class="thanks">Muchas gracias</div>
@@ -1049,9 +1227,43 @@
     </div>
   </div>
 </section>
+<section class="slide" data-n="R6" data-sec="R" data-backup>
+  <table class="sm">
+    <tr><th>Trabajo</th><th>Qué hace</th><th>Resultado y relación con la tesis</th></tr>
+    <tr><td>Fajardo et al., 2021</td><td>AV condicional, GAN, SMOTE y sobremuestreo aleatorio sobre versiones desbalanceadas de MNIST y Fashion-MNIST; MLP como clasificador.</td><td>El AV condicional fue el mejor generador. Origen de la prueba de evaluación del capítulo 3: MLP entrenado con sintéticos y evaluado con reales.</td></tr>
+    <tr><td>Ai et al., 2023</td><td>MGVAE: AV guiado por la clase mayoritaria; se preentrena con la mayoría y se ajusta con la minoría.</td><td>Supera a otros sobremuestreos en imágenes y datos tabulares (exactitud balanceada, ACSA, media geométrica).</td></tr>
+    <tr><td>Khmaissia y Frigui, 2023</td><td>AV entrenado con las muestras mal clasificadas o de baja confianza; aumentación semisupervisada.</td><td>Mejoras en STL10 y CIFAR-100. Aumentación dirigida a las regiones difíciles del espacio de características.</td></tr>
+    <tr class="hl"><td>Martins et al., 2022</td><td>AV para generar variantes de proteínas (luxA) y AG mono y multiobjetivo para optimizarlas.</td><td>El AG guiado supera al muestreo directo del AV. El antecedente más cercano: combina AV y AG, aunque para diseño de proteínas y no para selección de características.</td></tr>
+  </table>
+  <div class="spacer"></div>
+  <div class="line">Ningún antecedente combina AV y AG para selección de características; esa integración es el aporte de la tesis.</div>
+</section>
+
+<section class="slide" data-n="R7" data-sec="R" data-backup>
+  <div class="pasos">
+    <div class="r"><b>1 · Objetivo</b>Máxima verosimilitud</div>
+    <div class="formula">max<sub>θ</sub> log <i>p</i><sub>θ</sub>(<i>x</i>)</div>
+    <div class="e">Elegir θ para que el modelo asigne la mayor probabilidad posible a las observaciones reales.</div>
+
+    <div class="r"><b>2 · Impedimento</b>La integral sobre <i>z</i></div>
+    <div class="formula"><i>p</i><sub>θ</sub>(<i>x</i>) = ∫ <i>p</i><sub>θ</sub>(<i>x</i>|<i>z</i>) <i>p</i>(<i>z</i>) d<i>z</i></div>
+    <div class="e"><b>No se puede calcular:</b> sin fórmula, porque el integrando contiene la red <i>D</i><sub>θ</sub>; sin aproximación numérica, porque <i>z</i> tiene decenas de dimensiones y casi ningún <i>z</i> del prior produce <i>x</i>. Lo que no se calcula no se diferencia.</div>
+
+    <div class="r"><b>3 · Sustituto</b>Límite inferior de evidencia (ELBO)</div>
+    <div class="formula">log <i>p</i><sub>θ</sub>(<i>x</i>) ≥ E<sub><i>z</i> ∼ <i>q</i><sub>φ</sub>(<i>z</i>|<i>x</i>)</sub>[ log <i>p</i><sub>θ</sub>(<i>x</i>|<i>z</i>) ] − KL( <i>q</i><sub>φ</sub>(<i>z</i>|<i>x</i>) ‖ <i>p</i>(<i>z</i>) )</div>
+    <div class="e"><b>Sí se puede calcular:</b> un solo <i>z</i> sorteado del codificador <i>q</i><sub>φ</sub>(<i>z</i>|<i>x</i>), que propone <i>z</i> adecuados para esa <i>x</i>, y una KL entre normales con fórmula cerrada.</div>
+
+    <div class="r"><b>4 · Alcance</b>Una cota, no la verosimilitud</div>
+    <div class="formula">log <i>p</i><sub>θ</sub>(<i>x</i>) − ELBO = KL( <i>q</i><sub>φ</sub>(<i>z</i>|<i>x</i>) ‖ <i>p</i><sub>θ</sub>(<i>z</i>|<i>x</i>) )</div>
+    <div class="e">La brecha es el error del codificador respecto de la posterior verdadera. Maximizar la cota eleva la verosimilitud y reduce la brecha, sin garantizar que llegue a cero.</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="line"><b>El logaritmo</b> convierte el producto de las probabilidades de todas las observaciones en una suma, sin cambiar el máximo. <b>La pérdida de la diapositiva 11</b> es el negativo de la cota: −ELBO = error cuadrático + KL.</div>
+</section>
 
 </div>
 <div class="notes-panel" id="notes"></div>
+<canvas class="ink" id="ink"></canvas>
 
 <script>
 (function () {
@@ -1078,7 +1290,55 @@
     var a = s.querySelector('aside.notes');
     notes.innerHTML = a ? a.innerHTML : '<p>Sin notas.</p>';
     if (push !== false) history.replaceState(null, '', '#' + s.getAttribute('data-n'));
+    ink.clear();
   }
+
+  // Capa de dibujo sobre la diapositiva. Los trazos se guardan en píxeles CSS y se
+  // redibujan en cada cambio; se descartan al cambiar de diapositiva.
+  var ink = (function () {
+    var cv = document.getElementById('ink');
+    var ctx = cv.getContext('2d');
+    var strokes = [], cur = null, red = false;
+    var COL = { blue: '#1F4E79', red: '#B3261E' };
+    function size() {
+      var r = window.devicePixelRatio || 1;
+      cv.width = Math.round(window.innerWidth * r); cv.height = Math.round(window.innerHeight * r);
+      cv.style.width = window.innerWidth + 'px'; cv.style.height = window.innerHeight + 'px';
+      ctx.setTransform(r, 0, 0, r, 0, 0);
+      redraw();
+    }
+    function redraw() {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      strokes.concat(cur ? [cur] : []).forEach(function (s) {
+        if (s.pts.length < 2) return;
+        ctx.strokeStyle = s.color; ctx.beginPath();
+        ctx.moveTo(s.pts[0][0], s.pts[0][1]);
+        for (var i = 1; i < s.pts.length; i++) ctx.lineTo(s.pts[i][0], s.pts[i][1]);
+        ctx.stroke();
+      });
+    }
+    cv.addEventListener('pointerdown', function (e) {
+      if (!document.body.classList.contains('draw')) return;
+      cv.setPointerCapture(e.pointerId);
+      cur = { color: red ? COL.red : COL.blue, pts: [[e.clientX, e.clientY]], line: e.shiftKey };
+    });
+    cv.addEventListener('pointermove', function (e) {
+      if (!cur) return;
+      if (cur.line) cur.pts = [cur.pts[0], [e.clientX, e.clientY]]; else cur.pts.push([e.clientX, e.clientY]);
+      redraw();
+    });
+    function up() { if (cur) { strokes.push(cur); cur = null; redraw(); } }
+    cv.addEventListener('pointerup', up);
+    cv.addEventListener('pointercancel', up);
+    window.addEventListener('resize', size);
+    size();
+    return {
+      toggle: function () { document.body.classList.toggle('draw'); },
+      color: function () { red = !red; },
+      clear: function () { strokes = []; cur = null; redraw(); }
+    };
+  })();
 
   function fromHash() {
     var h = decodeURIComponent(location.hash.replace('#', ''));
@@ -1098,7 +1358,10 @@
       case 'f': case 'F':
         if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen();
         break;
-      case 'Escape': document.body.classList.remove('notes'); break;
+      case 'd': case 'D': ink.toggle(); break;
+      case 'c': case 'C': ink.clear(); break;
+      case 'r': case 'R': ink.color(); break;
+      case 'Escape': document.body.classList.remove('notes'); document.body.classList.remove('draw'); break;
     }
   });
 
