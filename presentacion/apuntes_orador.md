@@ -4,58 +4,67 @@ Una entrada por diapositiva. El número es el del pie de la diapositiva proyecta
 
 Los bloques en cita son observaciones del jurado, con el autor y la letra que tiene la respuesta larga en `Respuesta_observaciones_jurado.md`, seguidas de la respuesta en versión compacta. Van en la diapositiva donde conviene tenerlas a mano.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 0 · Portada
 
 - Saludo. Agradecer al jurado la lectura y las observaciones; al director y codirector.
-- Desafio: problema dificil y cross-industria +
-solución via 2 arquitecturas
+- Desafio: problema dificil y cross-industria 
+- Solución via 2 arquitecturas: AV + AG
 
-------------------------------------------------------------------------
+> Cuando tengo muchas variables es dificil predecir bien (modelar), pero cuando además de muchas variables tengo pocas observaciones el desafío es doble. 
+
+> La selección de características ayuda a resolver el problema, pero necesita necesita que la ayudemos con el segundo: ¿como multiplicamos información escaza?
+
+> La solución es: 
+>    1) resolver la escasez = generando más información
+>    2) resolver la dimensionalidad = seleccionando lo importante
+
+-------------------------------------------
 
 ## 1 · Organización
 
 - La mayor parte del tiempo va a resultados.
 - Conclusiones cortas, como guía para la discusión.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
-## 2 · Maldición de la dimensionalidad
+## 2 · Datos y Selección de características
 
 - Alta dimensionalidad implica espacios de variables intratables en la práctica.
-- Fisher: interacciones, no variables aisladas. Hughes: más variables no es más exactitud.
 - Seleccion de características: proceso de detectar las ca-
-racterísticas relevantes y descartar aquellas irrelevantes o redundantes, con el objetivo de obtener un subconjunto que describa adecuadamente un problema dado con una
-degradación mínima del rendimiento. 
+racterísticas relevantes y descartar aquellas irrelevantes o redundantes, con el objetivo de obtener un subconjunto que describa adecuadamente un problema dado con una degradación mínima del rendimiento. 
 
-------------------------------------------------------------------------
+-------------------------------------------
 
-## 3 · Cuatro propiedades
+## 3 · Alta dimensionalidad y escasez muestral 
 
 - De los tres aspectos de complejidad, solo la escasez muestral se ataca con aumentación.
 - Sobreajuste model -> baja generalización 
 - Sub-ajustado model -> baja precisión
 - Desbalance: muestreo y modificación del algoritmo, los dos dentro del autocodificador.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
-## 4 · Métodos envolventes
+## 4 Formas de Resolver la alta Dimensionalidad
 
 - Capturan interacciones, pero 2ⁿ subconjuntos: con 16.063 genes, intratable.
 - Heurística elegida: algoritmos genéticos (Vignolo y Gerard, 2017).
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 5 · Aptitud acotada por los datos
 
 - Punto de partida del aporte.
 - Con pocos datos la aptitud es ruidosa: convergencia prematura o sobreajuste.
 - El problema no es el algoritmo, es la calidad de la evaluación.
+- Lectura del gráfico: puntos vacíos, población inicial al azar; puntos llenos, población final. Con datos suficientes la aptitud estimada coincide con la real y la población final se concentra en la zona alta. Con pocos datos la estimación es irregular y la población final se concentra en un máximo espurio: una solución que solo parece satisfactoria.
+- No es una trayectoria: el AG mueve una población, la selección la concentra. Paisaje de aptitud = metáfora clásica (Wright 1932, Goldberg); la recta es una proyección de un espacio de 2ⁿ cadenas con distancia de Hamming.
+- No decir "óptimo": el AG es una heurística; busca soluciones satisfactorias. Por eso el resultado es una distribución de corridas y una frecuencia de activación, no un subconjunto único.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
-## 6 · Aumentación generativa
+## 6 · Formas de Resolver la escacez muestral 
 
 - Por qué AV y no SMOTE: Blagus y Lusa (no aporta en alta dimensión), Fajardo (AVC mejor generador), Ai.
 - SMOTE solo rebalancea; acá también se aumentan problemas balanceados.
@@ -64,7 +73,7 @@ degradación mínima del rendimiento.
 > **Dr. Quiroga (b): comparar con SMOTE y otros métodos de aumentación.**
 > La tesis no corrió SMOTE; se reconoce como limitación. La elección se apoyó en tres resultados: Blagus y Lusa (SMOTE no aporta en alta dimensión con pocas muestras, el escenario de los tres conjuntos genómicos), Fajardo (AV condicional mejor que SMOTE y GAN) y Ai (AV guiados superan a otros sobremuestreos). SMOTE rebalancea clases; acá se aumenta también en problemas balanceados. AV contra SMOTE en el mismo flujo: trabajo futuro inmediato.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 7 · Propuesta
 
@@ -72,7 +81,7 @@ degradación mínima del rendimiento.
 - El AG recibe originales más sintéticos.
 - La exactitud se mide siempre en la partición original de testeo.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 8 · Objetivos
 
@@ -82,13 +91,14 @@ degradación mínima del rendimiento.
 > **Dr. Quiroga (a): comparar con el estado del arte del capítulo 2.**
 > El objetivo fue medir el impacto de la aumentación sobre un mismo AG. La comparación con el capítulo 2 tiene una limitación: allí se reporta AUC y macro-F1 sobre una partición 80/20 propia; en el capítulo 4, exactitud sobre la partición original de testeo. La comparación válida es con el MLP del capítulo 3: el flujo AV+AG lo iguala o supera en los cinco conjuntos con el 0,6% a 10% de las características. Detalle en R1.
 
-------------------------------------------------------------------------
+
+-------------------------------------------
 
 ## 9 · Organización
 
 - "Marco teórico: el autocodificador variacional, el algoritmo genético y las métricas."
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 10 · Autocodificador
 
@@ -99,7 +109,7 @@ degradación mínima del rendimiento.
 > **Gambini (g): notación del codificador y pérdida de reconstrucción.**
 > Corregido: el codificador es C_θ en todo el texto (antes alternaba con E_θ); la pérdida es el cuadrado de la distancia euclídea, no la distancia. Agradecer y decir que está incorporado, sin más.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 11 · Autocodificador variacional
 
@@ -109,8 +119,11 @@ degradación mínima del rendimiento.
 - Dos términos en tensión; dejar plantado: en GCM primera etapa la KL dominó.
 - KL = divergencia de Kullback-Leibler ("Kúlbac-Láibler"): ≥ 0, cero solo si las distribuciones coinciden, no simétrica (las barras ordenan: codificada respecto de N(0, I)). Para dos normales: ½ Σ (μ² + σ² − 1 − log σ²). La D de la fórmula es solo el decodificador.
 - Origen de la pérdida (negativo del ELBO): no mencionar; si preguntan, R7.
+- Tira de dígitos: salida real de un AV chico (latente 2-D, 256 ocultas, 60 épocas, 5.000 MNIST) entrenado para la figura; doce puntos equiespaciados sobre una recta del latente. Contraste con la mancha de la 10.
 
-------------------------------------------------------------------------
+- AV = Kingma y Welling 2013
+
+-------------------------------------------
 
 ## 12 · AV condicional
 
@@ -120,7 +133,7 @@ degradación mínima del rendimiento.
 - Pesos de clase y muestreo ponderado: solo funcionan combinados.
 - Permite generar cantidades iguales por clase.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 13 · Algoritmo genético
 
@@ -130,9 +143,15 @@ degradación mínima del rendimiento.
 - La diversidad evita la convergencia prematura.
 
 
-Los AG son una clase de algoritmo inspirado en la evolución biológica y en la teoría de la selección natural. Los mismos se basan en el concepto de evolución de una población de soluciones potenciales a lo largo de múltiples generaciones. Utilizando operadores genéticos como la selección, el cruce y la mutación los AG generan nuevas soluciones a partir de las disponibles, mejorando su calidad y favoreciendo la preeminencia de ciertas características.
+> Los AG son una clase de algoritmo inspirado en la evolución biológica y en la teoría de la selección natural. 
 
-------------------------------------------------------------------------
+> evolución de una población de soluciones potenciales a lo largo de múltiples generaciones. 
+
+> Utilizando operadores genéticos como la selección, el cruce y la mutación los AG generan nuevas soluciones a partir de las disponibles.
+
+> formulados por Holland, Universidad de Michigan, 1975, y difundidos por su discípulo Goldberg. Es una familia de algoritmos (ej.colonias de hormigas, abejas, etc.)
+
+-------------------------------------------
 
 ## 14 · Cromosoma binario y operadores
 
@@ -144,7 +163,7 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 > **Gambini (j): inconsistencia en la Figura 4.2.**
 > La figura mostraba cinco variables y un cromosoma de siete bits. Corregida: siete variables, y 1100101 decodifica en X1, X2, X5 y X7, como en el ejemplo del texto. La presentación no usa esa figura.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 15 · Tres criterios de mejora
 
@@ -154,13 +173,13 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 > **Dra. Chan (e): qué significa "mejora en la selección de características".**
 > Tres criterios operativos, enunciados en la metodología del capítulo 4, que no se mueven juntos: desempeño predictivo (exactitud en testeo original), reducción de variables (características medias de la población final, penalizadas en la aptitud con igual peso) y estabilidad (dispersión de exactitud y de variables entre corridas). El balance por conjunto está en la diapositiva 38.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 16 · Organización
 
 - "Materiales y métodos: datos, línea base, modelos y diseño experimental."
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 17 · Cinco conjuntos
 
@@ -171,11 +190,11 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 **Clases por conjunto (contadas en los ARFF de `ealab/data`)**
 
 - Leukemia: leucemia aguda: linfoblástica vs mieloide . 
-- ALL Leukemia : 7 subtipos (no 14)  
+- ALL Leukemia: 7 subtipos de leucemia. 
 - GCM: 14 tipos de tumor: leucemia 24, linfoma 16, sistema nervioso central 16, los otros 11 con 8 cada uno (mama, próstata, pulmón, colorrectal, vejiga, melanoma, útero, riñón, páncreas, ovario, mesotelioma). Testeo 46: entre 2 y 6 por clase.
 - Gisette: dígitos 4 y 9.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 18 · Línea base
 
@@ -183,28 +202,39 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 - Leukemia y Gisette sin margen; Madelon y GCM con margen.
 - En GCM hay clases con F1 cero: nunca se predicen.
 
+**Cómo nombrar la métrica**
+
+- Primera vez: "área bajo la curva ROC"; después, "AUC". Es un área entre 0 y 1, no un porcentaje: decir "entre 0,85 y 1,00", nunca "85 de precisión".
+- Frase: "La métrica es el área bajo la curva ROC, AUC. En Leukemia la mayoría de los modelos clásicos obtiene valores entre 0,85 y 1, y tres de ellos llegan a 1: el problema está cerca de saturar."
+- Lectura intuitiva, si la piden: probabilidad de que el modelo asigne una puntuación mayor a una observación positiva que a una negativa; 1 es separación perfecta, 0,5 es azar. Palabra genérica: "desempeño" o "capacidad de discriminación".
+- No decir "precisión" ni "exactitud": son métricas con definición propia (precisión = positivos predichos que son correctos; exactitud = proporción de aciertos, la que usa el AG como aptitud). Los porcentajes quedan para la exactitud del AG en el capítulo 4.
+- GCM: "macro-F1", media del F1 por clase, mismo peso para cada clase sin importar su tamaño; por eso se ve que Breast o Prostate tienen F1 cero.
+
 > **Gambini (h): el SGD no es un clasificador.**
 > Tiene razón: es un método de optimización. Lo usado es el `SGDClassifier` de scikit-learn, un clasificador lineal entrenado con descenso de gradiente estocástico. El texto corregido lo presenta así.
 
 > **Gambini (i): descripción superficial de los métodos clásicos.**
 > Es cierto; su función es dar la línea de base sobre el espacio completo y dimensionar la dificultad de cada conjunto. El aporte está en la integración AV+AG de los capítulos 3 y 4. Reconocerlo sin justificarse de más.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 19 · Arquitectura
 
 - De dos capas a tres con normalización por lotes.
+- Columna "Entrada (capa 1)": es la dimensión de las características, no una capa con pesos; sirve para leer la compresión hasta el latente (Leukemia 7.129 → 108, unas 66 veces; GCM 16.063 → 35, unas 460 veces; Gisette 5.000 → 18, unas 280 veces). "Tres capas" = capas ocultas, sin contar la entrada ni las cabezas de μ y log σ². En las ecuaciones del capítulo 3 la entrada es x y h₁ es la capa 2 de la tabla.
 - MSE más KL; Adam; parada temprana con paciencia 10.
 - Dropout y L1 se probaron y no aportaron.
+- Puente con la 11 (σ allá, log σ² acá): "El codificador "la media y el logaritmo de la varianza"
 
 **Si preguntan por qué MSE**
 
-- Reconstrucción = suma de errores cuadráticos sobre observaciones y variables (distancia euclídea al cuadrado en ℝⁿ), en la misma escala que KL, como en el ELBO. Sin β.
-- MSE = término de reconstrucción del ELBO cuando p(x|z) se asume normal; entropía cruzada sería para datos binarios (Bernoulli). Los datos son continuos y estandarizados: normal, y por eso MSE.
+- Qué mide: la diferencia entre cada observación y su reconstrucción, elevada al cuadrado y sumada sobre todas las variables y todas las observaciones. Es la distancia entre la entrada y la salida.
+- Por qué cuadrático y no otra cosa: la pérdida del AV tiene dos términos, reconstrucción y KL. El error cuadrático es el término de reconstrucción que corresponde a datos continuos (se asume que cada observación se distribuye normal alrededor de su reconstrucción). Si los datos fueran binarios, 0 o 1, el término sería entropía cruzada. Nuestros datos son continuos y estandarizados, por eso error cuadrático.
+- Por qué suma y no promedio: para que quede en la misma escala que la KL, que también es una suma; no hay un peso β entre ambos términos.
 - Desbalance, dos mecanismos: muestreo ponderado por clase en cada lote (es el que efectivamente balancea la contribución de cada clase a la pérdida) y un factor de peso de clase sobre el término de reconstrucción. Validados juntos; la combinación dio la mejor reconstrucción de las clases minoritarias.
 - L1 se probó sin beneficio claro.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 20 · Función de aptitud
 
@@ -217,7 +247,7 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 - Descartar sube f solo mientras la exactitud no caiga. Sin genes informativos, la exactitud baja al azar (≈0,55 en Leukemia) y f ≈ 0,78; con 5 genes con señal y 0,95 de exactitud, f ≈ 0,97.
 - Con α = 0,5 el óptimo es "lo mínimo que todavía clasifica bien". Con α mucho menor colapsaría a cero; con α mucho mayor no reduciría.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 21 · Diseño experimental
 
@@ -225,20 +255,29 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 - Valores p con las corridas como n: corrige un test de la tesis, la conclusión no cambia.
 - Decirlo antes de que lo pregunten.
 
-------------------------------------------------------------------------
+**Qué se mide exactamente**
+
+- Por individuo: MLP pequeño (5 y 3 neuronas, tanh) entrenado con las variables activas sobre la partición de entrenamiento (originales, o originales + sintéticas); exactitud sobre la partición original de testeo; f = 0,5 · exactitud + 0,5 · (1 − k/n).
+- La unidad de análisis es la corrida completa del AG; su valor es la exactitud media de la población final, medida en la partición original de testeo. Se comparan las distribuciones de esas corridas entre los dos grupos.
+
+-------------------------------------------
 
 ## 22 · Flujo en tres etapas
 
 - Nació del fracaso de la primera etapa de GCM.
 - Si no aprende 16.063 variables con 133 muestras, que aprenda 1.600.
+- Lectura del diagrama: es el de la 21; lo nuevo es el recuadro verde, que entra entre los datos originales y el AVC. Señalarlo: "entre el paso 1 y el 2 intervino una selección". No es una corrida nueva del AG: se consolidaron los experimentos previos (590 cromosomas en GCM) y se tomaron las características más frecuentes. Etapas: selección previa (verde), generación (AVC), selección final (AG).
+- línea de investigación malograda por 'filtracion de datos'.
 
-------------------------------------------------------------------------
+
+
+-------------------------------------------
 
 ## 23 · Organización
 
 - "Resultados: calidad de los sintéticos, resultados globales, después cada conjunto."
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 24 · MLP con sintéticos
 
@@ -247,7 +286,7 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 - Protocolo de Fajardo et al. 2021 (tesis, cap. 3): un MLP entrenado solo con sintéticos y otro solo con reales, ambos evaluados en la misma partición original de testeo. Si rinden parecido, el generador capturó la estructura de los datos. Fajardo lo usó para AV condicionales sobre MNIST desbalanceado.
 - Leukemia 0,95 contra 0,81 no es "lo sintético es mejor": el MLP con reales tiene 11 AML; con sintéticos ve cientos y el recall de AML sube de 0,56 a 0,89. Efecto de cantidad y balance; el testeo (34 originales) nunca lo vio el AV.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 25 · Umbral de muestras
 
@@ -258,7 +297,7 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 - Respuesta a "¿cómo eligieron la cantidad?": barrido por conjunto, criterio de balance, umbral medido. No hay regla general entre conjuntos: eso sí es limitación.
 - Pendiente: la tesis dice 1.000 sintéticos en ALL Leukemia; `exp_53` tiene 3.000. Confirmar cuál se usó en el AG.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 26 · Resultados globales
 
@@ -269,7 +308,7 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 > **Dr. Quiroga (d): analizar primero los resultados de forma global.**
 > Incorporado en el orden de la exposición: una tabla con los cinco conjuntos, después el gráfico de diferencias con intervalos de confianza, después la regla que resume todo, y recién entonces los dos casos que la explican, Madelon y GCM.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 27 · Intervalos de confianza
 
@@ -277,7 +316,7 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 - Leukemia y Gisette: intervalos mínimos, nada que mejorar.
 - ALL y GCM anchos: pocas corridas; test de 57 muestras, 1,75 pp por muestra.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 28 · Escala común
 
@@ -287,7 +326,7 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 > **Dr. Quiroga (c): unificar las escalas de los gráficos de exactitud.**
 > Tiene razón: la Figura 4.16 usaba un eje distinto por panel y agrandaba diferencias no significativas. Para la defensa, dos gráficos: eje común de 0,4 a 1,0 (esta diapositiva) y diferencia en puntos porcentuales con IC 95% (la anterior). Si señalan "Precisión" en los ejes de la tesis: error de rótulo, la métrica es exactitud.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 29 · Madelon
 
@@ -295,21 +334,21 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 - 2.000 sintéticos, 30 generaciones.
 - Capítulo 2 reporta AUC en otra partición: referencia de orden, no comparación directa.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 30 · Interpretación de Madelon
 
 - Latente de 25: no puede memorizar 480 variables de ruido, las deja cerca de la media.
 - Conserva las 20 informativas: al AG le llega más señal.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 31 · GCM primera etapa
 
 - No mejoró: 0,538 a 0,512, dispersión similar.
 - Cromosomas de 20% y 30% daban 0,2 a 0,35; por eso 10%.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 32 · Diagnóstico
 
@@ -317,7 +356,7 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 - Colapso de la posterior: la KL domina.
 - Dos salidas: reponderar la KL (futuro) o reducir antes de generar (elegida).
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 33 · GCM segunda etapa
 
@@ -325,7 +364,7 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 - 0,497 a 0,541, p = 0,005. Mejora de exactitud, no de reducción.
 - Dispersión sube (0,033 contra 0,022): pocas corridas, test de 57. Con 6.000 muestras se degradó.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 34 · Reducción del cromosoma
 
@@ -333,7 +372,7 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 - Media con aumentación arriba en los cuatro tamaños; solo ~450 significativo, 5 contra 5.
 - Tendencia, no confirmación.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 35 · ALL Leukemia
 
@@ -344,14 +383,14 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 > **Dra. Chan (f), aplicada a ALL Leukemia.**
 > La tesis dice que la combinación "incrementa la precisión de manera consistente"; los datos dan +1,7 y +0,9 puntos con p mayor a 0,4, y con 300 genes los originales fueron mejores. Decir: "no se observaron diferencias significativas; la tendencia favorable en 35 y 180 genes no alcanza significación".
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 36 · Conjuntos saturados
 
 - Leukemia: 80.742 pares de genes con correlación mayor a 0,7; cualquier 10% clasifica.
 - Gisette: subconjunto algo más chico y más estable.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 37 · Evaluación por criterio
 
@@ -361,27 +400,27 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 > **Dra. Chan (e), balance por conjunto.**
 > Leukemia: sin diferencia, igual reducción, mejora estabilidad. Gisette: sin diferencia, menos variables, estabilidad leve. Madelon: mejora en los tres. GCM: mejora exactitud, igual reducción, empeora estabilidad. ALL Leukemia: sin diferencia, igual reducción, estabilidad leve. La distinción favorece: permite decir qué mejoró en cada caso en vez de un "mejora" genérico.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 38 · Síntesis
 
 - La regla en tres líneas es lo que el jurado va a recordar.
 - La tercera, el flujo en tres etapas, es el aporte propio.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 39 · Organización
 
 - "Conclusiones, limitaciones y trabajos futuros."
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 40 · Conclusiones
 
 - En orden de solidez; la cuarta es el aporte metodológico.
 - De palabra: existe un umbral de sintéticos; arquitecturas simples rinden igual o mejor.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 41 · Limitaciones
 
@@ -392,21 +431,21 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 > **Dra. Chan (f): limitaciones de generalización y conclusiones moderadas.**
 > Con evidencia significativa se sostienen dos conclusiones: Madelon y GCM segunda etapa. En los otros tres solo menor dispersión y, en Gisette y Madelon, subconjuntos más compactos. Cinco limitaciones: cinco conjuntos, dos artificiales; pocas corridas y testeos chicos en GCM y ALL; el efecto depende de la calidad del AV (GCM primera etapa empeoró); umbral de muestras sintéticas (6.000 en GCM degradó); un solo clasificador en la aptitud e hiperparámetros ajustados por conjunto. Los porcentajes relativos de la tesis (10,4% y 8,85%) se dan junto a los puntos porcentuales (7,8 y 4,4).
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 42 · Trabajos futuros
 
 - Si hay que elegir uno: KL recocida contra el colapso de la posterior, podría evitar las tres etapas.
 - El cuarto viene de la sugerencia del Dr. Quiroga.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## 43 · Cierre
 
 - Agradecer.
 - Respaldo disponible: estado del arte, SMOTE, test de GCM, línea base, por clase.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## R1 · Estado del arte
 
@@ -416,21 +455,21 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 > **Dr. Quiroga (a), frente a la literatura externa.**
 > GCM: Ramaswamy 78% con SVM sobre los 16.063 genes; nuestro 54% usa 450 a 780 genes y una aptitud que penaliza variables con peso 0,5. Madelon: los ganadores de NIPS 2003 rondan 93% de exactitud balanceada; nuestro 83% con 29 variables supera a 16 de los 18 clásicos del capítulo 2 (cifra de NIPS pendiente de verificar en Guyon 2004). Leukemia: Golub con 50 genes; nosotros 30 a 65 en el mismo rango. Si insisten en el capítulo 2: mostrar R4 y aclarar que métricas y particiones difieren; no convertir AUC en exactitud.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## R2 · SMOTE
 
 - No se corrió; se reconoce.
 - Blagus y Lusa es justamente el escenario de los tres conjuntos genómicos.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## R3 · Test en GCM
 
 - El script de la tesis usó como n las observaciones.
 - Con corridas: Welch 0,005 y Mann-Whitney 0,005; toda la etapa 0,008 y 0,011.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## R4 · Línea base completa
 
@@ -440,14 +479,14 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 > **Gambini (i), si piden un modelo concreto.**
 > Para cada familia se citan los supuestos centrales y la referencia general (Hastie, Tibshirani y Friedman, 2009). Lo que importa poder explicar: por qué algunos modelos no se evaluaron en GCM y Gisette.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## R5 · Por clase
 
 - Con sintéticos varias clases llegan a precisión 1,00 pero cae el recall: modelo más conservador.
 - Clases 7 y 3 empeoran; la 12 duplica su F1.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## R6 · Antecedentes: AV para aumentación y AV con AG
 
@@ -456,7 +495,7 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 - Martins 2022: AV + AG, pero para diseño de proteínas; el más cercano.
 - Ninguno combina AV y AG para selección de características: ese es el aporte.
 
-------------------------------------------------------------------------
+-------------------------------------------
 
 ## R7 · Origen de la pérdida: el límite inferior de evidencia (ELBO)
 
@@ -469,4 +508,14 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 
 > **Gambini (g): la factorización p(x,z) = p(x|z) p(z) no es la regla de Bayes.**
 > Corregido: ahora se presenta como regla del producto, de la que se deriva la regla de Bayes. No discutirlo.
+
+## R8 · Espacio latente del AV: malla sobre MNIST
+
+- Solo si preguntan por la estructura del latente o por qué el AV sí genera. Leer con la 10 (hueco) y la 11 (recorrido recto).
+- Malla 15 × 15, z₁ y z₂ entre −2,5 y 2,5, mismo AV mínimo de la 11. Regiones contiguas por dígito, transiciones graduales, sin huecos.
+- Por qué: la KL mantiene las codificaciones cerca de N(0, I); el decodificador se entrena sobre todo el rango que después se muestrea.
+- Borrosidad: dos dimensiones latentes son pocas; se eligieron para poder dibujar. En la tesis, latentes de 18 a 108.
+- Misma figura que Kingma y Welling para MNIST.
+
+-------------------------------------------
 
