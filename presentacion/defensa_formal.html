@@ -1217,20 +1217,31 @@
 <section class="slide" data-n="32" data-sec="4">
 <nav class="secbar"><span>1. Introducción</span><span>2. Marco teórico</span><span>3. Materiales y métodos</span><span class="on">4. Resultados</span><span>5. Conclusiones y trabajos futuros</span></nav>
 <div class="content"><h2>Diagnóstico: el clasificador ajusta por completo la distribución sintética, pero no generaliza a la distribución real</h2>
-  <div class="spacer"></div>
-  <div class="kv" style="justify-content:center; gap:160px">
-    <div><span class="k">100%</span><span class="v">exactitud en la partición<br>sintética de testeo</span></div>
-    <div><span class="k" style="color:var(--grey)">50%</span><span class="v">exactitud en la partición<br>real de testeo</span></div>
+  <div class="row" style="gap:50px">
+    <div style="flex:0 0 800px">
+      <svg width="800" height="150" viewBox="0 0 800 150" style="display:block" role="img" aria-label="Un mismo MLP entrenado con muestras sintéticas se evalúa en dos particiones: la sintética y la real">
+        <rect x="110" y="6" width="580" height="64" rx="4" fill="#E6EEF5" stroke="#1F4E79" stroke-width="2"/>
+        <text x="400" y="34" text-anchor="middle" font-size="24" fill="#1F4E79">Un mismo MLP</text>
+        <text x="400" y="60" text-anchor="middle" font-size="20" fill="#6B6B6B">entrenado con el 70 % de las muestras sintéticas</text>
+        <line x1="320" y1="72" x2="210" y2="142" stroke="#1F4E79" stroke-width="2.5" marker-end="url(#ahb)"/>
+        <line x1="480" y1="72" x2="590" y2="142" stroke="#6B6B6B" stroke-width="2.5" marker-end="url(#ah)"/>
+      </svg>
+      <div class="kv" style="justify-content:center; gap:90px">
+        <div><span class="k">100%</span><span class="v">exactitud en la partición<br>sintética de testeo (30 %)</span></div>
+        <div><span class="k" style="color:var(--grey)">50%</span><span class="v">exactitud en la partición<br>real de testeo</span></div>
+      </div>
+    </div>
+    <div style="flex:1 1 0; font-size:27px; line-height:1.4">
+      <p>El MLP aprende por completo la distribución sintética, que es internamente consistente, pero esa distribución no es la real; por eso el conocimiento no se transfiere.</p>
+    </div>
   </div>
-  <p class="muted small" style="text-align:center; margin-top:18px">MLP entrenado con 3.000 muestras sintéticas. Tabla 4.4 de la tesis.</p>
-  <div class="spacer"></div>
   <div class="line">
-    <p>La distribución sintética es internamente consistente y de menor complejidad que la real: permite igualar al MLP entrenado con datos reales, no superarlo ni guiar mejor al AG.</p>
+    <p>La distribución sintética es de menor complejidad que la real: permite igualar al MLP entrenado con datos reales, no superarlo ni guiar mejor al AG.</p>
     <p><b>Explicación plausible:</b> colapso de la distribución posterior. La divergencia KL domina la pérdida y la reconstrucción deja de representar los datos reales.</p>
   </div>
 </div>
 <footer><span>C. S. Castillo · Defensa de tesis · Maestría en Minería de Datos, UTN FRP</span><span class="num">32 / 43</span></footer>
-<aside class="notes"><p>Conectar con la diapositiva 24: allí el MLP con sintéticos igualaba al MLP con reales en GCM (0,54 contra 0,54), y acá se ve por qué no lo supera. El modelo aprende los sintéticos a la perfección, pero en los reales queda en el mismo nivel que sin aumentación. La primera etapa del AG había usado 1.400 sintéticos; el diagnóstico se hizo con 3.000 y da el mismo cuadro. La explicación plausible es el colapso de la posterior, que en el marco teórico quedó plantado: la KL domina en un problema con relaciones complejas. Dos salidas: reponderar la KL contra la reconstrucción, o reducir el problema antes de generar. Se tomó la segunda; la primera queda como trabajo futuro.</p></aside>
+<aside class="notes"><p>Protocolo: el conjunto sintético de la primera etapa (1.400, 100 por clase) se divide 70/30; un MLP (500, 200, 100) se entrena con el 70 % y se evalúa sobre el 30 % sintético (100 %) y, sin reentrenar, sobre la partición real de testeo (0,50). Son dos evaluaciones de un solo modelo. La Tabla 4.4 tiene soporte 420 = 30 % de 1.400. Conectar con la diapositiva 24: allí el MLP con sintéticos igualaba al MLP con reales en GCM (0,54 contra 0,54), y acá se ve por qué no lo supera. El modelo aprende los sintéticos a la perfección, pero en los reales queda en el mismo nivel que sin aumentación. El 100 % no es sobreajuste clásico (el 30 % sintético no se usó para entrenar): la distribución sintética es más simple y más separable que la real. La explicación plausible es el colapso de la posterior, que en el marco teórico quedó plantado: la KL domina en un problema con relaciones complejas. Dos salidas: reponderar la KL contra la reconstrucción, o reducir el problema antes de generar. Se tomó la segunda; la primera queda como trabajo futuro.</p></aside>
 </section>
 
 <section class="slide" data-n="33" data-sec="4">

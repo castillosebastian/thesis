@@ -323,6 +323,12 @@ racterísticas relevantes y descartar aquellas irrelevantes o redundantes, con e
 - Pedida por el jurado: Leukemia y Gisette se superponen por completo.
 - Regla con dos condiciones: margen de mejora y reconstrucción adecuada.
 
+**Qué es "exactitud" en el eje**
+
+- Cada punto es una corrida completa del AG; su valor es `pob_accuracy_avg`: la exactitud media de la población final, medida en la partición original de testeo. 
+- Es la media de la población final, no la del mejor individuo. 
+- En GCM y ALL Leukemia es exactitud balanceada (media de la sensibilidad por clase); en los binarios, exactitud simple. 
+
 > **Dr. Quiroga (c): unificar las escalas de los gráficos de exactitud.**
 > Tiene razón: la Figura 4.16 usaba un eje distinto por panel y agrandaba diferencias no significativas. Para la defensa, dos gráficos: eje común de 0,4 a 1,0 (esta diapositiva) y diferencia en puntos porcentuales con IC 95% (la anterior). Si señalan "Precisión" en los ejes de la tesis: error de rótulo, la métrica es exactitud.
 
@@ -353,6 +359,8 @@ racterísticas relevantes y descartar aquellas irrelevantes o redundantes, con e
 ## 32 · Diagnóstico
 
 - Ajusta los sintéticos a la perfección; en reales queda igual que sin aumentación.
+- Protocolo: sintéticos de la primera etapa (1.400, 100 por clase) divididos 70/30; MLP entrenado con el 70 %; evaluado en el 30 % sintético (100 %) y, sin reentrenar, en la partición real de testeo (0,50). Un solo modelo, dos evaluaciones: "no se reentrenó nada; el modelo que acierta el 100 % de los sintéticos acierta el 50 % de los reales". Tabla 4.4: soporte 420 = 30 % de 1.400.
+- El 100 % no es sobreajuste clásico (el 30 % sintético no se usó para entrenar): la distribución sintética es más simple y separable que la real.
 - Colapso de la posterior: la KL domina.
 - Dos salidas: reponderar la KL (futuro) o reducir antes de generar (elegida).
 
