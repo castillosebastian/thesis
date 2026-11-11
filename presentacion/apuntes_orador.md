@@ -114,8 +114,9 @@ degradación mínima del rendimiento.
 
 ## 12 · AV condicional
 
-- Para GCM y ALL Leukemia: 14 clases desbalanceadas.
-- Pesos de clase: el error de reconstrucción de cada observación se multiplica por w_c ∝ 1/n_c (30 vs 10 observaciones: la chica pesa el triple). Evita que las clases numerosas dominen la pérdida.
+- Para GCM (14 clases) y ALL Leukemia (7), desbalanceados.
+- Muestreo ponderado: cada lote se arma con probabilidad ∝ 1/n_c; las clases chicas entran más veces y su error pesa más. Es el que balancea la pérdida.
+- Pesos de clase, w_c ∝ 1/n_c: factor sobre el término de reconstrucción. No decir "cada observación se pondera dentro del MSE".
 - Pesos de clase y muestreo ponderado: solo funcionan combinados.
 - Permite generar cantidades iguales por clase.
 
@@ -167,6 +168,13 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 - Madelon: 5 relevantes, 15 combinaciones, 480 aleatorias. Gisette: dígitos 4 y 9.
 - Particiones originales respetadas en todos los experimentos.
 
+**Clases por conjunto (contadas en los ARFF de `ealab/data`)**
+
+- Leukemia: leucemia aguda: linfoblástica vs mieloide . 
+- ALL Leukemia : 7 subtipos (no 14)  
+- GCM: 14 tipos de tumor: leucemia 24, linfoma 16, sistema nervioso central 16, los otros 11 con 8 cada uno (mama, próstata, pulmón, colorrectal, vejiga, melanoma, útero, riñón, páncreas, ovario, mesotelioma). Testeo 46: entre 2 y 6 por clase.
+- Gisette: dígitos 4 y 9.
+
 ------------------------------------------------------------------------
 
 ## 18 · Línea base
@@ -189,6 +197,13 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 - MSE más KL; Adam; parada temprana con paciencia 10.
 - Dropout y L1 se probaron y no aportaron.
 
+**Si preguntan por qué MSE**
+
+- Reconstrucción = suma de errores cuadráticos sobre observaciones y variables (distancia euclídea al cuadrado en ℝⁿ), en la misma escala que KL, como en el ELBO. Sin β.
+- MSE = término de reconstrucción del ELBO cuando p(x|z) se asume normal; entropía cruzada sería para datos binarios (Bernoulli). Los datos son continuos y estandarizados: normal, y por eso MSE.
+- Desbalance, dos mecanismos: muestreo ponderado por clase en cada lote (es el que efectivamente balancea la contribución de cada clase a la pérdida) y un factor de peso de clase sobre el término de reconstrucción. Validados juntos; la combinación dio la mejor reconstrucción de las clases minoritarias.
+- L1 se probó sin beneficio claro.
+
 ------------------------------------------------------------------------
 
 ## 20 · Función de aptitud
@@ -196,6 +211,11 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 - Mitad exactitud, mitad reducción: sacrifica exactitud por diseño.
 - Ejemplo: 100% con todas las variables da 0,5; 80% con el 20% da 0,8.
 - Genes activos al inicio: 10% en general, hasta 0,3% en GCM y ALL.
+
+**Si preguntan por qué no colapsa a cero variables**
+
+- Descartar sube f solo mientras la exactitud no caiga. Sin genes informativos, la exactitud baja al azar (≈0,55 en Leukemia) y f ≈ 0,78; con 5 genes con señal y 0,95 de exactitud, f ≈ 0,97.
+- Con α = 0,5 el óptimo es "lo mínimo que todavía clasifica bien". Con α mucho menor colapsaría a cero; con α mucho mayor no reduciría.
 
 ------------------------------------------------------------------------
 
@@ -224,6 +244,8 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 
 - Leukemia 0,95 contra 0,81. Madelon 0,57 contra 0,55. GCM 0,54 en ambos. Gisette 0,95 contra 0,97.
 - Es la condición previa, no el resultado de la tesis.
+- Protocolo de Fajardo et al. 2021 (tesis, cap. 3): un MLP entrenado solo con sintéticos y otro solo con reales, ambos evaluados en la misma partición original de testeo. Si rinden parecido, el generador capturó la estructura de los datos. Fajardo lo usó para AV condicionales sobre MNIST desbalanceado.
+- Leukemia 0,95 contra 0,81 no es "lo sintético es mejor": el MLP con reales tiene 11 AML; con sintéticos ve cientos y el recall de AML sube de 0,56 a 0,89. Efecto de cantidad y balance; el testeo (34 originales) nunca lo vio el AV.
 
 ------------------------------------------------------------------------
 
@@ -231,7 +253,10 @@ Los AG son una clase de algoritmo inspirado en la evolución biológica y en la 
 
 - Pasado el umbral, los sintéticos sobreajustan al generador.
 - Latente compacto generalizó mejor (Ai 2023, contra Boom 2021).
-- Se calibra por problema: limitación.
+- Cantidad de sintéticos: barrido por conjunto (`ealab/exp`). Leukemia 100–300 (sobre 38 de entrenamiento); Madelon 2.000 y Gisette 6.000 (igual al entrenamiento); GCM 190, 200, 400, 1.400, 3.000, 6.000 (el más sistemático); ALL Leukemia 3.000.
+- Criterio: igualar las clases, como Fajardo; en multiclase ~200 por clase (GCM 3.000/14 = 214). Pasado el umbral (6.000 en GCM) la exactitud cae.
+- Respuesta a "¿cómo eligieron la cantidad?": barrido por conjunto, criterio de balance, umbral medido. No hay regla general entre conjuntos: eso sí es limitación.
+- Pendiente: la tesis dice 1.000 sintéticos en ALL Leukemia; `exp_53` tiene 3.000. Confirmar cuál se usó en el AG.
 
 ------------------------------------------------------------------------
 

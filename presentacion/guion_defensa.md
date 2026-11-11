@@ -129,7 +129,7 @@ Debajo, la hipótesis en una línea: *aumentar sintéticamente las muestras perm
 
 **Visible.** **(nuevo SVG)** Esquema del AVC: [x, y] entra al codificador; [z, y] entra al decodificador. Tres ítems: etiqueta concatenada en ambas redes; pesos de clase inversos a la frecuencia en la reconstrucción (los errores en las clases minoritarias pesan más); muestreo ponderado en cada mini-lote (las clases minoritarias entran con mayor probabilidad).
 
-**Notas.** Para GCM y ALL Leukemia, con 14 clases desbalanceadas. Sin condicionamiento, el generador favorece las clases mayoritarias. Pesos de clase: en la pérdida de reconstrucción cada observación pesa según su clase, con w_c proporcional a 1/n_c; con 30 y 10 observaciones, un error en la clase chica cuenta tres veces más. Sin esto la pérdida la dominan las clases numerosas y el AVC reconstruye mal justo las que después hay que generar. Los pesos de clase y el muestreo ponderado se validaron juntos: separados o solos no dieron el mejor resultado, combinados sí. Esto permite generar cantidades iguales por clase, que es lo que se hace en la segunda etapa de GCM.
+**Notas.** Para GCM, con 14 clases desbalanceadas, y ALL Leukemia, con 7 (la tesis dice 14 por una errata; el archivo y el experimento usan 7). Sin condicionamiento, el generador favorece las clases mayoritarias: la pérdida la dominan las clases numerosas y el AVC reconstruye mal justo las que después hay que generar. Dos mecanismos contra el desbalance. El muestreo ponderado arma cada lote con probabilidad proporcional a 1/n_c, así las observaciones de las clases chicas entran más veces y su error pesa más en la suma; es el que efectivamente balancea la contribución de cada clase a la pérdida. Los pesos de clase, w_c proporcional a 1/n_c, entran como factor sobre el término de reconstrucción. Se validaron juntos: separados o solos no dieron el mejor resultado, combinados sí. No decir "cada observación se pondera por su clase dentro del MSE": el código no lo hace así (ver apuntes 19). Esto permite generar cantidades iguales por clase, que es lo que se hace en la segunda etapa de GCM.
 
 ### 13. Algoritmos genéticos
 
@@ -171,7 +171,7 @@ Una línea al pie: *los tres criterios no varían conjuntamente; se reportan por
 | Gisette | Dígitos manuscritos; 4 frente a 9 | 13.500 × 5.000 | 2, balanceado | ruido y redundancia, espacio grande |
 | Madelon | Artificial; XOR en 5 dimensiones | 2.000 × 500 | 2, balanceado | 20 variables con señal, 480 de ruido |
 | GCM | Expresión génica; 14 tipos de tumor | 190 × 16.063 | 14, desbalanceado | n ≫ m, multiclase, desbalance |
-| ALL Leukemia | Expresión génica; LLA pediátrica | 327 × 12.600 | 14, desbalanceado | n ≫ m, multiclase; validación |
+| ALL Leukemia | Expresión génica; LLA pediátrica | 327 × 12.600 | 7, desbalanceado | n ≫ m, multiclase; validación |
 
 Pie en una sola línea: referencias (Golub 1999, Ramaswamy 2001, Yeoh 2002; Gisette y Madelon, NIPS 2003) y, en negrita, "En todos los experimentos se respetan las particiones originales de entrenamiento y testeo".
 

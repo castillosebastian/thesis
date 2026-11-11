@@ -662,7 +662,7 @@
   </div>
 </div>
 <footer><span>C. S. Castillo · Defensa de tesis · Maestría en Minería de Datos, UTN FRP</span><span class="num">12 / 43</span></footer>
-<aside class="notes"><p>Para GCM y ALL Leukemia, con 14 clases desbalanceadas. Sin condicionamiento, el generador favorece las clases mayoritarias. Pesos de clase: en la pérdida de reconstrucción cada observación pesa según su clase, con w_c proporcional a 1/n_c; con 30 y 10 observaciones, un error en la clase chica cuenta tres veces más. Sin esto la pérdida la dominan las clases numerosas y el AVC reconstruye mal justo las que después hay que generar. Los pesos de clase y el muestreo ponderado se validaron juntos: separados o solos no dieron el mejor resultado, combinados sí. Esto permite generar cantidades iguales por clase, que es lo que se hace en la segunda etapa de GCM.</p></aside>
+<aside class="notes"><p>Para GCM, con 14 clases desbalanceadas, y ALL Leukemia, con 7 (la tesis dice 14 por una errata; el archivo y el experimento usan 7). Sin condicionamiento, el generador favorece las clases mayoritarias: la pérdida la dominan las clases numerosas y el AVC reconstruye mal justo las que después hay que generar. Dos mecanismos contra el desbalance. El muestreo ponderado arma cada lote con probabilidad proporcional a 1/n_c, así las observaciones de las clases chicas entran más veces y su error pesa más en la suma; es el que efectivamente balancea la contribución de cada clase a la pérdida. Los pesos de clase, w_c proporcional a 1/n_c, entran como factor sobre el término de reconstrucción. Se validaron juntos: separados o solos no dieron el mejor resultado, combinados sí. No decir "cada observación se pondera por su clase dentro del MSE": el código no lo hace así (ver apuntes 19). Esto permite generar cantidades iguales por clase, que es lo que se hace en la segunda etapa de GCM.</p></aside>
 </section>
 
 <section class="slide" data-n="13" data-sec="2">
@@ -835,7 +835,7 @@
     <tr><td>Gisette</td><td>Dígitos manuscritos; 4 frente a 9</td><td class="n">13.500 × 5.000</td><td style="white-space:nowrap">2, balanceado</td><td>Ruido y redundancia en un espacio de búsqueda grande</td></tr>
     <tr><td>Madelon</td><td>Artificial; XOR en 5 dimensiones</td><td class="n">2.000 × 500</td><td style="white-space:nowrap">2, balanceado</td><td>20 variables con señal y 480 de ruido</td></tr>
     <tr><td>GCM</td><td>Expresión génica; 14 tipos de tumor</td><td class="n">190 × 16.063</td><td style="white-space:nowrap">14, desbalanceado</td><td>Más variables que observaciones; multiclase con desbalance</td></tr>
-    <tr><td style="white-space:nowrap">ALL Leukemia</td><td>Expresión génica; LLA pediátrica</td><td class="n">327 × 12.600</td><td style="white-space:nowrap">14, desbalanceado</td><td>Más variables que observaciones; multiclase. Validación del flujo</td></tr>
+    <tr><td style="white-space:nowrap">ALL Leukemia</td><td>Expresión génica; LLA pediátrica</td><td class="n">327 × 12.600</td><td style="white-space:nowrap">7, desbalanceado</td><td>Más variables que observaciones; multiclase. Validación del flujo</td></tr>
   </table>
   <div class="spacer"></div>
   <div class="line">
