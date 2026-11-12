@@ -43,7 +43,7 @@ Borrador del 4 de noviembre de 2026, para revisar antes de construir las diaposi
 
 **Visible.** Lista numerada de las cinco secciones, con subtemas en una línea cada una:
 1. Introducción: motivación, selección de características, estado del arte, propuesta y objetivos.
-2. Marco teórico: autocodificadores variacionales, algoritmos genéticos, métricas.
+2. Marco teórico: autocodificadores variacionales, algoritmos genéticos, criterios de evaluación.
 3. Materiales y métodos: conjuntos de datos, línea base, modelos, diseño experimental.
 4. Resultados: calidad de los datos sintéticos, resultados globales, análisis por conjunto.
 5. Conclusiones y trabajos futuros.
@@ -86,7 +86,7 @@ Borrador del 4 de noviembre de 2026, para revisar antes de construir las diaposi
 
 **Visible.** Izquierda, árbol con la taxonomía del capítulo 1: Aumentación de datos → Muestreo (sobremuestreo aleatorio, que replica observaciones; SMOTE, que interpola entre vecinos cercanos) y Modelos generativos (GAN, autocodificador variacional, modelos de difusión marcados como no abordados). Derecha, tabla de tres filas, SMOTE / GAN / AV, con dos columnas: mecanismo en una frase y comportamiento con n ≫ m, con la cita que respalda cada celda (Blagus y Lusa 2013; Fajardo et al. 2021; Ai et al. 2023). Cierre: en las comparaciones directas el AV condicional fue el mejor generador frente a SMOTE y GAN; antecedentes en respaldo (R6).
 
-**Notas.** Tres técnicas, tres mecanismos. El submuestreo del capítulo 1 no está en el árbol porque elimina instancias de la clase mayoritaria: es un remedio para el desbalance, no una técnica de aumentación. SMOTE no es un modelo: crea un punto sobre el segmento entre una observación minoritaria y uno de sus vecinos; solo rebalancea, y en alta dimensión con pocas muestras las distancias se concentran y el vecino más cercano deja de significar algo (Blagus y Lusa: sin beneficio salvo selección previa; es el escenario de Leukemia, GCM y ALL). La GAN es un juego entre generador y discriminador: muestras nítidas, pero entrenamiento inestable, colapso de modos (fatal con 14 clases) y sin codificador, así que no hay paso codificar-decodificar. El AV es un modelo probabilístico explícito, estable, con latente continuo y codificador. Fajardo comparó los cuatro y el AV condicional ganó; Ai confirmó que los AV guiados superan a otros sobremuestreos. Si preguntan por modelos de difusión: son el estándar actual en imágenes, costosos, y sin antecedentes en datos tabulares con n ≫ m cuando se diseñó la tesis; quedan como trabajo futuro. Los AV se han aplicado a imágenes, texto, habla, música, datos tabulares, longitudinales y grafos (capítulo 1). Antecedentes detallados en R6; SMOTE en R2.
+**Notas.** Tres técnicas, tres mecanismos. El submuestreo del capítulo 1 no está en el árbol porque elimina instancias de la clase mayoritaria: es un remedio para el desbalance, no una técnica de aumentación. SMOTE no es un modelo: crea un punto sobre el segmento entre una observación minoritaria y uno de sus vecinos; solo rebalancea, y en alta dimensión con pocas muestras todas las distancias entre pares de observaciones resultan casi iguales (concentración de distancias), de modo que el vecino «más cercano» es casi arbitrario y, además, lo deciden las miles de variables ruidosas, no las pocas discriminantes; el punto interpolado no aporta información nueva sobre la clase (Blagus y Lusa: sin beneficio salvo selección previa de variables; es el escenario de Leukemia, GCM y ALL). La GAN es un juego entre generador y discriminador: muestras nítidas, pero entrenamiento inestable, colapso de modos (fatal con 14 clases) y sin codificador, así que no hay paso codificar-decodificar. El AV es un modelo probabilístico explícito, estable, con latente continuo y codificador. Fajardo comparó los cuatro y el AV condicional ganó; Ai confirmó que los AV guiados superan a otros sobremuestreos. Si preguntan por modelos de difusión: son el estándar actual en imágenes, costosos, y sin antecedentes en datos tabulares con n ≫ m cuando se diseñó la tesis; quedan como trabajo futuro. Los AV se han aplicado a imágenes, texto, habla, música, datos tabulares, longitudinales y grafos (capítulo 1). Antecedentes detallados en R6; SMOTE en R2.
 
 ### 7. Propuesta: generación de muestras sintéticas mediante AV y selección de características con AG sobre los datos aumentados
 
@@ -111,7 +111,7 @@ Tercer bloque, con el mismo formato que los dos anteriores, "Hipótesis": *aumen
 
 ### 9. Organización (sección 2 resaltada)
 
-**Notas.** Pasar en segundos: "Marco teórico: el autocodificador variacional, el algoritmo genético y las métricas."
+**Notas.** Pasar en segundos: "Marco teórico: el autocodificador variacional, el algoritmo genético y los criterios de evaluación."
 
 ### 10. Autocodificadores y el problema de la generación de datos
 
@@ -133,13 +133,13 @@ Tercer bloque, con el mismo formato que los dos anteriores, "Hipótesis": *aumen
 
 ### 13. Algoritmos genéticos
 
-**Visible.** Sobre el ciclo, una tira de bits rotulada "Individuo · solución candidata: un subconjunto de variables codificado como una cadena de bits": celdas x₁ … xₙ con los 1 resaltados en azul; leyenda "1: la variable forma parte del subconjunto · 0: queda fuera · n bits, uno por variable (7.129 en Leukemia)"; una flecha baja desde la tira al cuadro "Población inicial aleatoria" con el rótulo "× 100, generados al azar". Debajo, el ciclo de la Figura 4.1. Cuatro propiedades de Goldberg en una columna: opera sobre una codificación, evalúa una población, usa una función de aptitud sin derivadas, transiciones probabilísticas.
+**Visible.** Sobre el ciclo, una tira de bits rotulada "Individuo · solución candidata: un subconjunto de variables codificado como una cadena de bits": celdas x₁ … xₙ con los 1 resaltados en azul; leyenda "1: la variable forma parte del subconjunto · 0: queda fuera · n bits, uno por variable (7.129 en Leukemia)"; una flecha baja desde la tira al cuadro "Población inicial aleatoria" con el rótulo "× 100, generados al azar". Debajo, el ciclo de la Figura 4.1. Cuatro propiedades de Goldberg en una columna: opera sobre una codificación, evalúa una población, se guía solo por el valor de la aptitud (no necesita derivadas respecto de la solución), transiciones probabilísticas.
 
-**Notas.** Un individuo es una solución candidata al problema de selección, un subconjunto de variables; no es una observación. Las observaciones intervienen solo al evaluar la aptitud. Población inicial aleatoria, evaluación por aptitud, selección, cruce, mutación, hasta un criterio de terminación. Las cuatro propiedades explican por qué sirven donde otros métodos no: espacios discretos, no diferenciables, multimodales. La diversidad de la población es lo que evita la convergencia prematura.
+**Notas.** Un individuo es una solución candidata al problema de selección, un subconjunto de variables; no es una observación. Las observaciones intervienen solo al evaluar la aptitud. Población inicial aleatoria, evaluación por aptitud, selección, cruce, mutación, hasta un criterio de terminación. Las cuatro propiedades explican por qué sirven donde otros métodos no: espacios discretos, no diferenciables, multimodales. Sobre las derivadas: la que el AG no necesita es la de la aptitud respecto del cromosoma, que no existe porque el espacio es discreto; el MLP calcula gradientes respecto de sus pesos para producir el valor de aptitud, y eso es interno a la evaluación. El AG solo recibe el número. La diversidad de la población es lo que evita la convergencia prematura.
 
 ### 14. Codificación del cromosoma y operadores genéticos
 
-**Visible.** Figura `codificacion-decodificacion.png` (Figura 4.2, corregida): genotipo 1100101 → fenotipo [X1, X2, X5, X7]. Al lado, pequeños esquemas de cruce (`ag_cruce.png`) y mutación (`ag_mutacion.png`). Debajo, una franja "Selección: quién se reproduce" con las tres estrategias del capítulo 4 en columnas: ruleta (probabilidad proporcional a la aptitud; favorece a los más aptos y reduce la diversidad), torneo, marcada como la empleada en la tesis (se sortean k individuos y pasa el mejor; el tamaño del torneo regula la presión de selección) y ventana (grupos; el mejor de cada uno; preserva la diversidad).
+**Visible.** Figura `codificacion-decodificacion.png` (Figura 4.2, corregida): genotipo 1100101 → fenotipo [X1, X2, X5, X7]. Al lado, pequeños esquemas de cruce (`ag_cruce.png`) y mutación (`ag_mutacion.png`). Debajo, una franja "Selección: quién se reproduce" con las tres estrategias del capítulo 4 en columnas: ruleta (probabilidad proporcional a la aptitud; favorece a los más aptos y reduce la diversidad), torneo, marcada como la empleada en la tesis (se sortean k individuos y pasa el mejor; el tamaño del torneo regula la presión de selección: equilibra exploración y explotación) y ventana (grupos; el mejor de cada uno; preserva la diversidad).
 
 **Notas.** Codificación binaria de largo igual al número de variables: 7.129 bits en Leukemia, 16.063 en GCM. El fenotipo es el subconjunto que entrena al clasificador. Selección por torneo (torneos de 5 individuos en la implementación): equilibra explotación y exploración, porque el más apto gana su torneo pero cualquier individuo puede caer en un torneo flojo y pasar; la ruleta explota más rápido y pierde diversidad; la ventana explora más. Cruce de dos puntos y mutación por inversión de bits. La proporción de bits activos en la inicialización define el tamaño del subconjunto que explora el AG, y es un parámetro crítico que aparece en todos los experimentos.
 
@@ -204,7 +204,7 @@ Pie en una sola línea: referencias (Golub 1999, Ramaswamy 2001, Yeoh 2002; Gise
 
 La columna de entrada da la dimensión de partida y permite leer la compresión hasta el latente (Leukemia: 7.129 a 108, unas 66 veces; GCM: 16.063 a 35, unas 460 veces).
 
-**Notas.** Se partió de dos capas, se vio baja calidad de reconstrucción y se pasó a tres con normalización por lotes. Pérdida: MSE más KL; MSE balanceado por clase en multiclase. Optimizador Adam, parada temprana con paciencia de 10 épocas. Hiperparámetros por búsqueda en grilla y optimización bayesiana: capas 2 y 3 entre 50 y 5.000 neuronas, latente entre 10 y 300 (hasta 1.000 en AVC), tasa entre 10⁻⁵ y 10⁻². Normalización estándar de entrada. Dropout y pérdida L1 se probaron y no aportaron.
+**Notas.** Se partió de dos capas, se vio baja calidad de reconstrucción y se pasó a tres con normalización por lotes. Pérdida: error cuadrático (suma sobre variables y lote, `MSELoss` con `reduction="sum"`) más KL; en multiclase, error de reconstrucción balanceado por clase. Decir "error cuadrático", no "medio": el código suma, no promedia; si piden aclaración, darla. Optimizador Adam, parada temprana con paciencia de 10 épocas. Hiperparámetros por búsqueda en grilla y optimización bayesiana: capas 2 y 3 entre 50 y 5.000 neuronas, latente entre 10 y 300 (hasta 1.000 en AVC), tasa entre 10⁻⁵ y 10⁻². Normalización estándar de entrada. Dropout y pérdida L1 se probaron y no aportaron.
 
 ### 20. Función de aptitud del algoritmo genético
 
@@ -300,9 +300,9 @@ La columna de entrada da la dimensión de partida y permite leer la compresión 
 
 **Notas.** El panel derecho de la figura de la tesis no se proyecta: mezcla corridas de ~450 y ~750 genes en proporciones distintas por grupo y sugiere una reducción de variables que no existe; por eso el número de variables va como texto, comparado dentro de cada tamaño. Con el AVC entrenado en las 1.600 características más frecuentes, pesos de clase y muestreo ponderado, 3.000 muestras balanceadas, cromosomas de ~450 y ~750, 15 generaciones. La mejora es de exactitud, no de reducción de variables. La dispersión aumenta (desviación 0,033 contra 0,022 en estas 9 y 10 corridas), y lo digo antes de que lo pregunten: pocas corridas y un test de 57 muestras. Tomando toda la etapa, 18 contra 25 corridas, p = 0,008 y desviación 0,052 contra 0,036. Con 6.000 muestras el resultado se degradó, coherente con el umbral del capítulo 3.
 
-### 34. GCM con reducción progresiva del cromosoma: la exactitud se mantiene hasta ~45 genes y la media con aumentación es superior en los cuatro tamaños
+### 34. GCM con reducción progresiva del cromosoma: la exactitud se mantiene hasta ~45 genes y la aumentación tiende a quedar por encima, con significación solo en ~450
 
-**Visible.** Figura `boxplot_gcm_ngenes_accuracy.png` (Figura 4.12), redibujada con los mismos datos y rótulos limpios. Tabla mínima, medias de corridas (aum. / orig.):
+**Visible.** Figura `boxplot_gcm_ngenes_accuracy.png` (Figura 4.12), redibujada con los mismos datos y rótulos limpios; cada caja lleva además un rombo blanco con la media del grupo, para leerla junto a la mediana. Tabla mínima, medias de corridas (aum. / orig.):
 
 | Genes activos | Corridas | Exactitud orig. | Exactitud aum. | p |
 | --- | --- | --- | --- | --- |
@@ -311,11 +311,11 @@ La columna de entrada da la dimensión de partida y permite leer la compresión 
 | ~450 | 5 / 5 | 0,489 | 0,538 | 0,035 |
 | ~750 | 4 / 5 | 0,505 | 0,545 | 0,10 |
 
-**Notas.** Experimentos de validación interna con reducción agresiva. Pese a pasar de 16.063 a 45 genes la exactitud queda en un nivel aceptable. En media los aumentados quedan arriba en los cuatro grupos; en ~200 la mediana queda apenas por debajo, que es lo que muestra la figura y lo que dice la tesis. Solo ~450 alcanza significación por sí solo, con 5 y 5 corridas. Decirlo como tendencia, no como confirmación.
+**Notas.** Experimentos de validación interna con reducción agresiva. Pese a pasar de 16.063 a 45 genes la exactitud queda en un nivel aceptable. En media los aumentados quedan arriba en los cuatro grupos (rombos); en ~200 la mediana queda por debajo (0,479 contra 0,486) porque una sola corrida de 0,571 levanta la media y tres de las cinco quedan bajo la mediana del grupo sin aumentación; es lo que muestra la figura y lo que dice la tesis ("a excepción del grupo de ~200"). Por eso el título dice "tiende a quedar por encima" y no "superior en los cuatro tamaños". Solo ~450 alcanza significación por sí solo, con 5 y 5 corridas. Decirlo como tendencia, no como confirmación.
 
 ### 35. ALL Leukemia valida el flujo en un segundo problema multiclase: tendencia favorable, sin significación estadística
 
-**Visible.** Figura `boxplot_all_leukemia_ngenes_accuracy.png` (Figura 4.13). Tabla mínima: ~35 genes 0,608 → 0,625; ~180 0,654 → 0,663; ~300 0,754 → 0,735; ningún p menor a 0,4.
+**Visible.** Figura `boxplot_all_leukemia_ngenes_accuracy.png` (Figura 4.13), con rombos de media como en la 34. Tabla mínima: ~35 genes 0,608 → 0,625; ~180 0,654 → 0,663; ~300 0,754 → 0,735; ningún p menor a 0,4.
 
 **Notas.** Mismo flujo: AVC sobre un subespacio de 3 corridas, 1.000 sintéticas, 15 generaciones. Con 35 y 180 genes la aumentación queda por encima, con 300 por debajo, y ninguna diferencia es significativa con 5 a 8 corridas por grupo. Lo digo moderado, como pide la Dra. Chan: el flujo es viable en un segundo problema y la tendencia acompaña, pero no es una confirmación estadística. Sí hay menor dispersión con aumentación: desviación 0,056 contra 0,065. En 35 genes la mutación de 0,028 explica parte de la variabilidad.
 

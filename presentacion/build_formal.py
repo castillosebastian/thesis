@@ -30,7 +30,7 @@ GUION = HERE / "guion_defensa.md"
 
 SECCIONES = [
     ("Introducción", "motivación, selección de características, estado del arte, propuesta y objetivos"),
-    ("Marco teórico", "autocodificadores variacionales, algoritmos genéticos, métricas"),
+    ("Marco teórico", "autocodificadores variacionales, algoritmos genéticos, criterios de evaluación"),
     ("Materiales y métodos", "conjuntos de datos, línea base, modelos, diseño experimental"),
     ("Resultados", "calidad de los datos sintéticos, resultados globales, análisis por conjunto"),
     ("Conclusiones y trabajos futuros", "conclusiones, limitaciones, trabajos futuros"),

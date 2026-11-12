@@ -68,6 +68,8 @@ racterísticas relevantes y descartar aquellas irrelevantes o redundantes, con e
 
 - Por qué AV y no SMOTE: Blagus y Lusa (no aporta en alta dimensión), Fajardo (AVC mejor generador), Ai.
 - SMOTE solo rebalancea; acá también se aumentan problemas balanceados.
+- Qué significa «todas las distancias resultan casi iguales» (concentración de distancias): con pocas observaciones en miles de dimensiones, la distancia de una observación a su vecino más cercano y a su vecino más lejano casi no difieren; entonces «el más cercano» es casi arbitrario. Y como casi todas las variables son ruido, el vecino lo deciden las variables ruidosas, no las pocas discriminantes. SMOTE interpola entre dos puntos elegidos así: el sintético no aporta información nueva sobre la clase.
+- Decir: «SMOTE elige al vecino por distancia; con miles de variables y decenas de observaciones esa distancia ya no distingue vecinos cercanos de lejanos».
 - Respaldo R2 si preguntan.
 
 > **Dr. Quiroga (b): comparar con SMOTE y otros métodos de aumentación.**
@@ -96,13 +98,13 @@ racterísticas relevantes y descartar aquellas irrelevantes o redundantes, con e
 
 ## 9 · Organización
 
-- "Marco teórico: el autocodificador variacional, el algoritmo genético y las métricas."
+- "Marco teórico: el autocodificador variacional, el algoritmo genético y los criterios de evaluación."
 
 -------------------------------------------
 
 ## 10 · Autocodificador
 
-- Codificador y decodificador entrenados juntos por distancia euclídea.
+- Codificador y decodificador entrenados juntos minimizando el cuadrado de la distancia euclídea entre entrada y reconstrucción (suma de errores cuadráticos; no es la media, MSE, aunque PyTorch lo llame así).
 - Latente discontinuo: muestrear en regiones no usadas da salidas sin relación con los datos.
 - Por eso no sirve como generador.
 
@@ -119,6 +121,7 @@ racterísticas relevantes y descartar aquellas irrelevantes o redundantes, con e
 - Dos términos en tensión; dejar plantado: en GCM primera etapa la KL dominó.
 - KL = divergencia de Kullback-Leibler ("Kúlbac-Láibler"): ≥ 0, cero solo si las distribuciones coinciden, no simétrica (las barras ordenan: codificada respecto de N(0, I)). Para dos normales: ½ Σ (μ² + σ² − 1 − log σ²). La D de la fórmula es solo el decodificador.
 - Origen de la pérdida (negativo del ELBO): no mencionar; si preguntan, R7.
+- Si notan que θ y φ se intercambian respecto de la 10 (allí C_θ/D_φ; acá q_φ/D_θ): es la notación de la tesis, capítulo 3. El autocodificador clásico sigue C_θ/D_φ; el variacional adopta la de Kingma y Welling, q_φ codificador y p_θ decodificador, para coincidir con la literatura del ELBO.
 - Tira de dígitos: salida real de un AV chico (latente 2-D, 256 ocultas, 60 épocas, 5.000 MNIST) entrenado para la figura; doce puntos equiespaciados sobre una recta del latente. Contraste con la mancha de la 10.
 
 - AV = Kingma y Welling 2013
@@ -138,6 +141,7 @@ racterísticas relevantes y descartar aquellas irrelevantes o redundantes, con e
 ## 13 · Algoritmo genético
 
 - Individuo = solución candidata (subconjunto de variables en bits), no una observación.
+- Aptitud del individuo = > probabilidad de supervivencia y reproducción.
 - Población, aptitud, selección, cruce, mutación, hasta terminar.
 - Sirve en espacios discretos, no diferenciables, multimodales.
 - La diversidad evita la convergencia prematura.
@@ -222,7 +226,7 @@ racterísticas relevantes y descartar aquellas irrelevantes o redundantes, con e
 
 - De dos capas a tres con normalización por lotes.
 - Columna "Entrada (capa 1)": es la dimensión de las características, no una capa con pesos; sirve para leer la compresión hasta el latente (Leukemia 7.129 → 108, unas 66 veces; GCM 16.063 → 35, unas 460 veces; Gisette 5.000 → 18, unas 280 veces). "Tres capas" = capas ocultas, sin contar la entrada ni las cabezas de μ y log σ². En las ecuaciones del capítulo 3 la entrada es x y h₁ es la capa 2 de la tabla.
-- MSE más KL; Adam; parada temprana con paciencia 10.
+- Error cuadrático (suma, no media) más KL; Adam; parada temprana con paciencia 10. En la filmina dice "error cuadrático" a secas, a propósito.
 - Dropout y L1 se probaron y no aportaron.
 - Puente con la 11 (σ allá, log σ² acá): "El codificador "la media y el logaritmo de la varianza"
 
@@ -230,7 +234,7 @@ racterísticas relevantes y descartar aquellas irrelevantes o redundantes, con e
 
 - Qué mide: la diferencia entre cada observación y su reconstrucción, elevada al cuadrado y sumada sobre todas las variables y todas las observaciones. Es la distancia entre la entrada y la salida.
 - Por qué cuadrático y no otra cosa: la pérdida del AV tiene dos términos, reconstrucción y KL. El error cuadrático es el término de reconstrucción que corresponde a datos continuos (se asume que cada observación se distribuye normal alrededor de su reconstrucción). Si los datos fueran binarios, 0 o 1, el término sería entropía cruzada. Nuestros datos son continuos y estandarizados, por eso error cuadrático.
-- Por qué suma y no promedio: para que quede en la misma escala que la KL, que también es una suma; no hay un peso β entre ambos términos.
+- Por qué suma y no promedio: para que quede en la misma escala que la KL, que también es una suma; no hay un peso β entre ambos términos. "MSE" es el nombre que usa la tesis (y la función de PyTorch, `MSELoss`), configurada con `reduction="sum"`: error cuadrático sumado sobre variables y lote, que es el cuadrado de la distancia euclídea de la filmina 10. Con el promedio la reconstrucción pesaría miles de veces menos y la KL dominaría.
 - Desbalance, dos mecanismos: muestreo ponderado por clase en cada lote (es el que efectivamente balancea la contribución de cada clase a la pérdida) y un factor de peso de clase sobre el término de reconstrucción. Validados juntos; la combinación dio la mejor reconstrucción de las clases minoritarias.
 - L1 se probó sin beneficio claro.
 
@@ -377,7 +381,8 @@ racterísticas relevantes y descartar aquellas irrelevantes o redundantes, con e
 ## 34 · Reducción del cromosoma
 
 - De 16.063 a 45 genes, exactitud aceptable.
-- Media con aumentación arriba en los cuatro tamaños; solo ~450 significativo, 5 contra 5.
+- Media con aumentación (rombos) arriba en los cuatro tamaños; solo ~450 significativo, 5 contra 5.
+- En ~200 la mediana con aumentación queda por debajo (0,479 contra 0,486): una corrida de 0,571 levanta la media, tres de cinco quedan bajo la mediana del otro grupo. La tesis lo dice ("a excepción del grupo de ~200"). Si preguntan: "con cinco corridas por grupo, una sola decide el signo; p = 0,38; en ese tamaño no hay diferencia defendible".
 - Tendencia, no confirmación.
 
 -------------------------------------------

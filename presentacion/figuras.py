@@ -243,6 +243,9 @@ def por_tamano(pares, nombre, dec=2):
         c = i * 2.6
         caja(ax, vo, c, ORI, ancho=0.8, seed=i)
         caja(ax, va, c + 1, AUM, ancho=0.8, seed=i + 10)
+        # media de cada grupo: rombo blanco con borde de tinta, para leerla junto a la mediana
+        ax.scatter([c, c + 1], [vo.mean(), va.mean()], marker="D", s=52, facecolor=PAPER,
+                   edgecolor=INK, linewidth=1.4, zorder=5)
         ticks.append(c + 0.5); labels.append(rotulo)
         _, _, _, p = welch(va, vo)
         print(f"  {nombre} {rotulo}: n={len(va)}/{len(vo)} {vo.mean():.3f}->{va.mean():.3f} p={p:.3f}")
@@ -252,8 +255,10 @@ def por_tamano(pares, nombre, dec=2):
     ax.yaxis.set_major_locator(MultipleLocator(0.05))
     ax.yaxis.set_major_formatter(coma(dec))
     h = [plt.Rectangle((0, 0), 1, 1, facecolor=ORI, alpha=0.5, edgecolor=ORI),
-         plt.Rectangle((0, 0), 1, 1, facecolor=AUM, alpha=0.5, edgecolor=AUM)]
-    ax.legend(h, ["Sin aumentación", "Con aumentación"], loc="upper left", ncol=2,
+         plt.Rectangle((0, 0), 1, 1, facecolor=AUM, alpha=0.5, edgecolor=AUM),
+         plt.Line2D([], [], linestyle="none", marker="D", markersize=7, markerfacecolor=PAPER,
+                    markeredgecolor=INK, markeredgewidth=1.4)]
+    ax.legend(h, ["Sin aumentación", "Con aumentación", "Media"], loc="upper left", ncol=3,
               bbox_to_anchor=(0, 1.12))
     guardar(fig, nombre)
 

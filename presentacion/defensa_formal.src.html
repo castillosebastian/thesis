@@ -484,7 +484,7 @@
     </svg>
     <table class="sm" style="flex: 1 1 auto">
       <tr><th>Técnica</th><th>Mecanismo</th><th>Con <i>n</i> ≫ <i>m</i></th></tr>
-      <tr><td>SMOTE</td><td>Interpola entre vecinos cercanos de la clase minoritaria; solo rebalancea clases.</td><td>Las distancias pierden sentido; sin beneficio salvo selección previa de variables <span class="muted">(Blagus y Lusa, 2013)</span>.</td></tr>
+      <tr><td>SMOTE</td><td>Interpola entre vecinos cercanos de la clase minoritaria; solo rebalancea clases.</td><td>Todas las distancias resultan casi iguales y el vecino «más cercano» es casi arbitrario; sin beneficio salvo selección previa de variables <span class="muted">(Blagus y Lusa, 2013)</span>.</td></tr>
       <tr><td>GAN</td><td>Un generador aprende a engañar a un discriminador que separa muestras reales de sintéticas.</td><td>Entrenamiento inestable y colapso de modos con pocas muestras; sin codificador <span class="muted">(Fajardo et al., 2021)</span>.</td></tr>
       <tr class="hl"><td>AV</td><td>Codifica cada observación como una distribución latente y decodifica muestras de ella.</td><td>Entrenamiento estable; latente continuo; el paso codificar-decodificar atenúa el ruido <span class="muted">(Fajardo et al., 2021; Ai et al., 2023)</span>.</td></tr>
     </table>
@@ -742,7 +742,7 @@
       <ul>
         <li>Opera sobre una codificación de las soluciones.</li>
         <li>Evalúa una población, no un punto único.</li>
-        <li>Usa una función de aptitud, sin derivadas.</li>
+        <li>Se guía solo por el valor de la aptitud; no necesita derivadas respecto de la solución.</li>
         <li>Aplica reglas de transición probabilísticas.</li>
       </ul>
     </div>
@@ -779,11 +779,10 @@
   <h3 style="margin-top:36px">Selección: quién se reproduce</h3>
   <div class="sel">
     <div><b>Ruleta</b>Probabilidad de ser elegido proporcional a la aptitud. Favorece con fuerza a los más aptos; reduce la diversidad.</div>
-    <div class="usada"><b>Torneo <span>· empleada en la tesis</span></b>Se sortean <i>k</i> individuos al azar y pasa el mejor. El tamaño del torneo regula la presión de selección.</div>
+    <div class="usada"><b>Torneo <span>· empleada en la tesis</span></b>Se sortean <i>k</i> individuos al azar y pasa el mejor. El tamaño del torneo regula la presión de selección: equilibra exploración y explotación.</div>
     <div><b>Ventana</b>La población se divide en grupos y se toma el mejor de cada uno. Preserva la diversidad entre regiones del espacio de búsqueda.</div>
   </div>
   <div class="spacer"></div>
-  <div class="line">La longitud del cromosoma es igual al número de variables: 7.129 bits en Leukemia, 16.063 en GCM. La proporción de bits activos en la inicialización define el tamaño del subconjunto explorado.</div>
 </section>
 
 <section class="slide" data-n="15" data-sec="2">
@@ -834,7 +833,7 @@
   <div class="cards c3" style="margin-bottom:26px">
     <div class="card"><b>Codificador.</b> Tres capas lineales, cada una con normalización por lotes y ReLU.</div>
     <div class="card"><b>Espacio latente.</b> μ y log σ² mediante dos capas lineales independientes.</div>
-    <div class="card"><b>Decodificador.</b> Simétrico al codificador. Pérdida: error cuadrático medio + divergencia KL.</div>
+    <div class="card"><b>Decodificador.</b> Simétrico al codificador. Pérdida: error cuadrático + divergencia KL.</div>
   </div>
   <table class="sm">
     <tr><th>Conjunto</th><th>Modelo</th><th class="n">Entrada (capa 1)</th><th class="n">Neuronas en capas 2 y 3</th><th class="n">Dimensión latente</th><th class="n">Tasa de aprendizaje</th><th class="n">Épocas</th></tr>
