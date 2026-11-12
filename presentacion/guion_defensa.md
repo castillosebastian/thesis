@@ -380,12 +380,11 @@ La columna de entrada da la dimensión de partida y permite leer la compresión 
 ### 42. Trabajos futuros
 
 **Visible.** Cuatro ítems:
-1. Función de pérdida del AV: reponderar reconstrucción y KL, con un peso de la KL que crezca gradualmente durante el entrenamiento.
+1. Función de pérdida del AV: dar mayor peso a la reconstrucción frente a la KL, que dominó en GCM; por ejemplo, introduciendo la KL de forma gradual durante el entrenamiento.
 2. Integración AV-AG: selección dinámica en varias etapas y optimización conjunta de ambos modelos.
 3. Encadenamientos y ensambles de AV y AG para reducir varianza.
-4. Comparación con SMOTE y otros generadores dentro del mismo flujo con AG.
 
-**Notas.** Los tres primeros son los del capítulo 5. El cuarto se agrega por la sugerencia del Dr. Quiroga. Si hay que elegir uno, el primero: el colapso de la posterior en GCM sugiere que una pérdida con la KL de peso creciente (KL annealing, en la literatura) podría evitar el flujo en tres etapas.
+**Notas.** Son los tres del capítulo 5. La comparación con SMOTE y otros generadores en el mismo flujo (sugerencia del Dr. Quiroga) no va en la filmina; se menciona en voz alta como trabajo futuro inmediato si surge la pregunta (apuntes 6). Si hay que elegir uno, el primero: el colapso de la posterior en GCM sugiere que una pérdida que favorezca la reconstrucción (sección 5.2.1.1 de la tesis: reponderar a favor de la reconstrucción; KL annealing, que introduce la KL gradualmente para que al comienzo mande la reconstrucción) podría evitar el flujo en tres etapas.
 
 ---
 

@@ -448,8 +448,8 @@ racterísticas relevantes y descartar aquellas irrelevantes o redundantes, con e
 
 ## 42 · Trabajos futuros
 
-- Si hay que elegir uno: KL con peso creciente durante el entrenamiento (KL annealing) contra el colapso de la posterior; podría evitar las tres etapas. No decir "recocida".
-- El cuarto viene de la sugerencia del Dr. Quiroga.
+- Si hay que elegir uno: favorecer la reconstrucción frente a la KL, que dominó en GCM (tesis 5.2.1.1); el KL annealing introduce la KL de forma gradual, así al comienzo manda la reconstrucción. Contra el colapso de la posterior; podría evitar las tres etapas. No decir "recocida".
+- La comparación con SMOTE (sugerencia del Dr. Quiroga) ya no está en la filmina; si preguntan, decirla como trabajo futuro inmediato (respuesta en apuntes 6).
 
 -------------------------------------------
 
