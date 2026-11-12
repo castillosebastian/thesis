@@ -715,14 +715,12 @@
   <div class="line">
     <ul>
       <li>La etiqueta de clase se concatena a la entrada del codificador y a la del decodificador.</li>
-      <li>Pesos de clase inversos a la frecuencia en la reconstrucción: los errores en las clases minoritarias pesan más.</li>
       <li>Muestreo ponderado por clase en cada mini-lote: las clases minoritarias entran con mayor probabilidad.</li>
     </ul>
-    <p><b>Permite generar muestras por clase en problemas desbalanceados.</b></p>
   </div>
 </div>
 <footer><span>C. S. Castillo · Defensa de tesis · Maestría en Minería de Datos, UTN FRP</span><span class="num">12 / 43</span></footer>
-<aside class="notes"><p>Para GCM, con 14 clases desbalanceadas, y ALL Leukemia, con 7 (la tesis dice 14 por una errata; el archivo y el experimento usan 7). Sin condicionamiento, el generador favorece las clases mayoritarias: la pérdida la dominan las clases numerosas y el AVC reconstruye mal justo las que después hay que generar. Dos mecanismos contra el desbalance. El muestreo ponderado arma cada lote con probabilidad proporcional a 1/n_c, así las observaciones de las clases chicas entran más veces y su error pesa más en la suma; es el que efectivamente balancea la contribución de cada clase a la pérdida. Los pesos de clase, w_c proporcional a 1/n_c, entran como factor sobre el término de reconstrucción. Se validaron juntos: separados o solos no dieron el mejor resultado, combinados sí. No decir "cada observación se pondera por su clase dentro del MSE": el código no lo hace así (ver apuntes 19). Esto permite generar cantidades iguales por clase, que es lo que se hace en la segunda etapa de GCM.</p></aside>
+<aside class="notes"><p>Para GCM, con 14 clases desbalanceadas, y ALL Leukemia, con 7 (la tesis dice 14 por una errata; el archivo y el experimento usan 7). Sin condicionamiento, el generador favorece las clases mayoritarias: la pérdida la dominan las clases numerosas y el AVC reconstruye mal justo las que después hay que generar. El mecanismo que se muestra es el muestreo ponderado: arma cada lote con probabilidad proporcional a 1/n_c, así las observaciones de las clases chicas entran más veces y su error pesa más en la suma; es el que efectivamente balancea la contribución de cada clase a la pérdida. La tesis menciona además pesos de clase w_c proporcionales a 1/n_c en la pérdida; en la implementación entran como factor sobre el término de reconstrucción del lote, no por observación, por eso no van en la filmina. Si preguntan: "el equilibrio entre clases lo garantiza el muestreador ponderado" (ver apuntes 12).</p></aside>
 </section>
 
 <section class="slide" data-n="13" data-sec="2">

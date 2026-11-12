@@ -132,9 +132,9 @@ racterísticas relevantes y descartar aquellas irrelevantes o redundantes, con e
 
 - Para GCM (14 clases) y ALL Leukemia (7), desbalanceados.
 - Muestreo ponderado: cada lote se arma con probabilidad ∝ 1/n_c; las clases chicas entran más veces y su error pesa más. Es el que balancea la pérdida.
-- Pesos de clase, w_c ∝ 1/n_c: factor sobre el término de reconstrucción. No decir "cada observación se pondera dentro del MSE".
-- Pesos de clase y muestreo ponderado: solo funcionan combinados.
-- Permite generar cantidades iguales por clase.
+- Pesos de clase (en la tesis, no en la filmina), w_c ∝ 1/n_c: factor sobre el término de reconstrucción. No decir "cada observación se pondera dentro del MSE". Se validaron junto con el muestreo; combinados dieron el mejor resultado.
+- ¿Fijos o por lote? Fijos: w_c = 1/n_c calculado una vez sobre la partición de entrenamiento, antes de entrenar (`cvae_ga_template.py:89-95`). El muestreador los usa para armar cada mini-lote (1.024, con reposición) con las clases equilibradas; la pérdida los aplica como factor sobre el término de reconstrucción. En la implementación ese factor es el promedio de los pesos del lote, casi constante porque el lote ya viene balanceado: `mean(SSE_lote × w)` con SSE ya sumada, no `Σ SSE_i × w_i`. Consecuencias: (a) la ponderación por observación no existe; el balance lo da el muestreador; (b) el factor ≈ media de 1/n_c (GCM: 14 clases, n_c de 8 a 24, ≈ 0,11–0,14) escala la reconstrucción hacia abajo: equivale a un β-VAE con β ≈ 7–9, es decir, la KL pesa 7 a 9 veces más que en la formulación estándar. Respuesta si preguntan cómo entran los pesos: "como factor sobre el término de reconstrucción del lote; el equilibrio entre clases lo garantiza el muestreador ponderado". No afirmar que cada observación se pondera individualmente.
+- Salvedad (no decir, saber): este código es el de la segunda etapa (subespacio GCM y ALL). El AVC de la primera etapa sobre el espacio completo (`exp_42`) se entrenó sin pesos ni muestreador.
 
 -------------------------------------------
 
