@@ -380,12 +380,12 @@ La columna de entrada da la dimensión de partida y permite leer la compresión 
 ### 42. Trabajos futuros
 
 **Visible.** Cuatro ítems:
-1. Función de pérdida del AV: reponderar reconstrucción y KL, inferencia variacional recocida; AV jerárquicos para datos como GCM.
+1. Función de pérdida del AV: reponderar reconstrucción y KL, con un peso de la KL que crezca gradualmente durante el entrenamiento.
 2. Integración AV-AG: selección dinámica en varias etapas y optimización conjunta de ambos modelos.
 3. Encadenamientos y ensambles de AV y AG para reducir varianza.
 4. Comparación con SMOTE y otros generadores dentro del mismo flujo con AG.
 
-**Notas.** Los tres primeros son los del capítulo 5. El cuarto se agrega por la sugerencia del Dr. Quiroga. Si hay que elegir uno, el primero: el colapso de la posterior en GCM sugiere que una pérdida con KL recocida podría evitar el flujo en tres etapas.
+**Notas.** Los tres primeros son los del capítulo 5. El cuarto se agrega por la sugerencia del Dr. Quiroga. Si hay que elegir uno, el primero: el colapso de la posterior en GCM sugiere que una pérdida con la KL de peso creciente (KL annealing, en la literatura) podría evitar el flujo en tres etapas.
 
 ---
 

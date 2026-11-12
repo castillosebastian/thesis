@@ -448,7 +448,7 @@ racterísticas relevantes y descartar aquellas irrelevantes o redundantes, con e
 
 ## 42 · Trabajos futuros
 
-- Si hay que elegir uno: KL recocida contra el colapso de la posterior, podría evitar las tres etapas.
+- Si hay que elegir uno: KL con peso creciente durante el entrenamiento (KL annealing) contra el colapso de la posterior; podría evitar las tres etapas. No decir "recocida".
 - El cuarto viene de la sugerencia del Dr. Quiroga.
 
 -------------------------------------------
