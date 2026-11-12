@@ -316,6 +316,8 @@ racterísticas relevantes y descartar aquellas irrelevantes o redundantes, con e
 - Leukemia y Gisette: intervalos mínimos, nada que mejorar.
 - ALL y GCM anchos: pocas corridas; test de 57 muestras, 1,75 pp por muestra.
 
+>"El intervalo del 95 % es el rango de valores que la diferencia verdadera podría tener según estas corridas; si incluye el cero, no hay evidencia de efecto."
+
 -------------------------------------------
 
 ## 28 · Escala común
@@ -359,10 +361,8 @@ racterísticas relevantes y descartar aquellas irrelevantes o redundantes, con e
 ## 32 · Diagnóstico
 
 - Ajusta los sintéticos a la perfección; en reales queda igual que sin aumentación.
-- Protocolo: sintéticos de la primera etapa (1.400, 100 por clase) divididos 70/30; MLP entrenado con el 70 %; evaluado en el 30 % sintético (100 %) y, sin reentrenar, en la partición real de testeo (0,50). Un solo modelo, dos evaluaciones: "no se reentrenó nada; el modelo que acierta el 100 % de los sintéticos acierta el 50 % de los reales". Tabla 4.4: soporte 420 = 30 % de 1.400.
-- El 100 % no es sobreajuste clásico (el 30 % sintético no se usó para entrenar): la distribución sintética es más simple y separable que la real.
-- Colapso de la posterior: la KL domina.
-- Dos salidas: reponderar la KL (futuro) o reducir antes de generar (elegida).
+- Hipótesis principal, sobreajuste: 133 observaciones en 16.063 dimensiones; la reconstrucción es una suma sobre 16.063 variables y la KL sobre 35, así que en magnitud domina la reconstrucción y lo natural es que el AVC memorice el entrenamiento. 
+- Hipótesis de la tesis, colapso de la distribución posterior (la distribución del latente z que produce el codificador, q(z|x)). En términos simples: el codificador produce la misma distribución para todas las observaciones, exactamente la normal estándar; entonces la KL vale cero, la mejor nota posible en ese término, pero z deja de llevar información sobre x y el decodificador, que recibe siempre lo mismo, devuelve siempre lo mismo: algo parecido al promedio. 
 
 -------------------------------------------
 
